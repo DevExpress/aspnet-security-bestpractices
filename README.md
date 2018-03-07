@@ -12,7 +12,7 @@ In the example solution, you can reproduce the security issue using the followin
 
 1. Run the solution and open the **UploadingBinaryImage/UploadControl.aspx** page.
 2. Upload the **\App_Data\TestData\Content-Sniffing-XSS.jpg** file, which is a JavaScript file emulating a malicious script disguised as a JPEG image.
-3. Open the **UploadingBinaryImage/UploadControl.aspx** page, which writes the uploaded file to the server response in the code behind.
+3. Open the **UploadingBinaryImage/BinaryImageViewer.aspx** page, which writes the uploaded file to the server response in the code behind.
 4. As the result, java script code from the uploaded file is executed by the browser:
 
 ![malicious-image](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/uploading-binary-image-1.png?raw=true)
@@ -70,9 +70,9 @@ protected void ASPxButton1_Click(object sender, EventArgs e) {
 
 It is also recommended that you always specify the exact content type when you write binary data to the response:
 
-**Correct:** `Response.ContentType = "image"`;
+**Correct:** `Response.ContentType = "image/jpeg"`;
 
-**Potential security breach:** `Response.ContentType = "image/jpeg"`.
+**Potential security breach:** `Response.ContentType = "image"`.
 
 ### Notes:
 1. Microsoft Edge automatically detects file type based on its content, which prevents execution of malicious scripts.
