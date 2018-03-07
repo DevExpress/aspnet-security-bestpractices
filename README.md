@@ -57,9 +57,9 @@ static bool IsValidImage(Stream stream) {
 ``` cs
 protected void ASPxButton1_Click(object sender, EventArgs e) {
     byte[] contentBytes = ASPxBinaryImage1.ContentBytes;
-    // here contentBytes should be saved to database
+    // Here contentBytes should be saved to a database
  
-    // for demonstration purposes we will save it to file
+    // For demonstration purposes, content is saved to a file
     string fileName = Server.MapPath("~/App_Data/UploadedData/avatar.jpg");
     File.WriteAllBytes(fileName, contentBytes);
 }
