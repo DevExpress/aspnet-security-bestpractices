@@ -18,6 +18,8 @@ In the example solution, you can reproduce the security issue using the followin
 To mitigate the vulnerability, consider one of the following solutions:
 
 1.	Programmatically check whether the uploaded file is really an image before saving it to the server-side storage.
+
+\[C#\]
 ``` cs
 protected void ASPxUploadControl1_FileUploadComplete(object sender, 
   DevExpress.Web.FileUploadCompleteEventArgs e) {
@@ -43,6 +45,8 @@ static bool IsValidImage(Stream stream) {
 }
 ```
 2.	Use the [ASPxBinaryImage](https://documentation.devexpress.com/AspNet/11624/ASP-NET-WebForms-Controls/Data-Editors/Editor-Types/ASPxBinaryImage/Overview/ASPxBinaryImage-Overview) control for image uploading. This control implements automatic file type check.
+
+\[Aspx\]
 ``` asp
 <dx:ASPxBinaryImage ID="ASPxBinaryImage1" runat="server">
     <EditingSettings Enabled="True">
@@ -51,6 +55,7 @@ static bool IsValidImage(Stream stream) {
 <dx:ASPxButton ID="ASPxButton1" runat="server" OnClick="ASPxButton1_Click" Text="Save">
 </dx:ASPxButton>
 ```
+\[C#\]
 ``` cs
 protected void ASPxButton1_Click(object sender, EventArgs e) {
     byte[] contentBytes = ASPxBinaryImage1.ContentBytes;
