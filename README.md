@@ -18,8 +18,6 @@ In the example solution, you can reproduce the security issue using the followin
 To mitigate the vulnerability, consider one of the following solutions:
 
 1.	Programmatically check whether the uploaded file is really an image before saving it to the server-side storage.
-
-\[C#\]
 ``` cs
 protected void ASPxUploadControl1_FileUploadComplete(object sender, 
   DevExpress.Web.FileUploadCompleteEventArgs e) {
@@ -97,7 +95,26 @@ In this example solution, you can reproduce the security issue using the followi
 Take into account the following rules to mitigate this vulnerability:
 
 1. Perform server-side validation of the uploaded file type by specifying the [AllowedExtensions](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_AllowedFileExtensionstopic) property.
+``` asp
+<ValidationSettings AllowedFileExtensions=".jpg, .png">
+</ValidationSettings>
+```
 2. Disable file execution in the upload folder ([https://stackoverflow.com/questions/3776847/how-to-restrict-folder-access-in-asp-net])
+``` xml
+  <location path="UploadingFiles/Images">
+    <system.webServer>
+      <handlers>
+        <clear />
+        <add
+          name="StaticFile"
+          path="*" verb="*"
+          modules="StaticFileModule"
+          resourceType="Either"
+          requireAccess="Read" />
+      </handlers>
+    </system.webServer>
+  </location>
+```
 
 ### 2.2. Getting unauthorized access to an uploaded file
 See the **UploadingFiles/UploadControlTempFileName.aspx** page source code for a full code sample with commentaries. The vulnerability exists when a malefactor can potentially guess the path of an uploaded static file.
@@ -105,7 +122,20 @@ See the **UploadingFiles/UploadControlTempFileName.aspx** page source code for a
 Take into account the following rules to mitigate this vulnerability when storing temporary files, which should not be accessed by third parties:
 
 1. Use a dedicated file extension for temporary files on the server (for example “.tmp”). 
-2. Consider assigning random file names using the [GetRandomName](https://msdn.microsoft.com/en-us/library/system.io.path.getrandomfilename(v=vs.110).aspx) method. Not that in the **Advanced** uploading mode, files are loaded in small pieces (200KB by default), thus setting the **httpRuntime**>**maxRequestLength** and **requestLimits**>**maxAllowedContentLength** options in **web.config** is not enough to prevent attacks.
+2. Consider assigning random file names using the [GetRandomName](https://msdn.microsoft.com/en-us/library/system.io.path.getrandomfilename(v=vs.110).aspx) method.
+``` cs
+protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
+    if (uploadControl.UploadedFiles != null && uploadControl.UploadedFiles.Length > 0) {
+        for (int i = 0; i < uploadControl.UploadedFiles.Length; i++) {
+            UploadedFile file = uploadControl.UploadedFiles[i];
+            if (file.FileName != "") { 
+                string fileName = string.Format("{0}{1}", MapPath("~/UploadingFiles/Processing/"),
+                    Path.GetRandomFileName() + ".tmp");
+                file.SaveAs(fileName, true);
+                // DoFileProcessing(fileName);
+                ...
+
+```
 
 ### 2.3. Uploading big files – possible memory overflow and disk space cluttering
 See the **UploadingFiles/UploadControlMemory.aspx** page for source code a full code sample with commentaries.
@@ -115,7 +145,20 @@ If the application does not restrict the maximum uploaded file size, there is a 
 Take into account the following rules to mitigate this vulnerability:
 
 1. When working with massive uploaded files, access file contents using the [FileContent](http://help.devexpress.com/#AspNet/DevExpressWebUploadedFile_FileContenttopic) property (a Stream) rather than [FileBytes](http://help.devexpress.com/#AspNet/DevExpressWebUploadedFile_FileBytestopic) property (a byte array).
-2. Specify the maximum size for uploaded files using the [UploadControlValidationSettings.MaxFileSize](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_MaxFileSizetopic) property.
+``` cs
+protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
+    for(int i = 0; i < uploadControl.UploadedFiles.Length; i++) {
+        UploadedFile file = uploadControl.UploadedFiles[i];
+ 	
+        // good approach - use stream for large files
+        using (var stream = file.FileContent) {
+            DoProcessing(stream);
+        }
+    }
+}
+
+```
+2. Specify the maximum size for uploaded files using the [UploadControlValidationSettings.MaxFileSize](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_MaxFileSizetopic) property.  Note that in the **Advanced** uploading mode, files are loaded in small pieces (200KB by default), thus setting the **httpRuntime**>**maxRequestLength** and **requestLimits**>**maxAllowedContentLength** options in **web.config** is not enough to prevent attacks.
 
 
 
