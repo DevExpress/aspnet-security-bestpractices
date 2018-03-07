@@ -50,7 +50,7 @@ Take into account the following rules to mitigate this vulnerability:
 1. Perform server-side validation of the uploaded file type by specifying the ASPxUploadControl.AllowedExtensions property.
 2. Disable file execution in the upload folder ([https://stackoverflow.com/questions/3776847/how-to-restrict-folder-access-in-asp-net])
 
-### 2.2. Uploading executables
+### 2.2. Getting unauthorized access to an uploaded file
 See the **UploadingFiles/UploadControlTempFileName.aspx** page source code for a full code sample with commentaries. The vulnerability exists when a malefactor can potentially guess the path of an uploaded static file.
 
 Take into account the following rules to mitigate this vulnerability when storing temporary files, which should not be accessed by third parties:
@@ -58,7 +58,7 @@ Take into account the following rules to mitigate this vulnerability when storin
 1. Use a dedicated file extension for temporary files on the server (for example “.tmp”). 
 2. Consider assigning random file names using the [GetRandomName](https://msdn.microsoft.com/en-us/library/system.io.path.getrandomfilename(v=vs.110).aspx) method. Not that in the **Advanced** uploading mode, files are loaded in small pieces (200KB by default), thus setting the **httpRuntime**>**maxRequestLength** and **requestLimits**>**maxAllowedContentLength** options in **web.config** is not enough to prevent attacks.
 
-### 2.1. Uploading executables
+### 2.3. Uploading big files – possible memory overflow and disk space cluttering
 See the **UploadingFiles/UploadControlMemory.aspx** page for source code a full code sample with commentaries.
 
 If the application does not restrict the maximum uploaded file size, there is a security breach allowing a malefactor to perform a denial of service (DoS) attack by cluttering up server memory and disk space.
