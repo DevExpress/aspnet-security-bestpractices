@@ -19,12 +19,13 @@ To mitigate the vulnerability, consider one of the following solutions:
 
 1.	Programmatically check whether the uploaded file is really an image before saving it to the server-side storage.
 ``` cs
-protected void ASPxUploadControl1_FileUploadComplete(object sender, DevExpress.Web.FileUploadCompleteEventArgs e) {
-    // here contentBytes should be saved to database
+protected void ASPxUploadControl1_FileUploadComplete(object sender, 
+  DevExpress.Web.FileUploadCompleteEventArgs e) {
+    // Here contentBytes should be saved to a database
     using(var stream = e.UploadedFile.FileContent) {
         if(!IsValidImage(stream)) return;
 
-        // for demonstration purposes we will save it to file
+        // For demonstration purposes, content is saved to a file
         string fileName = Server.MapPath("~/App_Data/TestData/avatar.jpg");
         e.UploadedFile.SaveAs(fileName, true);
     }
@@ -42,6 +43,25 @@ static bool IsValidImage(Stream stream) {
 }
 ```
 2.	Use the [ASPxBinaryImage](https://documentation.devexpress.com/AspNet/11624/ASP-NET-WebForms-Controls/Data-Editors/Editor-Types/ASPxBinaryImage/Overview/ASPxBinaryImage-Overview) control for image uploading. This control implements automatic file type check.
+``` asp
+<dx:ASPxBinaryImage ID="ASPxBinaryImage1" runat="server">
+    <EditingSettings Enabled="True">
+    </EditingSettings>
+</dx:ASPxBinaryImage>
+<dx:ASPxButton ID="ASPxButton1" runat="server" OnClick="ASPxButton1_Click" Text="Save">
+</dx:ASPxButton>
+```
+``` cs
+protected void ASPxButton1_Click(object sender, EventArgs e) {
+    byte[] contentBytes = ASPxBinaryImage1.ContentBytes;
+    // here contentBytes should be saved to database
+ 
+    // for demonstration purposes we will save it to file
+    string fileName = Server.MapPath("~/App_Data/UploadedData/avatar.jpg");
+    File.WriteAllBytes(fileName, contentBytes);
+}
+
+```
 
 It is also recommended that you always specify the exact content type when you write binary data to the response:
 
