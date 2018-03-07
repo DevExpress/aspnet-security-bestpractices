@@ -18,6 +18,29 @@ In the example solution, you can reproduce the security issue using the followin
 To mitigate the vulnerability, consider one of the following solutions:
 
 1.	Programmatically check whether the uploaded file is really an image before saving it to the server-side storage.
+``` cs
+protected void ASPxUploadControl1_FileUploadComplete(object sender, DevExpress.Web.FileUploadCompleteEventArgs e) {
+    // here contentBytes should be saved to database
+    using(var stream = e.UploadedFile.FileContent) {
+        if(!IsValidImage(stream)) return;
+
+        // for demonstration purposes we will save it to file
+        string fileName = Server.MapPath("~/App_Data/TestData/avatar.jpg");
+        e.UploadedFile.SaveAs(fileName, true);
+    }
+}
+
+static bool IsValidImage(Stream stream) {
+    try {
+        using(var image = Image.FromStream(stream)) {
+            return true;
+        }
+    }
+    catch(Exception) {
+        return false;
+    }
+}
+```
 2.	Use the [ASPxBinaryImage](https://documentation.devexpress.com/AspNet/11624/ASP-NET-WebForms-Controls/Data-Editors/Editor-Types/ASPxBinaryImage/Overview/ASPxBinaryImage-Overview) control for image uploading. This control implements automatic file type check.
 
 It is also recommended that you always specify the exact content type when you write binary data to the response:
@@ -48,7 +71,7 @@ In this example solution, you can reproduce the security issue using the followi
 
 Take into account the following rules to mitigate this vulnerability:
 
-1. Perform server-side validation of the uploaded file type by specifying the ASPxUploadControl.AllowedExtensions property.
+1. Perform server-side validation of the uploaded file type by specifying the [AllowedExtensions](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_AllowedFileExtensionstopic) property.
 2. Disable file execution in the upload folder ([https://stackoverflow.com/questions/3776847/how-to-restrict-folder-access-in-asp-net])
 
 ### 2.2. Getting unauthorized access to an uploaded file
