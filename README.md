@@ -15,6 +15,8 @@ In the example solution, you can reproduce the security issue using the followin
 3. Open the **UploadingBinaryImage/UploadControl.aspx** page, which writes the uploaded file to the server response in the code behind.
 4. As the result, java script code from the uploaded file is executed by the browser:
 
+![malicious-image][https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/uploading-binary-image-1.png?raw=true]
+
 To mitigate the vulnerability, consider one of the following solutions:
 
 1.	Programmatically check whether the uploaded file is really an image before saving it to the server-side storage.
