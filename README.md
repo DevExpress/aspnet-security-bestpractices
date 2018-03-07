@@ -23,6 +23,7 @@ To mitigate the vulnerability, consider one of the following solutions:
 It is also recommended that you always specify the exact content type when you write binary data to the response:
 
 **Correct:** `Response.ContentType = "image"`;
+
 **Potential security breach:** `Response.ContentType = "image/jpeg"`.
 
 ### Notes
