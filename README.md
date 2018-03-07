@@ -72,7 +72,7 @@ It is also recommended that you always specify the exact content type when you w
 
 **Potential security breach:** `Response.ContentType = "image/jpeg"`.
 
-### Notes
+### Notes:
 1. Microsoft Edge automatically detects file type based on its content, which prevents execution of malicious scripts.
 2. Make sure to strictly specify the maximum uploaded file size to prevent DoS attacks based on uploading large files.
 
