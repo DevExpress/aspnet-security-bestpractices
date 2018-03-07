@@ -2,7 +2,7 @@
 
 This README document provides information on best practices that you should follow when you develop your applications to avoid introducing any security breaches. The document is divided into sections. Each section describes a use case scenario and possible vulnerabilities associated with it along with information on how to make sure that these vulnerabilities do not take place in you applications. Thus, you can use this document as check list to verify your applications security.
 
-The example solution illustrates the described vulnerabilities and provides code samples with comprehensive. To launch this solution, you need to have DevExpress ASP.NET controls installed. You can download the installer from the DevExpress site.
+The example solution illustrates the described vulnerabilities and provides code samples with comprehensive comments. To launch this solution, you need to have DevExpress ASP.NET controls installed. You can download the installer from the DevExpress site.
 
 ## 1. Uploading and Displaying Binary Images
 
