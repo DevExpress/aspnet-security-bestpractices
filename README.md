@@ -11,12 +11,23 @@ If there is a potential for a file containing a malicious script disguised as an
 
 You can familiarize yourself with the issue using the following steps:
 
+<<<<<<< HEAD
 1. Run the example solution and open the **[UploadingBinaryImage/UploadControl.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices/UploadingBinaryImages/UploadControl.aspx)** page.
 2. Upload the **[\App_Data\TestData\Content-Sniffing-XSS.jpg](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices/App_Data/TestData/Content-Sniffing-XSS.jpg)** file, which is a JavaScript file emulating a malicious script disguised as a JPEG image.
 3. Open the **[UploadingBinaryImage/BinaryImageViewer.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices/UploadingBinaryImages/BinaryImageViewer.aspx)** page, which writes the uploaded file to the server response in the [code behind](https://github.com/DevExpress/aspnet-security-bestpractices/blob/fd40850d01330a3d16f1a5a8c3cfd80cbe831c60/SecurityBestPractices/UploadingBinaryImages/BinaryImageViewer.aspx.cs#L17-L18).
 4. As the result, java script code from the uploaded file is executed by the browser:
 
 To prevent possible security issues, consider one of the following solutions:
+=======
+1. Run the solution and open the **UploadingBinaryImage/UploadControl.aspx** page.
+2. Upload the **\App_Data\TestData\Content-Sniffing-XSS.jpg** file, which is a JavaScript file emulating a malicious script disguised as a JPEG image.
+3. Open the **UploadingBinaryImage/BinaryImageViewer.aspx** page, which writes the uploaded file to the server response in the code behind.
+4. As the result, java script code from the uploaded file is executed by the browser:
+
+![malicious-image](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/uploading-binary-image-1.png?raw=true)
+
+To mitigate the vulnerability, consider one of the following solutions:
+>>>>>>> bdb5cecad4c007417709af2529d30dc97459eddb
 
 1.	Programmatically check whether the uploaded file is really an image before saving it to the server-side storage (see the [IsValidImage](https://github.com/DevExpress/aspnet-security-bestpractices/blob/fd40850d01330a3d16f1a5a8c3cfd80cbe831c60/SecurityBestPractices/UploadingBinaryImages/UploadControl.aspx.cs#L22-L31) method implementation).
 ``` cs
@@ -69,9 +80,9 @@ protected void ASPxButton1_Click(object sender, EventArgs e) {
 
 It is also recommended that you always specify the exact content type when you write binary data to the response:
 
-**Correct:** `Response.ContentType = "image"`;
+**Correct:** `Response.ContentType = "image/jpeg"`;
 
-**Potential security breach:** `Response.ContentType = "image/jpeg"`.
+**Potential security breach:** `Response.ContentType = "image"`.
 
 ### Notes:
 1. Microsoft Edge automatically detects file type based on its content, which prevents execution of malicious scripts.
