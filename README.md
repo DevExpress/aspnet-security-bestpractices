@@ -5,19 +5,20 @@ This README document provides information on best practices that you should foll
 The example solution illustrates the described vulnerabilities and provides code samples with comprehensive comments. To launch this solution, you need to have DevExpress ASP.NET controls installed. You can download the installer from the DevExpress site.
 
 ## 1. Uploading and Displaying Binary Images
+**Related Controls**: [ASPxBinaryImage](https://documentation.devexpress.com/AspNet/11624/ASP-NET-WebForms-Controls/Data-Editors/Editor-Types/ASPxBinaryImage/Overview/ASPxBinaryImage-Overview), [ASPxUploadControl](https://documentation.devexpress.com/AspNet/4040/ASP-NET-WebForms-Controls/File-Management/File-Upload/Overview/ASPxUploadControl-Overview)
 
-If there is a potential for a file containing a malicious script disguised as an image to be uploaded and sent to an end-user, an opportunity is open to run malicious code in the end-user’s browser (XSS via Content-sniffing)
+If there is a potential for a file containing a malicious script disguised as an image to be uploaded and sent to an end-user, an opportunity is open to run malicious code in the end-user’s browser (XSS via Content-sniffing, a particular case of [CWE-79](https://cwe.mitre.org/data/definitions/79.html)).
 
-In the example solution, you can reproduce the security issue using the following steps:
+You can familiarize yourself with the issue using the following steps:
 
-1. Run the solution and open the **UploadingBinaryImage/UploadControl.aspx** page.
-2. Upload the **\App_Data\TestData\Content-Sniffing-XSS.jpg** file, which is a JavaScript file emulating a malicious script disguised as a JPEG image.
-3. Open the **UploadingBinaryImage/UploadControl.aspx** page, which writes the uploaded file to the server response in the code behind.
+1. Run the example solution and open the **[UploadingBinaryImage/UploadControl.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices/UploadingBinaryImages/UploadControl.aspx)** page.
+2. Upload the **[\App_Data\TestData\Content-Sniffing-XSS.jpg](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices/App_Data/TestData/Content-Sniffing-XSS.jpg)** file, which is a JavaScript file emulating a malicious script disguised as a JPEG image.
+3. Open the **[UploadingBinaryImage/BinaryImageViewer.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices/UploadingBinaryImages/BinaryImageViewer.aspx)** page, which writes the uploaded file to the server response in the [code behind](https://github.com/DevExpress/aspnet-security-bestpractices/blob/fd40850d01330a3d16f1a5a8c3cfd80cbe831c60/SecurityBestPractices/UploadingBinaryImages/BinaryImageViewer.aspx.cs#L17-L18).
 4. As the result, java script code from the uploaded file is executed by the browser:
 
-To mitigate the vulnerability, consider one of the following solutions:
+To prevent possible security issues, consider one of the following solutions:
 
-1.	Programmatically check whether the uploaded file is really an image before saving it to the server-side storage.
+1.	Programmatically check whether the uploaded file is really an image before saving it to the server-side storage (see the [IsValidImage](https://github.com/DevExpress/aspnet-security-bestpractices/blob/fd40850d01330a3d16f1a5a8c3cfd80cbe831c60/SecurityBestPractices/UploadingBinaryImages/UploadControl.aspx.cs#L22-L31) method implementation).
 ``` cs
 protected void ASPxUploadControl1_FileUploadComplete(object sender, 
   DevExpress.Web.FileUploadCompleteEventArgs e) {
