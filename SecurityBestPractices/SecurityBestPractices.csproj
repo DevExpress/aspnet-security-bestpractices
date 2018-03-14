@@ -160,6 +160,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\UploadedData\" />
     <Folder Include="UploadingFiles\Images\" />
     <Folder Include="UploadingFiles\Processing\" />
   </ItemGroup>

@@ -1,1 +1,1 @@
-<body onload='alert(1)'></body>
+<body onload='alert("XSS")'></body>
