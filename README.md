@@ -155,7 +155,7 @@ protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.F
 ```
 
 ### Uploading Large Files
-See the **UploadingFiles/UploadControlMemory.aspx** page for source code a full code sample with commentaries.
+See the **UploadingFiles/UploadControlMemory.aspx** page source code for a full code sample with commentaries.
 
 If the application does not restrict the maximum uploaded file size, there is a security breach allowing a malefactor to perform a denial of service ([DoS](https://cwe.mitre.org/data/definitions/400.html)) attack by cluttering up server memory and disk space.
 
