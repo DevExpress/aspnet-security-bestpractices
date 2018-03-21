@@ -98,7 +98,7 @@ This document provides information on security best practices that you should co
 ### Uploading Files Accessible by URL
 See the **UploadingFiles\UploadControl.aspx** page source code for a full code sample with commentaries.
 
-Consider a situation in which your web application supports uploading files which are then available under a URL. A security concernarises when a web application allows uploading executable files, which than can be executed on the server side. For example, a malefactor can upload an ASPX file containing malicious code and guess its URL. If the malefactor requests this URL, the file will be executed on the server as if it was a part of the application.
+Consider a situation in which your web application supports uploading files, which are then available under a URL. A security concern occurs when a web application allows uploading executable files, which than can be executed on the server side. For example, a malefactor can upload an ASPX file containing malicious code and guess its URL. If the malefactor requests this URL, the file will be executed on the server as if it was a part of the application.
 
 In this example solution, you can can get familiar with the issue using the following steps:
 
