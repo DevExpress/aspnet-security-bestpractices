@@ -19,7 +19,7 @@ This document provides information on security best practices that you should co
 * [Protect Temporary Files](#protect-temporary-files)
 
 ### Prevent Uploading Malicious Files
-See the **UploadingFiles\UploadControl.aspx** page source code for a full code sample with commentaries.
+See the **[UploadingFiles\UploadControl.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices/UploadingFiles/UploadControl.aspx.cs)** page source code for a full code sample with commentaries.
 
 Consider a situation in which your web application supports uploading files, which are then available under a URL. A security concern occurs when a web application allows uploading executable files, which than can be executed on the server side. For example, a malefactor can upload an ASPX file containing malicious code and guess its URL. If the malefactor requests this URL, the file will be executed on the server as if it was a part of the application.
 
@@ -66,7 +66,7 @@ The table below lists the default file extensions allowed by various controls wi
 
 
 ### Prevent Uncontrolled Resource Consumption
-See the **UploadingFiles/UploadControlMemory.aspx** page source code for a full code sample with commentaries.
+See the **[UploadingFiles/UploadControlMemory.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices/UploadingFiles/UploadControlMemory.aspx.cs)** page source code for a full code sample with commentaries.
 
 If the application does not restrict the maximum uploaded file size, there is a security breach allowing a malefactor to perform a denial of service ([DoS](https://cwe.mitre.org/data/definitions/400.html)) attack by cluttering up server memory and disk space.
 
@@ -105,7 +105,7 @@ The availability of other operations on files (such as copying, deleting, downlo
 
 
 ### Protect Temporary Files
-See the **UploadingFiles/UploadControlTempFileName.aspx** page source code for a full code sample with commentaries. 
+See the **[UploadingFiles/UploadControlTempFileName.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices/UploadingFiles/UploadControlTempFileName.aspx.cs)** page source code for a full code sample with commentaries. 
 
 If you are storing temporary files on the server (e.g., to process the uploaded content before it is moved to a database), you need to make sure that these files are inaccessible for third parties.  
 
