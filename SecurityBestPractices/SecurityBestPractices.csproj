@@ -194,7 +194,6 @@
   <ItemGroup>
     <Content Include="App_Data\nwind.mdb" />
     <Content Include="App_Data\PublicDashboard.xml" />
-    <Content Include="App_Data\TestData\avatar.jpg" />
     <Content Include="App_Data\TestData\Content-Sniffing-XSS.jpg" />
     <Content Include="App_Data\TestData\Malicious.aspx" />
     <Content Include="Authorization\Dashboards\DashboardPage.aspx" />
