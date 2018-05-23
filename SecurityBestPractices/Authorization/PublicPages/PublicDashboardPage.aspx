@@ -1,5 +1,4 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PublicDashboardPage.aspx.cs" Inherits="SecurityBestPractices.Authorization.PublicPages.PublicDashboardPage" %>
-<%@ Register TagPrefix="dx" Namespace="DevExpress.DashboardWeb" Assembly="DevExpress.Dashboard.v18.1.Web.WebForms, Version=18.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" %>
 
 <!DOCTYPE html>
 
