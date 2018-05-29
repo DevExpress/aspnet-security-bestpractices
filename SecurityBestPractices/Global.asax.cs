@@ -13,23 +13,23 @@ namespace SecurityBestPractices
     public class Global : System.Web.HttpApplication
     {
         protected void Application_Start(object sender, EventArgs e) {
-            // query builder initialization
+            #region Query builder
             DefaultQueryBuilderContainer.Register<IDataSourceWizardConnectionStringsProvider, DataSourceWizardConnectionStringsProvider>();
             DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>();
             
             //DevExpress.XtraReports.Web.ASPxQueryBuilder.StaticInitialize();
+            #endregion            
 
-
-            // XtraReports initialization for authorization
+            #region Reports
             DevExpress.XtraReports.Web.Extensions.ReportStorageWebExtension.RegisterExtensionGlobal(new ReportStorageWithAccessRules());
             DefaultReportDesignerContainer.RegisterDataSourceWizardConnectionStringsProvider<DataSourceWizardConnectionStringsProvider>(); // provide connections for report designer
             DefaultReportDesignerContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>(); // provide only nessesary dbtables
 
             DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Required;
             DevExpress.XtraReports.Web.ASPxReportDesigner.StaticInitialize();
+            #endregion           
 
-
-            // Dashboards initialization for authorization
+            #region Dashboards
             DashboardConfigurator.Default.SetDashboardStorage(new DashboardStorageWithAccessRules());
             DashboardConfigurator.Default.CustomParameters += (o, args) => {
                 if (!new DashboardStorageWithAccessRules().IsAuthorized(args.DashboardId))
@@ -38,7 +38,7 @@ namespace SecurityBestPractices
 
             DashboardConfigurator.Default.SetConnectionStringsProvider(new DataSourceWizardConnectionStringsProvider()); // provide connections for dashboard designer
             DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx()); // provide only nessesary dbtables
-
+            #endregion            
         }
     }
 }
