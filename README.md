@@ -6,7 +6,7 @@ The example solution illustrates the described vulnerabilities and provides code
 
 ---
 
-# 1. Uploading Files
+## 1. Uploading Files
 
 **Related Controls**: [ASPxBinaryImage](https://documentation.devexpress.com/AspNet/11624/ASP-NET-WebForms-Controls/Data-Editors/Editor-Types/ASPxBinaryImage/Overview/ASPxBinaryImage-Overview), [ASPxUploadControl](https://documentation.devexpress.com/AspNet/4040/ASP-NET-WebForms-Controls/File-Management/File-Upload/Overview/ASPxUploadControl-Overview), [ASPxFileManager](https://documentation.devexpress.com/AspNet/9030/ASP-NET-WebForms-Controls/File-Management/File-Manager/Overview/ASPxFileManager-Overview), [ASPxHtmlEditor](https://documentation.devexpress.com/AspNet/4024/ASP-NET-WebForms-Controls/HTML-Editor), [ASPxRichEdit](https://documentation.devexpress.com/AspNet/17721/ASP-NET-WebForms-Controls/Rich-Text-Editor), [ASPxSpreadsheet](https://documentation.devexpress.com/AspNet/16157/ASP-NET-WebForms-Controls/Spreadsheet)
 
@@ -208,18 +208,298 @@ It is also recommended that you always specify the exact content type when you w
 **Potential security breach:** `Response.ContentType = "image"`.
 
 ### Notes:
-1. Microsoft Edge automatically detects file type based on its content, which prevents execution of malicious scripts.
+1. Microsoft Edge automatically detects a file's type based on its content, which prevents execution of malicious scripts.
 2. Make sure to strictly specify the maximum uploaded file size to prevent DoS attacks based on uploading large files.
 ---
 
 
 
 
+## 3. Authorization 
+### 3.1 XtraReports
+Normally when you create a reporting application with access restrictions via one of the standard Microsoft mechanisms, you grant or restrict access to particular pages based on a user’s identity: 
+
+``` xml
+  <location path="Authorization/Reports">
+    <system.web>
+      <authorization>
+        <deny users="?" />
+      </authorization>
+    </system.web>
+  </location>
+
+```
+
+However, note that by restricting access to certain pages, containing the Report Viewer control, you don’t automatically protect the report files that these pages display. These files can still be accessed by report viewers contained by other pages through client side API. A malefactor can open a report through API, by guessing the report’s name:
+
+``` js
+documentViewer.OpenReport("ReportTypeName"); 
+```
+
+The best practice when implementing a web reporting application is to restrict access to particular report files on the server by implementing a custom report storage by overriding methods of the base **ReportStorageWebExtension** class. In your custom method implementations, perform access rights check for a particular user. To implement this functionality in your application, you can copy the sample code from the **ReportStorageWithAccessRules.cs** file of the example project and fine-tune it for your needs.
+
+Based on your use-case scenario, the following customizations are required:
+
+
+#### A. Viewing Reports
+
+In the sample project, the **GetViewableReportDisplayNamesForCurrentUser** method returns a list of reports available to be viewed by the currently logged in user:
+
+``` cs
+// Logic for getting reports available for viewing
+public static IEnumerable<string> GetViewableReportDisplayNamesForCurrentUser() {
+    var identityName = GetIdentityName();
+
+    var result = new List<string> { reports[typeof(PublicReport)] }; // for unauthenticated users (ie public)
+
+    if (identityName == "Admin") {
+        result.AddRange(new[] { reports[typeof(AdminReport)], reports[typeof(JohnReport)] });
+    } else if (identityName == "John") {
+        result.Add(reports[typeof(JohnReport)]);
+    }
+    return result;
+}
+```
+
+This method is then called from the overridden **GetData()** method and other methods interacting with the report storage:
+
+``` cs
+public override byte[] GetData(string url) {
+    var reportNames = GetViewableReportDisplayNamesForCurrentUser();
+    if (!reportNames.Contains(url))
+        throw new UnauthorizedAccessException();
+
+    XtraReport publicReport = CreateReportByDisplayName(url);
+    using (MemoryStream ms = new MemoryStream()) {
+        publicReport.SaveLayoutToXml(ms);
+        return ms.GetBuffer();
+    }
+}
+```
+
+Copy this code from the example project and change it for your needs.
 
 
 
+#### B. Editing Reports
+In the sample project, the **GetEditableReportNamesForCurrentUser** method returns a list of reports available to be edited by the currently logged in user:
+
+``` cs
+// Logic for getting reports available for editing
+public static IEnumerable<string> GetEditableReportNamesForCurrentUser() {
+    var identityName = GetIdentityName();
+    if (identityName == "Admin") {
+        return new[] { reports[typeof(AdminReport)], reports[typeof(JohnReport)] };
+    }
+    if (identityName == "John") {
+        return new[] { reports[typeof(JohnReport)] };
+    }
+
+    return Array.Empty<string>();
+}
+```
+
+This method is then called from the overridden **IsValidUrl()** method and other methods related to writing report data.
+
+``` cs
+public override bool IsValidUrl(string url) {
+    var reportNames = GetEditableReportNamesForCurrentUser();
+    return reportNames.Contains(url);
+}
+```
+
+Copy this code from the example project and change it for your needs.
 
 
+To prevent errors in an end-user’s browser when handling unauthorized access attempts, check the access rights on the page’s **PageLoad** event. If the user is not authorized to open the report, redirect to a public page.
+
+(ReportViewerPage.aspx):
+``` cs
+protected void Page_Load(object sender, EventArgs e) {
+    var name = Request.QueryString["name"];
+    var reportNames = ReportStorageWithAccessRules.GetEditableReportNamesForCurrentUser();
+    if(reportNames.Contains(name))
+        ASPxReportDesigner1.OpenReport(name);
+    else
+        Response.Redirect("~/Authorization/Reports/ReportViewerPage.aspx");
+}
+``` 
+
+
+
+### 3.2 Dashboards 
+
+The DevExpress Dashboards suite can operate in one of the two supported modes:
+
+#####1)	Callbacks are processed by an ASPx page containing the ASPxDashboard control  (the  UseDashboardConfigurator property is set to false)
+
+Use the standard ASP.NET access restriction mechanisms:
+
+``` xml
+<location path="Authorization/Dashboards">
+    <system.web>
+        <authorization>
+           <deny users="?" />
+        </authorization>
+    </system.web>
+</location>
+```
+
+This mode is used by default.
+
+#####2)	Callbacks are processed by the DashboardConfigurator on the DevExpress HTTP Handler side (the UseDashboardConfigurator property is set to true) 
+
+In this mode, access restriction rules defined using the default mechanisms have no effect. The access control logic should be manually implemented by a custom dashboard storage class registered using the **DashboardConfigurator.Default.SetDashboardStorage** method:
+
+``` cs
+DashboardConfigurator.Default.SetDashboardStorage(new DashboardStorageWithAccessRules());
+```
+
+Note that this mode of operation is recommended, because it is considerably faster and more flexible.
+
+
+``` cs
+// Initialize the Dashboard for using authorization
+DashboardConfigurator.Default.SetDashboardStorage(new DashboardStorageWithAccessRules());
+DashboardConfigurator.Default.CustomParameters += (o, args) => {
+if (!new DashboardStorageWithAccessRules().IsAuthorized(args.DashboardId))
+    throw new UnauthorizedAccessException();
+};
+DashboardConfigurator.Default.SetConnectionStringsProvider(new DataSourceWizardConnectionStringsProvider()); // provide connections for dashboard designer
+DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx()); // provide only nessesary dbtables
+```
+
+In the **DashboardStorageWithAccessRules** class implementation define the access restrictions.  
+
+``` cs
+// Register dashboard layouts
+var adminId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"/App_Data/AdminDashboard.xml")), "Admin Dashboard");
+var johnId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"/App_Data/JohnDashboard.xml")), "John Dashboard");
+this.publicDashboardId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(publicDashboardPath)), "Public Dashboard");
+```
+
+The code below defines which user should have access to which dashboards.
+
+``` cs
+// Authorization logic
+authDictionary.Add("Admin", new HashSet<string>(new [] { adminId, johnId, publicDashboardId })); // admin can view/edit all dashboards
+authDictionary.Add("John", new HashSet<string>(new[] { johnId })); // john can view/edit only his dashboard
+
+public bool IsAuthorized(string dashboardId) {
+    var identityName = GetIdentityName();
+    if(!string.IsNullOrEmpty(identityName)) {
+        return authDictionary.ContainsKey(identityName) && authDictionary[identityName].Contains(dashboardId);
+    }
+
+    return false;
+}
+
+static string GetIdentityName() {
+    return HttpContext.Current.User?.Identity?.Name;
+}
+```
+
+With this custom implementation, if a user John will try to use the client API to open a report with restricted access (e.g., a report with id=’1’), the handler will return the error 404:
+
+``` js
+dashboard.LoadDashboard('1') // Load a dashboard available only to Admin
+```
+
+
+```
+GET http://localhost:65252/Authorization/Dashboards/DXDD.axd?action=DashboardAction/1&_=1525787741461 404 (Not Found)
+```
+
+You can copy the code from the example project and change user names and authorization logic based on your requirements.
+
+
+
+### 3.3 Query Builder
+Both the standalone Query Builder and the Query Builder integrated into the Report and Dashboard designers require you to restrict an end-user’s access to the available connections and data tables in code.
+ 
+See the example project’s **Global.asax** file to see how these customizations are registered fort Reports, Dashboards and standalone Query Builder
+
+To restrict access to connection strings, implement a custom connection string provider (see the example implementation):
+
+``` cs
+public class DataSourceWizardConnectionStringsProvider : IDataSourceWizardConnectionStringsProvider {
+
+    public Dictionary<string, string> GetConnectionDescriptions() {
+        Dictionary<string, string> connections =
+            new Dictionary<string, string> { { "nwindConnection", "NWind database" } };
+
+        // Customize the loaded connections list.  
+
+        // here restrict access
+        //if(GetIdentityName() == "Admin")
+        //    connections.Add("secretConnection", "Admin only database");
+
+        return connections;
+    }
+
+    public DataConnectionParametersBase GetDataConnectionParameters(string name) {
+        return AppConfigHelper.LoadConnectionParameters(name);
+    }
+}
+```
+
+Implement a custom database schema provider to restrict access to data tables:
+
+``` cs
+public class DBSchemaProviderEx : IDBSchemaProviderEx {
+    public DBTable[] GetTables(SqlDataConnection connection, params string[] tableList) {
+        // here you can check permission
+
+        var dbTables = connection.GetDBSchema().Tables;
+        return dbTables.Where(t => t.Name == "Categories" || t.Name == "Products").ToArray();
+    }
+
+    public DBTable[] GetViews(SqlDataConnection connection, params string[] viewList) {
+        return Array.Empty<DBTable>();
+    }
+
+    public DBStoredProcedure[] GetProcedures(SqlDataConnection connection, params string[] procedureList) {
+        return Array.Empty<DBStoredProcedure>();
+    }
+
+    public void LoadColumns(SqlDataConnection connection, params DBTable[] tables) {
+    }
+}
+```
+
+
+The Dashboard Designer requires the database schema provider to be created by a factory object:
+
+``` cs
+public class DataSourceWizardDBSchemaProviderExFactory : DevExpress.DataAccess.Web.IDataSourceWizardDBSchemaProviderExFactory {
+    public IDBSchemaProviderEx Create() {
+        return new DBSchemaProviderEx();
+    }
+}
+```
+
+Register the implemented classes for the Report Designer, Dashboard Designer and standalone Query Builder as shown below.
+
+**Reports:**
+``` cs
+DefaultReportDesignerContainer.RegisterDataSourceWizardConnectionStringsProvider<DataSourceWizardConnectionStringsProvider>();
+DefaultReportDesignerContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>();
+```
+
+**Dashboards:**
+``` cs
+DefaultQueryBuilderContainer.Register<IDataSourceWizardConnectionStringsProvider, DataSourceWizardConnectionStringsProvider>();
+DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>();
+```
+
+
+**Query Builder:**
+``` cs
+DashboardConfigurator.Default.SetConnectionStringsProvider(new DataSourceWizardConnectionStringsProvider());
+DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx());
+```
+
+**See the example implementation.**
 
 
 
