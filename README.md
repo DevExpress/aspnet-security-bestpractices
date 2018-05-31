@@ -311,7 +311,6 @@ public override bool IsValidUrl(string url) {
 
 To prevent errors in an end-user’s browser when handling unauthorized access attempts, check the access rights on the page’s [PageLoad](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportDesignerPage.aspx.cs#L6-L13) event. If the user is not authorized to open the report, redirect to a public page.
 
-(ReportViewerPage.aspx):
 ``` cs
 protected void Page_Load(object sender, EventArgs e) {
     var name = Request.QueryString["name"];
