@@ -12,13 +12,13 @@ The example solution illustrates the described vulnerabilities and provides code
 
 **Security Risks**: [CWE-400](https://cwe.mitre.org/data/definitions/400.html), [CWE-434](https://cwe.mitre.org/data/definitions/434.html)
 
-This document provides information on security best practices that you should consider when organizing the file uploading functionality in your web applications. Document sections describe use-case scenarios along with related security concerns and best practices that you should follow to avoid introducing any security breaches. The following sections are included:
+This section provides information on security best practices that you should consider when organizing the file uploading functionality in your web applications. Document sections describe use-case scenarios along with related security concerns and best practices that you should follow to avoid introducing any security breaches. The following sections are included:
 
-* [Prevent Uploading Malicious Files](#prevent-uploading-malicious-files)
-* [Prevent Uncontrolled Resource Consumption](#prevent-uncontrolled-resource-consumption)
-* [Protect Temporary Files](#protect-temporary-files)
+* [1.1. Prevent Uploading Malicious Files](#11-prevent-uploading-malicious-files)
+* [1.2. Prevent Uncontrolled Resource Consumption](#12-prevent-uncontrolled-resource-consumption)
+* [1.3. Protect Temporary Files](#13-protect-temporary-files)
 
-### Prevent Uploading Malicious Files
+### 1.1. Prevent Uploading Malicious Files
 See the **[UploadingFiles\UploadControl.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices/UploadingFiles/UploadControl.aspx.cs)** page source code for a full code sample with commentaries.
 
 Consider a situation in which your web application supports uploading files, which are then available under a URL. A security concern occurs when a web application allows uploading executable files, which than can be executed on the server side. For example, a malefactor can upload an ASPX file containing malicious code and guess its URL. If the malefactor requests this URL, the file will be executed on the server as if it was a part of the application.
@@ -65,7 +65,7 @@ The table below lists the default file extensions allowed by various controls wi
 
 
 
-### Prevent Uncontrolled Resource Consumption
+### 1.2. Prevent Uncontrolled Resource Consumption
 See the **[UploadingFiles/UploadControlMemory.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices/UploadingFiles/UploadControlMemory.aspx.cs)** page source code for a full code sample with commentaries.
 
 If the application does not restrict the maximum uploaded file size, there is a security breach allowing a malefactor to perform a denial of service ([DoS](https://cwe.mitre.org/data/definitions/400.html)) attack by cluttering up server memory and disk space.
@@ -104,7 +104,7 @@ Be aware that the file manager control allows uploading files and does not impos
 The availability of other operations on files (such as copying, deleting, downloading, etc.) is configured using the [SettingsEditing](http://help.devexpress.com/#AspNet/DevExpressWebASPxFileManager_SettingsEditingtopic) property. By default, all operations are disabled.
 
 
-### Protect Temporary Files
+### 1.3. Protect Temporary Files
 See the **[UploadingFiles/UploadControlTempFileName.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices/UploadingFiles/UploadControlTempFileName.aspx.cs)** page source code for a full code sample with commentaries. 
 
 If you are storing temporary files on the server (e.g., to process the uploaded content before it is moved to a database), you need to make sure that these files are inaccessible for third parties.  
@@ -216,8 +216,14 @@ It is also recommended that you always specify the exact content type when you w
 
 
 ## 3. Authorization 
-### 3.1 XtraReports
-Normally when you create a reporting application with access restrictions via one of the standard Microsoft mechanisms, you grant or restrict access to particular pages based on a user’s identity: 
+This section provides information on security best practices to consider when using DevExpress controls in web applications with authorization and access control.
+
+* [3.1. Reporting](#31-reporting)
+* [3.2. Dashboard](#32-dashboard)
+* [3.3. Query Builder](#33-query-builder)
+
+### 3.1. Reporting
+Normally, when you create a reporting application with access restrictions using one of the standard Microsoft mechanisms, you grant or restrict access to particular pages based on a user’s identity: 
 
 ``` xml
   <location path="Authorization/Reports">
@@ -227,18 +233,15 @@ Normally when you create a reporting application with access restrictions via on
       </authorization>
     </system.web>
   </location>
-
 ```
 
-However, note that by restricting access to certain pages, containing the Report Viewer control, you don’t automatically protect the report files that these pages display. These files can still be accessed by report viewers contained by other pages through client side API. A malefactor can open a report through API, by guessing the report’s name:
+However, note that by restricting access to certain pages, containing the Report Viewer control, you don’t automatically protect the report files that these pages display. These files can still be accessed by the Report Viewer control's instances from other pages through client side API. Knowing a report's name, a malefactor can open it, by calling the client **OpenReport** method:
 
 ``` js
 documentViewer.OpenReport("ReportTypeName"); 
 ```
 
-The best practice when implementing a web reporting application is to restrict access to particular report files on the server by implementing a custom report storage by overriding methods of the base **ReportStorageWebExtension** class. In your custom method implementations, perform access rights check for a particular user. To implement this functionality in your application, you can copy the sample code from the **ReportStorageWithAccessRules.cs** file of the example project and fine-tune it for your needs.
-
-Based on your use-case scenario, the following customizations are required:
+The best practice when developing a web reporting application is to define authorization rules in server code by implementing a custom report storage derived from the **ReportStorageWebExtension** class. Based on your use-case scenario, the following customizations are required:
 
 
 #### A. Viewing Reports
@@ -250,7 +253,7 @@ In the sample project, the **GetViewableReportDisplayNamesForCurrentUser** metho
 public static IEnumerable<string> GetViewableReportDisplayNamesForCurrentUser() {
     var identityName = GetIdentityName();
 
-    var result = new List<string> { reports[typeof(PublicReport)] }; // for unauthenticated users (ie public)
+    var result = new List<string> { reports[typeof(PublicReport)] }; // For unauthenticated users (i.e., public)
 
     if (identityName == "Admin") {
         result.AddRange(new[] { reports[typeof(AdminReport)], reports[typeof(JohnReport)] });
@@ -261,7 +264,7 @@ public static IEnumerable<string> GetViewableReportDisplayNamesForCurrentUser() 
 }
 ```
 
-This method is then called from the overridden **GetData()** method and other methods interacting with the report storage:
+This method is then called from the overridden **GetData** method and other methods interacting with the report storage:
 
 ``` cs
 public override byte[] GetData(string url) {
@@ -276,9 +279,7 @@ public override byte[] GetData(string url) {
     }
 }
 ```
-
-Copy this code from the example project and change it for your needs.
-
+You can copy the reference implementation from the example project's **ReportStorageWithAccessRules.cs** file to your application and fine-tune it for your needs.
 
 
 #### B. Editing Reports
@@ -299,7 +300,7 @@ public static IEnumerable<string> GetEditableReportNamesForCurrentUser() {
 }
 ```
 
-This method is then called from the overridden **IsValidUrl()** method and other methods related to writing report data.
+This method is then called from the overridden **IsValidUrl** method and other methods related to writing report data.
 
 ``` cs
 public override bool IsValidUrl(string url) {
@@ -307,9 +308,6 @@ public override bool IsValidUrl(string url) {
     return reportNames.Contains(url);
 }
 ```
-
-Copy this code from the example project and change it for your needs.
-
 
 To prevent errors in an end-user’s browser when handling unauthorized access attempts, check the access rights on the page’s **PageLoad** event. If the user is not authorized to open the report, redirect to a public page.
 
@@ -324,10 +322,11 @@ protected void Page_Load(object sender, EventArgs e) {
         Response.Redirect("~/Authorization/Reports/ReportViewerPage.aspx");
 }
 ``` 
+You can copy the reference implementation from the example project's **ReportStorageWithAccessRules.cs** file to your application and fine-tune it for your needs.
 
 
 
-### 3.2 Dashboards 
+### 3.2. Dashboard
 
 The DevExpress Dashboards suite can operate in one of the two supported modes:
 
@@ -345,31 +344,15 @@ Use the standard ASP.NET access restriction mechanisms:
 </location>
 ```
 
-This mode is used by default.
+This mode is active by default.
 
 #####2)	Callbacks are processed by the DashboardConfigurator on the DevExpress HTTP Handler side (the UseDashboardConfigurator property is set to true) 
 
-In this mode, access restriction rules defined using the default mechanisms have no effect. The access control logic should be manually implemented by a custom dashboard storage class registered using the **DashboardConfigurator.Default.SetDashboardStorage** method:
+This is the recommended mode, as it is considerably faster and much more flexible. However, in this mode, access restriction rules defined using the default mechanisms have no effect. The access control should be performed by a custom dashboard storage implementing the **IEditableDashboardStorage** interface.
 
-``` cs
-DashboardConfigurator.Default.SetDashboardStorage(new DashboardStorageWithAccessRules());
-```
+You can copy the reference implementation of a dashboard storage from the example project's **DashboardStorageWithAccessRules.cs** and fine-tune it for your needs.
 
-Note that this mode of operation is recommended, because it is considerably faster and more flexible.
-
-
-``` cs
-// Initialize the Dashboard for using authorization
-DashboardConfigurator.Default.SetDashboardStorage(new DashboardStorageWithAccessRules());
-DashboardConfigurator.Default.CustomParameters += (o, args) => {
-if (!new DashboardStorageWithAccessRules().IsAuthorized(args.DashboardId))
-    throw new UnauthorizedAccessException();
-};
-DashboardConfigurator.Default.SetConnectionStringsProvider(new DataSourceWizardConnectionStringsProvider()); // provide connections for dashboard designer
-DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx()); // provide only nessesary dbtables
-```
-
-In the **DashboardStorageWithAccessRules** class implementation define the access restrictions.  
+The **DashboardStorageWithAccessRules** class implementation defines the access restrictions:
 
 ``` cs
 // Register dashboard layouts
@@ -382,8 +365,8 @@ The code below defines which user should have access to which dashboards.
 
 ``` cs
 // Authorization logic
-authDictionary.Add("Admin", new HashSet<string>(new [] { adminId, johnId, publicDashboardId })); // admin can view/edit all dashboards
-authDictionary.Add("John", new HashSet<string>(new[] { johnId })); // john can view/edit only his dashboard
+authDictionary.Add("Admin", new HashSet<string>(new [] { adminId, johnId, publicDashboardId })); // Admin can view/edit all dashboards.
+authDictionary.Add("John", new HashSet<string>(new[] { johnId })); // John can view/edit only his dashboard.
 
 public bool IsAuthorized(string dashboardId) {
     var identityName = GetIdentityName();
@@ -399,10 +382,20 @@ static string GetIdentityName() {
 }
 ```
 
-With this custom implementation, if a user John will try to use the client API to open a report with restricted access (e.g., a report with id=’1’), the handler will return the error 404:
+Register the custom dashboard storage in the Global.asax file as shown below.
+
+``` cs
+DashboardConfigurator.Default.SetDashboardStorage(new DashboardStorageWithAccessRules());
+DashboardConfigurator.Default.CustomParameters += (o, args) => {
+if (!new DashboardStorageWithAccessRules().IsAuthorized(args.DashboardId))
+    throw new UnauthorizedAccessException();
+};
+```
+
+With this custom implementation of a dashboard storage, if a user named 'John' tries to use the client API to open a report with restricted access (e.g., a report with id=’1’), the handler will return the error 404:
 
 ``` js
-dashboard.LoadDashboard('1') // Load a dashboard available only to Admin
+dashboard.LoadDashboard('1') // Load a dashboard available only to Admin.
 ```
 
 
@@ -410,16 +403,12 @@ dashboard.LoadDashboard('1') // Load a dashboard available only to Admin
 GET http://localhost:65252/Authorization/Dashboards/DXDD.axd?action=DashboardAction/1&_=1525787741461 404 (Not Found)
 ```
 
-You can copy the code from the example project and change user names and authorization logic based on your requirements.
 
+### 3.3. Query Builder
 
+The standalone Query Builder as well as the Query Builder integrated into the Report and Dashboard allows an end-user to browse a web application's data connections and a data tables available through these connections. In a web application with access control, you need to restrict an end-user’s access to the available connections and data tables in code.
 
-### 3.3 Query Builder
-Both the standalone Query Builder and the Query Builder integrated into the Report and Dashboard designers require you to restrict an end-user’s access to the available connections and data tables in code.
- 
-See the example project’s **Global.asax** file to see how these customizations are registered fort Reports, Dashboards and standalone Query Builder
-
-To restrict access to connection strings, implement a custom connection string provider (see the example implementation):
+To restrict the access to connection strings, implement a custom connection string provider (see the example implementation):
 
 ``` cs
 public class DataSourceWizardConnectionStringsProvider : IDataSourceWizardConnectionStringsProvider {
@@ -430,7 +419,7 @@ public class DataSourceWizardConnectionStringsProvider : IDataSourceWizardConnec
 
         // Customize the loaded connections list.  
 
-        // here restrict access
+        // Access restriction logic.
         //if(GetIdentityName() == "Admin")
         //    connections.Add("secretConnection", "Admin only database");
 
@@ -443,12 +432,12 @@ public class DataSourceWizardConnectionStringsProvider : IDataSourceWizardConnec
 }
 ```
 
-Implement a custom database schema provider to restrict access to data tables:
+Implement a custom database schema provider to restrict the access to data tables:
 
 ``` cs
 public class DBSchemaProviderEx : IDBSchemaProviderEx {
     public DBTable[] GetTables(SqlDataConnection connection, params string[] tableList) {
-        // here you can check permission
+        // Check permissions.
 
         var dbTables = connection.GetDBSchema().Tables;
         return dbTables.Where(t => t.Name == "Categories" || t.Name == "Products").ToArray();
@@ -477,8 +466,9 @@ public class DataSourceWizardDBSchemaProviderExFactory : DevExpress.DataAccess.W
     }
 }
 ```
+You can copy the reference implementation from the example project's **DataSourceWizardConnectionStringsProvider.cs** and **DataSourceWizardDBSchemaProviderExFactory.cs** files to your application and fine-tune it for your needs.
 
-Register the implemented classes for the Report Designer, Dashboard Designer and standalone Query Builder as shown below.
+Register the implemented classes for the Report Designer, Dashboard Designer or standalone Query Builder as shown below. (See the **Global.asax** file)
 
 **Reports:**
 ``` cs
@@ -492,16 +482,12 @@ DefaultQueryBuilderContainer.Register<IDataSourceWizardConnectionStringsProvider
 DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>();
 ```
 
-
 **Query Builder:**
 ``` cs
 DashboardConfigurator.Default.SetConnectionStringsProvider(new DataSourceWizardConnectionStringsProvider());
 DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx());
 ```
-
-**See the example implementation.**
-
-
+---
 
 
 
