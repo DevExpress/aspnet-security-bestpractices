@@ -235,18 +235,18 @@ Normally, when you create a reporting application with access restrictions using
   </location>
 ```
 
-However, note that by restricting access to certain pages, containing the Report Viewer control, you don’t automatically protect the report files that these pages display. These files can still be accessed by the Report Viewer control's instances from other pages through client side API. Knowing a report's name, a malefactor can open it, by calling the client **OpenReport** method:
+However, note that by restricting access to certain pages, containing the Report Viewer control, you don’t automatically protect the report files that these pages display. These files can still be accessed by the Report Viewer control's instances from other pages through client side API. Knowing a report's name, a malefactor can open it, by calling the client [OpenReport](http://help.devexpress.com/#XtraReports/DevExpressXtraReportsWebScriptsASPxClientWebDocumentViewer_OpenReporttopic) method:
 
 ``` js
 documentViewer.OpenReport("ReportTypeName"); 
 ```
 
-The best practice when developing a web reporting application is to define authorization rules in server code by implementing a custom report storage derived from the **ReportStorageWebExtension** class. Based on your use-case scenario, the following customizations are required:
+The best practice when developing a web reporting application is to define authorization rules in server code by implementing a custom report storage derived from the [ReportStorageWebExtension](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebExtensionsReportStorageWebExtensiontopic) class. Based on your use-case scenario, the following customizations are required:
 
 
 #### A. Viewing Reports
 
-In the sample project, the **GetViewableReportDisplayNamesForCurrentUser** method returns a list of reports available to be viewed by the currently logged in user:
+In the sample project, the [GetViewableReportDisplayNamesForCurrentUser](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs#L25-L38) method returns a list of reports available to be viewed by the currently logged in user:
 
 ``` cs
 // Logic for getting reports available for viewing
@@ -264,7 +264,7 @@ public static IEnumerable<string> GetViewableReportDisplayNamesForCurrentUser() 
 }
 ```
 
-This method is then called from the overridden **GetData** method and other methods interacting with the report storage:
+This method is then called from the overridden [GetData](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs#L60-L70) method and other methods interacting with the report storage:
 
 ``` cs
 public override byte[] GetData(string url) {
@@ -279,11 +279,11 @@ public override byte[] GetData(string url) {
     }
 }
 ```
-You can copy the reference implementation from the example project's **ReportStorageWithAccessRules.cs** file to your application and fine-tune it for your needs.
+You can copy the reference implementation from the example project's [ReportStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs) file to your application and fine-tune it for your needs.
 
 
 #### B. Editing Reports
-In the sample project, the **GetEditableReportNamesForCurrentUser** method returns a list of reports available to be edited by the currently logged in user:
+In the sample project, the [GetEditableReportNamesForCurrentUser](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs#L41-L53) method returns a list of reports available to be edited by the currently logged in user:
 
 ``` cs
 // Logic for getting reports available for editing
@@ -300,7 +300,7 @@ public static IEnumerable<string> GetEditableReportNamesForCurrentUser() {
 }
 ```
 
-This method is then called from the overridden **IsValidUrl** method and other methods related to writing report data.
+This method is then called from the overridden [IsValidUrl](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs#L80-L83) method and other methods related to writing report data.
 
 ``` cs
 public override bool IsValidUrl(string url) {
@@ -309,7 +309,7 @@ public override bool IsValidUrl(string url) {
 }
 ```
 
-To prevent errors in an end-user’s browser when handling unauthorized access attempts, check the access rights on the page’s **PageLoad** event. If the user is not authorized to open the report, redirect to a public page.
+To prevent errors in an end-user’s browser when handling unauthorized access attempts, check the access rights on the page’s [PageLoad](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportDesignerPage.aspx.cs#L6-L13) event. If the user is not authorized to open the report, redirect to a public page.
 
 (ReportViewerPage.aspx):
 ``` cs
@@ -322,11 +322,11 @@ protected void Page_Load(object sender, EventArgs e) {
         Response.Redirect("~/Authorization/Reports/ReportViewerPage.aspx");
 }
 ``` 
-You can copy the reference implementation from the example project's **ReportStorageWithAccessRules.cs** file to your application and fine-tune it for your needs.
+You can copy the reference implementation from the example project's [ReportStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs) file to your application and fine-tune it for your needs.
 
 #### Making Sure that Authentication Rules are Applied
 In the example project, you can check whether the customization has effect using the following steps:
-* Open the **PublicReportPage.aspx** page with a Report Viewer without logging in.
+* Open the [PublicReportPage.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Authorization/PublicPages/PublicReportPage.aspx) page with a Report Viewer without logging in.
 * Try to open a report with restricted access using client API in the browser console:
 ```
 >documentViewer.OpenReport("Admin Report");
@@ -340,7 +340,7 @@ The browser console will respond with the following error.
 
 The DevExpress Dashboards suite can operate in one of the two supported modes:
 
-**1) Callbacks are processed by an ASPx page containing the ASPxDashboard control (the UseDashboardConfigurator property is set to false)**
+**1) Callbacks are processed by an ASPx page containing the ASPxDashboard control (the [UseDashboardConfigurator](http://help.devexpress.com/#Dashboard/DevExpressDashboardWebASPxDashboard_UseDashboardConfiguratortopic) property is set to false)**
 
 Use the standard ASP.NET access restriction mechanisms:
 
@@ -356,13 +356,13 @@ Use the standard ASP.NET access restriction mechanisms:
 
 This mode is active by default.
 
-**2) Callbacks are processed by the DashboardConfigurator on the DevExpress HTTP Handler side (the UseDashboardConfigurator property is set to true)**
+**2) Callbacks are processed by the Dashboard Configurator on the DevExpress HTTP Handler side (the [UseDashboardConfigurator](http://help.devexpress.com/#Dashboard/DevExpressDashboardWebASPxDashboard_UseDashboardConfiguratortopic) property is set to true)**
 
 This is the recommended mode, as it is considerably faster and much more flexible. However, in this mode, access restriction rules defined using the default mechanisms have no effect. The access control should be performed by a custom dashboard storage implementing the **IEditableDashboardStorage** interface.
 
-You can copy the reference implementation of a dashboard storage from the example project's **DashboardStorageWithAccessRules.cs** and fine-tune it for your needs.
+You can copy the reference implementation of a dashboard storage from the example project's [DashboardStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Authorization/Dashboards/DashboardStorageWithAccessRules.cs) and fine-tune it for your needs.
 
-The **DashboardStorageWithAccessRules** class implementation defines the access restrictions:
+The [DashboardStorageWithAccessRules](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Dashboards/DashboardStorageWithAccessRules.cs#L12-L126) class implementation defines the access restrictions:
 
 ``` cs
 // Register dashboard layouts
@@ -392,7 +392,7 @@ static string GetIdentityName() {
 }
 ```
 
-Register the custom dashboard storage in the Global.asax file as shown below.
+Register the custom dashboard storage in the [Global.asax.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Global.asax.cs) file as shown below.
 
 ``` cs
 DashboardConfigurator.Default.SetDashboardStorage(new DashboardStorageWithAccessRules());
@@ -420,7 +420,7 @@ GET http://localhost:65252/Authorization/Dashboards/DXDD.axd?action=DashboardAct
 
 The standalone Query Builder as well as the Query Builder integrated into the Report and Dashboard allows an end-user to browse a web application's data connections and a data tables available through these connections. In a web application with access control, you need to restrict an end-user’s access to the available connections and data tables in code.
 
-To restrict the access to connection strings, implement a custom connection string provider (see the example implementation):
+To restrict the access to connection strings, implement a custom connection string provider:
 
 ``` cs
 public class DataSourceWizardConnectionStringsProvider : IDataSourceWizardConnectionStringsProvider {
@@ -478,17 +478,17 @@ public class DataSourceWizardDBSchemaProviderExFactory : DevExpress.DataAccess.W
     }
 }
 ```
-You can copy the reference implementation from the example project's **DataSourceWizardConnectionStringsProvider.cs** and **DataSourceWizardDBSchemaProviderExFactory.cs** files to your application and fine-tune it for your needs.
+You can copy the reference implementation from the example project's [DataSourceWizardConnectionStringsProvider.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Authorization/DataSourceWizardConnectionStringsProvider.cs) and [DataSourceWizardDBSchemaProviderExFactory.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Authorization/DataSourceWizardDBSchemaProviderExFactory.cs) files to your application and fine-tune it for your needs.
 
-Register the implemented classes for the Report Designer, Dashboard Designer or standalone Query Builder as shown below. (See the **Global.asax** file)
+Register the implemented classes for the Report Designer, Dashboard Designer or standalone Query Builder as shown below. (See the [Global.asax.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Global.asax.cs) file)
 
-**Reports:**
+**Report Designer:**
 ``` cs
 DefaultReportDesignerContainer.RegisterDataSourceWizardConnectionStringsProvider<DataSourceWizardConnectionStringsProvider>();
 DefaultReportDesignerContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>();
 ```
 
-**Dashboards:**
+**Dashboard Designer:**
 ``` cs
 DefaultQueryBuilderContainer.Register<IDataSourceWizardConnectionStringsProvider, DataSourceWizardConnectionStringsProvider>();
 DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>();
