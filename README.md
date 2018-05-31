@@ -330,7 +330,7 @@ You can copy the reference implementation from the example project's **ReportSto
 
 The DevExpress Dashboards suite can operate in one of the two supported modes:
 
-#####1)	Callbacks are processed by an ASPx page containing the ASPxDashboard control  (the  UseDashboardConfigurator property is set to false)
+**1)	Callbacks are processed by an ASPx page containing the ASPxDashboard control  (the  UseDashboardConfigurator property is set to false)**
 
 Use the standard ASP.NET access restriction mechanisms:
 
@@ -346,7 +346,7 @@ Use the standard ASP.NET access restriction mechanisms:
 
 This mode is active by default.
 
-#####2)	Callbacks are processed by the DashboardConfigurator on the DevExpress HTTP Handler side (the UseDashboardConfigurator property is set to true) 
+**2)	Callbacks are processed by the DashboardConfigurator on the DevExpress HTTP Handler side (the UseDashboardConfigurator property is set to true)**
 
 This is the recommended mode, as it is considerably faster and much more flexible. However, in this mode, access restriction rules defined using the default mechanisms have no effect. The access control should be performed by a custom dashboard storage implementing the **IEditableDashboardStorage** interface.
 
