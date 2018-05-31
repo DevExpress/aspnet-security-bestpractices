@@ -324,13 +324,23 @@ protected void Page_Load(object sender, EventArgs e) {
 ``` 
 You can copy the reference implementation from the example project's **ReportStorageWithAccessRules.cs** file to your application and fine-tune it for your needs.
 
+#### Making Sure that Authentication Rules are Applied
+In the example project, you can check whether the customization has effect using the following steps:
+* Open the **PublicReportPage.aspx** page with a Report Viewer without logging in.
+* Try to open a report with restricted access using client API in the browser console:
+```
+>documentViewer.OpenReport("Admin Report");
+```
+The browser console will respond with the following error.
+
+![console-output](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/authoriazation-reports-accessdenied.png?raw=true)
 
 
 ### 3.2. Dashboard
 
 The DevExpress Dashboards suite can operate in one of the two supported modes:
 
-**1)	Callbacks are processed by an ASPx page containing the ASPxDashboard control  (the  UseDashboardConfigurator property is set to false)**
+**1) Callbacks are processed by an ASPx page containing the ASPxDashboard control (the UseDashboardConfigurator property is set to false)**
 
 Use the standard ASP.NET access restriction mechanisms:
 
@@ -346,7 +356,7 @@ Use the standard ASP.NET access restriction mechanisms:
 
 This mode is active by default.
 
-**2)	Callbacks are processed by the DashboardConfigurator on the DevExpress HTTP Handler side (the UseDashboardConfigurator property is set to true)**
+**2) Callbacks are processed by the DashboardConfigurator on the DevExpress HTTP Handler side (the UseDashboardConfigurator property is set to true)**
 
 This is the recommended mode, as it is considerably faster and much more flexible. However, in this mode, access restriction rules defined using the default mechanisms have no effect. The access control should be performed by a custom dashboard storage implementing the **IEditableDashboardStorage** interface.
 
@@ -402,6 +412,8 @@ dashboard.LoadDashboard('1') // Load a dashboard available only to Admin.
 ```
 GET http://localhost:65252/Authorization/Dashboards/DXDD.axd?action=DashboardAction/1&_=1525787741461 404 (Not Found)
 ```
+
+![console-output](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/authorization-dashboard-404.png?raw=true)
 
 
 ### 3.3. Query Builder
