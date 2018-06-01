@@ -9,11 +9,11 @@ namespace SecurityBestPractices.UploadingBinaryImages {
 
         protected void ASPxUploadControl1_FileUploadComplete(object sender,
             DevExpress.Web.FileUploadCompleteEventArgs e) {
-            // here contentBytes should be saved to database
+            // Here contentBytes should be saved to a database
             using(var stream = e.UploadedFile.FileContent) {
                 //if(!IsValidImage(stream)) return; // this string should be uncommented to prevent vulnerability
 
-                // for demonstration purposes we will save it to file
+                // We save it to a file for demonstration purposes
                 string fileName = Server.MapPath("~/App_Data/UploadedData/avatar.jpg");
                 e.UploadedFile.SaveAs(fileName, true);
             }

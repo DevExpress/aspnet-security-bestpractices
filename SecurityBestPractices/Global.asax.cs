@@ -22,8 +22,8 @@ namespace SecurityBestPractices
 
             #region Reports
             DevExpress.XtraReports.Web.Extensions.ReportStorageWebExtension.RegisterExtensionGlobal(new ReportStorageWithAccessRules());
-            DefaultReportDesignerContainer.RegisterDataSourceWizardConnectionStringsProvider<DataSourceWizardConnectionStringsProvider>(); // provide connections for report designer
-            DefaultReportDesignerContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>(); // provide only nessesary dbtables
+            DefaultReportDesignerContainer.RegisterDataSourceWizardConnectionStringsProvider<DataSourceWizardConnectionStringsProvider>(); // Provide connections to Report Designer
+            DefaultReportDesignerContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>(); // Provide only nessesary dbtables
 
             DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Required;
             DevExpress.XtraReports.Web.ASPxReportDesigner.StaticInitialize();
@@ -36,8 +36,8 @@ namespace SecurityBestPractices
                     throw new UnauthorizedAccessException();
             };
 
-            DashboardConfigurator.Default.SetConnectionStringsProvider(new DataSourceWizardConnectionStringsProvider()); // provide connections for dashboard designer
-            DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx()); // provide only nessesary dbtables
+            DashboardConfigurator.Default.SetConnectionStringsProvider(new DataSourceWizardConnectionStringsProvider()); // Provide connections to Dashboard Designer
+            DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx()); // Provide only nessesary dbtables
             #endregion            
         }
     }

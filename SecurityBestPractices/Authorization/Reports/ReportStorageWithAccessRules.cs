@@ -22,7 +22,7 @@ namespace SecurityBestPractices.Authorization.Reports
 
             return (XtraReport)Activator.CreateInstance(type);
         }
-        // getting viewable report logic
+        // Getting viewable reports
         public static IEnumerable<string> GetViewableReportDisplayNamesForCurrentUser() {
             var identityName = GetIdentityName();
 
@@ -37,7 +37,7 @@ namespace SecurityBestPractices.Authorization.Reports
             return result;
         }
 
-        // getting editable report logic
+        // Getting editable reports
         public static IEnumerable<string> GetEditableReportNamesForCurrentUser() {
             var identityName = GetIdentityName();
 

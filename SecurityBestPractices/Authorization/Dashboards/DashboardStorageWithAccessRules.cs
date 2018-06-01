@@ -35,14 +35,14 @@ namespace SecurityBestPractices.Authorization.Dashboards {
             table.PrimaryKey = new[] { idColumn };
             dashboards.Tables.Add(table);
 
-            // register dashboard layouts here
+            // Register dashboard layouts
             var adminId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"/App_Data/AdminDashboard.xml")), "Admin Dashboard");
             var johnId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"/App_Data/JohnDashboard.xml")), "John Dashboard");
             this.publicDashboardId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(publicDashboardPath)), "Public Dashboard");
 
-            // authorization logic here
-            authDictionary.Add("Admin", new HashSet<string>(new [] { adminId, johnId, publicDashboardId })); // admin can view/edit all dashboards
-            authDictionary.Add("John", new HashSet<string>(new[] { johnId })); // john can view/edit only his dashboard
+            // Authorization logic
+            authDictionary.Add("Admin", new HashSet<string>(new [] { adminId, johnId, publicDashboardId })); // Admin can view/edit all dashboards
+            authDictionary.Add("John", new HashSet<string>(new[] { johnId })); // John can view/edit only his dashboard
         }
         string AddDashboardCore(XDocument dashboard, string dashboardName) {
             DataRow newRow = dashboards.Tables[0].NewRow();
@@ -65,7 +65,7 @@ namespace SecurityBestPractices.Authorization.Dashboards {
             return HttpContext.Current.User?.Identity?.Name;
         }
 
-        // storage implementation
+        // Storage implementation
         XDocument IDashboardStorage.LoadDashboard(string dashboardId) {
             if (!IsAuthorized(dashboardId))
                 return null;
