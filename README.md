@@ -354,7 +354,7 @@ The [DevExpress Web Dashboard](https://devexpress.github.io/dotnet-eud/dashboard
 
 **1) Callbacks are processed by an ASPx page containing the ASPxDashboard control (the [UseDashboardConfigurator](http://help.devexpress.com/#Dashboard/DevExpressDashboardWebASPxDashboard_UseDashboardConfiguratortopic) property is set to false)**
 
-Use the standard ASP.NET access restriction mechanisms:
+This mode is active by default. In this mode, you can use the standard ASP.NET access restriction mechanisms:
 
 ``` xml
 <location path="Authorization/Dashboards">
@@ -366,7 +366,6 @@ Use the standard ASP.NET access restriction mechanisms:
 </location>
 ```
 
-This mode is active by default.
 
 **2) Callbacks are processed by the Dashboard Configurator on the DevExpress HTTP Handler side (the [UseDashboardConfigurator](http://help.devexpress.com/#Dashboard/DevExpressDashboardWebASPxDashboard_UseDashboardConfiguratortopic) property is set to true)**
 
