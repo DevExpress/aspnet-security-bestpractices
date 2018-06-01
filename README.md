@@ -36,7 +36,7 @@ Take into account the following rules to mitigate this vulnerability:
 <ValidationSettings AllowedFileExtensions=".jpg, .png">
 </ValidationSettings>
 ```
-2. Disable file execution in the upload folder ([https://stackoverflow.com/questions/3776847/how-to-restrict-folder-access-in-asp-net])
+2. Disable file execution in the upload folder ([https://stackoverflow.com/questions/3776847/how-to-restrict-folder-access-in-asp-net](https://stackoverflow.com/questions/3776847/how-to-restrict-folder-access-in-asp-net))
 ``` xml
   <location path="UploadingFiles/Images">
     <system.webServer>
@@ -235,13 +235,13 @@ Normally, when you create a reporting application with access restrictions using
   </location>
 ```
 
-However, note that by restricting access to certain pages, containing the Report Viewer control, you don’t automatically protect the report files that these pages display. These files can still be accessed by the Report Viewer control's instances from other pages through client side API. Knowing a report's name, a malefactor can open it, by calling the client [OpenReport](http://help.devexpress.com/#XtraReports/DevExpressXtraReportsWebScriptsASPxClientWebDocumentViewer_OpenReporttopic) method:
+However, note that by restricting access to certain pages, containing the [Document Viewer](https://documentation.devexpress.com/XtraReports/17738/Creating-End-User-Reporting-Applications/Web-Reporting/Document-Viewer/HTML5-Document-Viewer) control, you don’t automatically protect the report files that these pages display. These files can still be accessed by the Document Viewer control's instances from other pages through client side API. Knowing a report's name, a malefactor can open it, by calling the client [OpenReport](http://help.devexpress.com/#XtraReports/DevExpressXtraReportsWebScriptsASPxClientWebDocumentViewer_OpenReporttopic) method:
 
 ``` js
 documentViewer.OpenReport("ReportTypeName"); 
 ```
 
-The best practice when developing a web reporting application is to define authorization rules in server code by implementing a custom report storage derived from the [ReportStorageWebExtension](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebExtensionsReportStorageWebExtensiontopic) class. Based on your use-case scenario, the following customizations are required:
+The best practice when developing a web reporting application is to define authorization rules in server code by implementing a custom report storage derived from the [ReportStorageWebExtension](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebExtensionsReportStorageWebExtensiontopic) class. You can copy the reference implementation of from the example project's [ReportStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs) file to your application and fine-tune it for your needs. Based on your use-case scenario, the following customizations are required:
 
 
 #### A. Viewing Reports
@@ -279,7 +279,6 @@ public override byte[] GetData(string url) {
     }
 }
 ```
-You can copy the reference implementation from the example project's [ReportStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs) file to your application and fine-tune it for your needs.
 
 
 #### B. Editing Reports
@@ -321,9 +320,16 @@ protected void Page_Load(object sender, EventArgs e) {
         Response.Redirect("~/Authorization/Reports/ReportViewerPage.aspx");
 }
 ``` 
-You can copy the reference implementation from the example project's [ReportStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs) file to your application and fine-tune it for your needs.
 
-#### Making Sure that Authentication Rules are Applied
+
+#### Register the Custom Report Storage
+After implementing you custom report storage with access rules, register it in the [Global.asax.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Global.asax.cs) file: 
+
+``` cs
+DevExpress.XtraReports.Web.Extensions.ReportStorageWebExtension.RegisterExtensionGlobal(new ReportStorageWithAccessRules());
+```     
+
+#### Make Sure that Authentication Rules are Applied
 In the example project, you can check whether the customization has effect using the following steps:
 * Open the [PublicReportPage.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Authorization/PublicPages/PublicReportPage.aspx) page with a Report Viewer without logging in.
 * Try to open a report with restricted access using client API in the browser console:
@@ -335,9 +341,16 @@ The browser console will respond with the following error.
 ![console-output](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/authoriazation-reports-accessdenied.png?raw=true)
 
 
+#### Restrict Access to Data Conntections and Data Tables
+The [Report Designer](https://documentation.devexpress.com/XtraReports/17103/Creating-End-User-Reporting-Applications/Web-Reporting/Report-Designer) control allows an end-user to browse available data connection and data tables using the integrated [Query Builder](https://documentation.devexpress.com/AspNet/114930/ASP-NET-WebForms-Controls/Query-Builder). Refer to the [Query Builder](#33-query-builder) subsection to learn how to restrict access to this information based on authorization rules.
+
+
+
+
+
 ### 3.2. Dashboard
 
-The DevExpress Dashboards suite can operate in one of the two supported modes:
+The [DevExpress Web Dashboard](https://devexpress.github.io/dotnet-eud/dashboard-for-web/articles/index.html) can operate in one of the two supported modes:
 
 **1) Callbacks are processed by an ASPx page containing the ASPxDashboard control (the [UseDashboardConfigurator](http://help.devexpress.com/#Dashboard/DevExpressDashboardWebASPxDashboard_UseDashboardConfiguratortopic) property is set to false)**
 
@@ -357,7 +370,7 @@ This mode is active by default.
 
 **2) Callbacks are processed by the Dashboard Configurator on the DevExpress HTTP Handler side (the [UseDashboardConfigurator](http://help.devexpress.com/#Dashboard/DevExpressDashboardWebASPxDashboard_UseDashboardConfiguratortopic) property is set to true)**
 
-This is the recommended mode, as it is considerably faster and much more flexible. However, in this mode, access restriction rules defined using the default mechanisms have no effect. The access control should be performed by a custom dashboard storage implementing the **IEditableDashboardStorage** interface.
+This is the recommended mode, as it is considerably faster and much more flexible. However, in this mode, access restriction rules defined using the default mechanisms have no effect. The access control should be performed by a custom dashboard storage implementing the [IEditableDashboardStorage](https://docs.devexpress.com/Dashboard/DevExpress.DashboardWeb.IEditableDashboardStorage?tabs=tabid-csharp%2Ctabid-T392813_7_52373613) interface.
 
 You can copy the reference implementation of a dashboard storage from the example project's [DashboardStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices/Authorization/Dashboards/DashboardStorageWithAccessRules.cs) and fine-tune it for your needs.
 
@@ -414,10 +427,14 @@ GET http://localhost:65252/Authorization/Dashboards/DXDD.axd?action=DashboardAct
 
 ![console-output](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/authorization-dashboard-404.png?raw=true)
 
+#### Restrict Access to Data Conntections and Data Tables
+The Web Dashboard control allows an end-user to browse available data connection and data tables using the integrated [Query Builder](https://documentation.devexpress.com/AspNet/114930/ASP-NET-WebForms-Controls/Query-Builder). Refer to the [Query Builder](#33-query-builder) subsection to learn how to restrict access to this information based on authorization rules.
+
+
 
 ### 3.3. Query Builder
 
-The standalone Query Builder as well as the Query Builder integrated into the Report and Dashboard allows an end-user to browse a web application's data connections and a data tables available through these connections. In a web application with access control, you need to restrict an end-user’s access to the available connections and data tables in code.
+The standalone [Query Builder](https://documentation.devexpress.com/AspNet/114930/ASP-NET-WebForms-Controls/Query-Builder) as well as the Query Builder integrated into the Report and Dashboard designers allows an end-user to browse a web application's data connections and a data tables available through these connections. In a web application with access control, you need to restrict an end-user’s access to the available connections and data tables in code.
 
 To restrict the access to connection strings, implement a custom connection string provider:
 
