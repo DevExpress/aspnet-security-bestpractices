@@ -22,13 +22,6 @@ namespace SecurityBestPractices.Authorization.Reports
 
             var editableReportNames = ReportStorageWithAccessRules.GetEditableReportNamesForCurrentUser();
             EditButton.Enabled = editableReportNames.Contains(selectedItemText);
-
-            // copy solution
-            //IsCurrentUserAuthorizedForViewReport(reportUrl) // reportUrl = "Admin Report"
-
-            // for editing
-            // GetAvailableReportsForCurrentUser()
-            //IsCurrentUserAuthorizedForEditReport(reportUrl)
         }
 
         protected void ReportName_OnSelectedIndexChanged(object sender, EventArgs e) {

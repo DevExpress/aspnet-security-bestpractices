@@ -13,9 +13,9 @@ namespace SecurityBestPractices.Authorization {
             Dictionary<string, string> connections =
                 new Dictionary<string, string> { { "nwindConnection", "NWind database" } };
 
-            // Customize the loaded connections list.  
+            // Customize the connections list for your needs
 
-            // here restrict access
+            // Access restriction logic
             //if(GetIdentityName() == "Admin")
             //    connections.Add("secretConnection", "Admin only database");
 

@@ -9,9 +9,8 @@ namespace SecurityBestPractices.UploadingBinaryImages {
 
         protected void ASPxButton1_Click(object sender, EventArgs e) {
             byte[] contentBytes = ASPxBinaryImage1.ContentBytes;
-            // here contentBytes should be saved to database
-
-            // for demonstration purposes we will save it to file
+            // Here contentBytes should be saved to a database
+            // We will save it to a file for demonstration purposes
             string fileName = Server.MapPath("~/App_Data/UploadedData/avatar.jpg");
             File.WriteAllBytes(fileName, contentBytes);
         }

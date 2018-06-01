@@ -7,8 +7,8 @@ namespace SecurityBestPractices.UploadingFiles {
     public partial class UploadControl : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e) {
-            // uncomment the following line to prevent loading of executable(aspx) files
-//        uploadControl.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
+            // Uncomment the line below to prevent loading executable(aspx) files
+            //uploadControl.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
         }
 
         protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
@@ -18,7 +18,7 @@ namespace SecurityBestPractices.UploadingFiles {
                     if(file.FileName != "") {
                         string fileName = string.Format("{0}{1}", MapPath("~/UploadingFiles/Images/"), file.FileName);
                         using(var stream = file.FileContent) {
-                            // in case additional checks are needed do it here before actual file saving
+                            // In case additional checks are needed perform them here before saving the file
                             //if(!IsValidImage(stream)) throw new Exception("Validation failed");
                         }
 

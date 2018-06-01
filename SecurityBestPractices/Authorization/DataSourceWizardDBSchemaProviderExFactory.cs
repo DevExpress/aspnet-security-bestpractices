@@ -12,7 +12,7 @@ namespace SecurityBestPractices.Authorization {
 
     public class DBSchemaProviderEx : IDBSchemaProviderEx {
         public DBTable[] GetTables(SqlDataConnection connection, params string[] tableList) {
-            // here you can check permission
+            // Check permissions
 
             var dbTables = connection.GetDBSchema().Tables;
             return dbTables.Where(t => t.Name == "Categories" || t.Name == "Products").ToArray();

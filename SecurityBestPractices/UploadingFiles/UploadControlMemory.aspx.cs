@@ -25,7 +25,7 @@ namespace SecurityBestPractices.UploadingFiles {
                 // Bad approach - possible Denial of Service
                 DoProcessing(file.FileBytes);
             
-                // good approach - use stream for large files
+                // Good approach - use stream for large files
                 //using (var stream = file.FileContent) {
                 //    DoProcessing(stream);
                 //}
