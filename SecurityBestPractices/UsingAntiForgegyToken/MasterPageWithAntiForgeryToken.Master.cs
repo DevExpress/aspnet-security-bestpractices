@@ -15,14 +15,5 @@ namespace SecurityBestPractices.UsingAntiForgegyToken {
             if (IsPostBack)
                 System.Web.Helpers.AntiForgery.Validate();
         }
-        //protected void Page_Init(object sender, EventArgs e) {
-        //    if (IsPostBack) {
-        //        try {
-        //            System.Web.Helpers.AntiForgery.Validate();
-        //        } catch {
-        //            throw new Exception("<b>aaa<b>");
-        //        }
-        //    }
-        //}
     }
 }
