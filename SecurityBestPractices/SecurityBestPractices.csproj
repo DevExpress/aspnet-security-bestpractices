@@ -241,6 +241,7 @@
     <Compile Include="Authorization\PublicPages\PublicReportPage.aspx.designer.cs">
       <DependentUpon>PublicReportPage.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Authorization\Reports\OperationLogger.cs" />
     <Compile Include="Authorization\Reports\ReportStorageWithAccessRules.cs" />
     <Compile Include="Authorization\Reports\JohnReport.cs">
       <SubType>Component</SubType>

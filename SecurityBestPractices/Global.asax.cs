@@ -21,6 +21,12 @@ namespace SecurityBestPractices
             #endregion            
 
             #region Reports
+            DefaultWebDocumentViewerContainer.Register<IExportingAuthorizationService, OperationLogger>();
+            DefaultWebDocumentViewerContainer.Register<WebDocumentViewerOperationLogger, OperationLogger>();
+            DefaultWebDocumentViewerContainer.Register<IWebDocumentViewerAuthorizationService, OperationLogger>();
+
+            DefaultReportDesignerContainer.Register<WebDocumentViewerOperationLogger, OperationLogger>();
+
             DevExpress.XtraReports.Web.Extensions.ReportStorageWebExtension.RegisterExtensionGlobal(new ReportStorageWithAccessRules());
             DefaultReportDesignerContainer.RegisterDataSourceWizardConnectionStringsProvider<DataSourceWizardConnectionStringsProvider>(); // Provide connections to Report Designer
             DefaultReportDesignerContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>(); // Provide only nessesary dbtables
