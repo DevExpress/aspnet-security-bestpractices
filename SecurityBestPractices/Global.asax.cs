@@ -2,8 +2,8 @@
 using DevExpress.DashboardWeb;
 using DevExpress.DataAccess.Web;
 using DevExpress.XtraReports.Web.QueryBuilder;
-using DevExpress.XtraReports.Web.QueryBuilder.Native;
 using DevExpress.XtraReports.Web.ReportDesigner;
+using DevExpress.XtraReports.Web.WebDocumentViewer;
 using SecurityBestPractices.Authorization;
 using SecurityBestPractices.Authorization.Dashboards;
 using SecurityBestPractices.Authorization.Reports;
