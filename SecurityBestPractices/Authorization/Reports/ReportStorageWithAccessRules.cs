@@ -6,8 +6,7 @@ using System.Web;
 using DevExpress.XtraReports.UI;
 using DevExpress.XtraReports.Web.Extensions;
 
-namespace SecurityBestPractices.Authorization.Reports
-{
+namespace SecurityBestPractices.Authorization.Reports {
     public class ReportStorageWithAccessRules : ReportStorageWebExtension {
         private static readonly Dictionary<Type, string> reports = new Dictionary<Type, string> {
             {typeof(PublicReport), "Public Report"},
@@ -26,13 +25,15 @@ namespace SecurityBestPractices.Authorization.Reports
         public static IEnumerable<string> GetViewableReportDisplayNamesForCurrentUser() {
             var identityName = GetIdentityName();
 
-            var result = new List<string> { reports[typeof(PublicReport)] }; // for unauthenticated users (ie public)
+            var result = new List<string>(); 
 
             if (identityName == "Admin") {
                 result.AddRange(new[] { reports[typeof(AdminReport)], reports[typeof(JohnReport)] });
             } else if (identityName == "John") {
                 result.Add(reports[typeof(JohnReport)]);
             }
+
+            result.Add(reports[typeof(PublicReport)]); // for unauthenticated users (ie public)
 
             return result;
         }
@@ -59,11 +60,12 @@ namespace SecurityBestPractices.Authorization.Reports
         }
         public override byte[] GetData(string url) {
             var reportNames = GetViewableReportDisplayNamesForCurrentUser();
-            if (!reportNames.Contains(url))
+            if(!reportNames.Contains(url))
                 throw new UnauthorizedAccessException();
 
+            // TODO: Put your logic to get bytes from DB
             XtraReport publicReport = CreateReportByDisplayName(url);
-            using (MemoryStream ms = new MemoryStream()) {
+            using(MemoryStream ms = new MemoryStream()) {
                 publicReport.SaveLayoutToXml(ms);
                 return ms.GetBuffer();
             }
@@ -83,10 +85,12 @@ namespace SecurityBestPractices.Authorization.Reports
         }
 
         public override void SetData(XtraReport report, string url) {
+            // TODO: Put your logic to save bytes to DB
             // Save report layout
             // https://documentation.devexpress.com/XtraReports/17553/Creating-End-User-Reporting-Applications/Web-Reporting/Report-Designer/API-and-Customization/Implementing-a-Report-Storage
         }
         public override string SetNewData(XtraReport report, string defaultUrl) {
+            // TODO: Put your logic to save bytes to DB
             // Save new report layout and return report's URL
             // https://documentation.devexpress.com/XtraReports/17553/Creating-End-User-Reporting-Applications/Web-Reporting/Report-Designer/API-and-Customization/Implementing-a-Report-Storage
             return "New name";

@@ -141,7 +141,7 @@ namespace SecurityBestPractices.Authorization.Reports {
                 return false;
 
             lock(authDictionary)
-                return authDictionary["Public"][dictionaryName].Contains(id) || authDictionary[user][dictionaryName].Contains(id);
+                return authDictionary["Public"][dictionaryName].Contains(id) || !string.IsNullOrEmpty(user) && authDictionary[user][dictionaryName].Contains(id);
         }
 
         public bool CanReadExportedDocument(string id) {

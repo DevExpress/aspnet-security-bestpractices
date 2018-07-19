@@ -4,9 +4,6 @@ using System.Data;
 using System.Web;
 using System.Xml.Linq;
 using DevExpress.DashboardWeb;
-using DevExpress.DataAccess.ConnectionParameters;
-using DevExpress.DataAccess.Native;
-using DevExpress.DataAccess.Web;
 
 namespace SecurityBestPractices.Authorization.Dashboards {
     public class DashboardStorageWithAccessRules : IEditableDashboardStorage {
@@ -16,9 +13,6 @@ namespace SecurityBestPractices.Authorization.Dashboards {
         const string nameColumn = "DashboardName";
         const string dashboardIDColumn = "DashboardID";
         readonly Dictionary<string, HashSet<string>> authDictionary = new Dictionary<string, HashSet<string>>();
-
-        readonly string publicDashboardId;
-        readonly string publicDashboardPath = @"/App_Data/PublicDashboard.xml";
 
         public DashboardStorageWithAccessRules() {
             DataTable table = new DataTable("Dashboards");
@@ -35,19 +29,19 @@ namespace SecurityBestPractices.Authorization.Dashboards {
             table.PrimaryKey = new[] { idColumn };
             dashboards.Tables.Add(table);
 
-            // Register dashboard layouts
+            // Register dashboard layouts from you data source
+            // Put yout logic to  get dashboard layouts from Database, for example
             var adminId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"/App_Data/AdminDashboard.xml")), "Admin Dashboard");
             var johnId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"/App_Data/JohnDashboard.xml")), "John Dashboard");
-            this.publicDashboardId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(publicDashboardPath)), "Public Dashboard");
 
             // Authorization logic
-            authDictionary.Add("Admin", new HashSet<string>(new [] { adminId, johnId, publicDashboardId })); // Admin can view/edit all dashboards
+            authDictionary.Add("Admin", new HashSet<string>(new [] { adminId, johnId })); // Admin can view/edit all dashboards
             authDictionary.Add("John", new HashSet<string>(new[] { johnId })); // John can view/edit only his dashboard
         }
         string AddDashboardCore(XDocument dashboard, string dashboardName) {
             DataRow newRow = dashboards.Tables[0].NewRow();
             newRow[nameColumn] = dashboardName;
-            newRow[dashboardLayoutColumn] = dashboard;
+            newRow[dashboardLayoutColumn] = dashboard; 
             dashboards.Tables[0].Rows.Add(newRow);
             return newRow[dashboardIDColumn].ToString();
         }
@@ -69,6 +63,8 @@ namespace SecurityBestPractices.Authorization.Dashboards {
         XDocument IDashboardStorage.LoadDashboard(string dashboardId) {
             if (!IsAuthorized(dashboardId))
                 return null;
+
+            // Put yout logic to get dashboard bytes from Database by <dashboardId>
 
             DataRow currentRow = dashboards.Tables[0].Rows.Find(dashboardId);
             if (currentRow == null)
@@ -99,9 +95,7 @@ namespace SecurityBestPractices.Authorization.Dashboards {
             if (!IsAuthorized(dashboardId))
                 return;
 
-            if(dashboardId == this.publicDashboardId) {
-                dashboard.Save(HttpContext.Current.Server.MapPath(publicDashboardPath));
-            }
+            // Put yout logic to save dashboard bytes to Database by <dashboardId>
 
             DataRow currentRow = dashboards.Tables[0].Rows.Find(dashboardId);
             if (currentRow == null)
@@ -110,17 +104,17 @@ namespace SecurityBestPractices.Authorization.Dashboards {
             currentRow[dashboardLayoutColumn] = dashboard;
         }
         string IEditableDashboardStorage.AddDashboard(XDocument dashboard, string dashboardName) {
-            var id = AddDashboardCore(dashboard, dashboardName);
             var identityName = GetIdentityName();
 
             if(string.IsNullOrEmpty(identityName))
                 throw new UnauthorizedAccessException();
 
-            if (!authDictionary.ContainsKey(identityName)) {
+            if(!authDictionary.ContainsKey(identityName)) {
                 authDictionary.Add(identityName, new HashSet<string>());
             }
-            authDictionary[identityName].Add(id);
 
+            var id = AddDashboardCore(dashboard, dashboardName);
+            authDictionary[identityName].Add(id);
             return id;
         }
     }

@@ -16,9 +16,9 @@ namespace SecurityBestPractices
             #region Query builder
             DefaultQueryBuilderContainer.Register<IDataSourceWizardConnectionStringsProvider, DataSourceWizardConnectionStringsProvider>();
             DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>();
-            
-            //DevExpress.XtraReports.Web.ASPxQueryBuilder.StaticInitialize();
-            #endregion            
+
+            //DevExpress.XtraReports.Web.ASPxQueryBuilder.StaticInitialize(); TODO: do we need it ?
+            #endregion
 
             #region Reports
             DefaultWebDocumentViewerContainer.Register<IExportingAuthorizationService, OperationLogger>();
@@ -36,9 +36,10 @@ namespace SecurityBestPractices
             #endregion           
 
             #region Dashboards
-            DashboardConfigurator.Default.SetDashboardStorage(new DashboardStorageWithAccessRules());
+            var service = new DashboardStorageWithAccessRules();
+            DashboardConfigurator.Default.SetDashboardStorage(service);
             DashboardConfigurator.Default.CustomParameters += (o, args) => {
-                if (!new DashboardStorageWithAccessRules().IsAuthorized(args.DashboardId))
+                if (!service.IsAuthorized(args.DashboardId))
                     throw new UnauthorizedAccessException();
             };
 
