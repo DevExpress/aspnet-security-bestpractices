@@ -12,7 +12,7 @@ namespace SecurityBestPractices.Authorization.QueryBuilder
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            ASPxQueryBuilder1.OpenConnection("nwindConnection");
+            ASPxQueryBuilder1.OpenConnection("nwindConnectionXpo");
         }
     }
 }

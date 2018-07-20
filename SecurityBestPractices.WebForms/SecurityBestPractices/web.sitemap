@@ -14,12 +14,12 @@
     <siteMapNode url="" title="3. Authorization">
       <siteMapNode url="" title="3.1. Reporting">
         <siteMapNode url="~/Authorization/PublicPages/PublicReportPage.aspx" title="Public Report" />
-        <siteMapNode url="~/Authorization/Reports/ReportViewerPage.aspx" title="ReportViewer" />
-        <siteMapNode url="~/Authorization/Reports/ReportDesignerPage.aspx" title="ReportDesigner (note: entering via ReportViewer)" />
+        <siteMapNode url="~/Authorization/Reports/ReportViewerPage.aspx" title="ReportViewer (with ability to edit report via Report Designer)" />
+        <!--<siteMapNode url="~/Authorization/Reports/ReportDesignerPage.aspx" title="ReportDesigner (note: entering via ReportViewer)" />-->
       </siteMapNode>
       <siteMapNode url="" title="3.2. Dashboard">
-        <siteMapNode url="~/Authorization/PublicPages/PublicDashboardPage.aspx" title="Public Dashboard" />
-        <siteMapNode url="~/Authorization/Dashboards/DashboardPage.aspx" title="Dashboard" />
+        <siteMapNode url="~/Authorization/PublicPages/PublicDashboardPage.aspx" title="Public Dashboard (View only)" />
+        <siteMapNode url="~/Authorization/Dashboards/DashboardPage.aspx" title="Dashboard (Editable)" />
       </siteMapNode>
       <siteMapNode url="" title="3.3. Query Builder">
         <siteMapNode url="~/Authorization/QueryBuilder/QueryBuilder.aspx" title="QueryBuilder" />

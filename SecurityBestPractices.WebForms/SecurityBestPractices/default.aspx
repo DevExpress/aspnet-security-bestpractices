@@ -8,7 +8,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <dx:ASPxSiteMapControl runat="server" DataSourceID="SiteMapDataSource">
+        <dx:ASPxSiteMapControl runat="server" DataSourceID="SiteMapDataSource" Font-Size="115%" Theme="" Border-BorderStyle="None" ForeColor="Black">
         </dx:ASPxSiteMapControl>
         <dx:ASPxSiteMapDataSource ShowStartingNode="true" runat="server" ID="SiteMapDataSource" SiteMapFileName="~/web.sitemap"></dx:ASPxSiteMapDataSource>
     </form>

@@ -8,7 +8,7 @@ namespace SecurityBestPractices.Authorization {
 
         public Dictionary<string, string> GetConnectionDescriptions() {
             Dictionary<string, string> connections =
-                new Dictionary<string, string> { { "nwindConnection", "NWind database" } };
+                new Dictionary<string, string> { { "nwindConnectionXpo", "NWind database" } };
 
             // Customize the connections list for your needs
 

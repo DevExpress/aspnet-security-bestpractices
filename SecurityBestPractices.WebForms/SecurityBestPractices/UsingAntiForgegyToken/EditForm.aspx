@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/UsingAntiForgegyToken/MasterPageWithAntiForgeryToken.Master" AutoEventWireup="true" CodeBehind="EditForm.aspx.cs" Inherits="SecurityBestPractices.UsingAntiForgegyToken.EditForm" %>
+﻿<%@ Page Title="Using AntiForgegyToken" Language="C#" MasterPageFile="~/UsingAntiForgegyToken/MasterPageWithAntiForgeryToken.Master" AutoEventWireup="true" CodeBehind="EditForm.aspx.cs" Inherits="SecurityBestPractices.UsingAntiForgegyToken.EditForm" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -24,7 +24,7 @@
             </dx:GridViewDataTextColumn>
         </Columns>
     </dx:ASPxGridView>
-    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" DeleteCommand="DELETE FROM [Products] WHERE [ProductID] = ?" InsertCommand="INSERT INTO [Products] ([ProductID], [ProductName], [UnitPrice]) VALUES (?, ?, ?)" ProviderName="<%$ ConnectionStrings:ConnectionString.ProviderName %>" SelectCommand="SELECT [ProductID], [ProductName], [UnitPrice] FROM [Products]" UpdateCommand="UPDATE [Products] SET [ProductName] = ?, [UnitPrice] = ? WHERE [ProductID] = ?">
+    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:nwindConnection %>" DeleteCommand="DELETE FROM [Products] WHERE [ProductID] = ?" InsertCommand="INSERT INTO [Products] ([ProductID], [ProductName], [UnitPrice]) VALUES (?, ?, ?)" ProviderName="<%$ ConnectionStrings:nwindConnection.ProviderName %>" SelectCommand="SELECT [ProductID], [ProductName], [UnitPrice] FROM [Products]" UpdateCommand="UPDATE [Products] SET [ProductName] = ?, [UnitPrice] = ? WHERE [ProductID] = ?">
         <DeleteParameters>
             <asp:Parameter Name="ProductID" Type="Int32" />
         </DeleteParameters>

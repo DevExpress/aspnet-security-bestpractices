@@ -230,7 +230,7 @@ public class PublicReport : DevExpress.XtraReports.UI.XtraReport {
             // 
             // sqlDataSource1
             // 
-            this.sqlDataSource1.ConnectionName = "nwindConnection";
+            this.sqlDataSource1.ConnectionName = "nwindConnectionXpo";
             this.sqlDataSource1.Name = "sqlDataSource1";
             columnExpression1.ColumnName = "CategoryID";
             table1.Name = "Categories";
