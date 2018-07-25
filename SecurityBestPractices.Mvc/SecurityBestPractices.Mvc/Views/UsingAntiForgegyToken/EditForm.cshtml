@@ -1,0 +1,18 @@
+﻿@model IEnumerable
+
+<script>
+    // sending __RequestVerificationToken value manually
+    $.ajaxPrefilter(function (options, originalOptions, xhr) {
+        var tokenValue = $('input:hidden[name="__RequestVerificationToken"]').val();
+        if (tokenValue && options && options.data && options.data.indexOf('RequestVerificationToken') === -1)
+            options.data += "&__RequestVerificationToken=" + tokenValue;
+    });
+</script>
+
+<h2>Editable Grid</h2>
+<p>Note: you should be logged in to edit the grid</p>
+
+@using(Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.Partial("EditFormPartial", Model)
+}

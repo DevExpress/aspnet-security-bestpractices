@@ -193,11 +193,6 @@
     <Content Include="App_Data\AdminDashboard.xml" />
     <Content Include="App_Data\JohnDashboard.xml" />
     <Content Include="App_Data\nwind.mdb" />
-    <Content Include="App_Data\NWind1.mdf" />
-    <Content Include="App_Data\NWind1_log.ldf">
-      <DependentUpon>NWind1.mdf</DependentUpon>
-    </Content>
-    <Content Include="App_Data\PublicDashboard1.xml" />
     <Content Include="App_Data\PublicDashboard.xml" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
@@ -254,6 +249,8 @@
     <Content Include="Views\Authorization\Dashboards\_Layout.cshtml" />
     <Content Include="Views\Authorization\Reports\_ViewStart.cshtml" />
     <Content Include="Views\Authorization\Reports\_Layout.cshtml" />
+    <Content Include="Views\UsingAntiForgegyToken\EditForm.cshtml" />
+    <Content Include="Views\UsingAntiForgegyToken\EditFormPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -266,6 +263,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\Authorization\AuthorizationController.QueryBuilder.cs" />
+    <Compile Include="Controllers\UsingAntiForgegyToken\UsingAntiForgegyTokenController.cs" />
+    <Compile Include="Models\EditFormModel.cs" />
     <Compile Include="Services\Dashboards\DashboardStorageWithAccessRules.cs" />
     <Compile Include="Services\DataSourceWizardConnectionStringsProvider.cs" />
     <Compile Include="Services\DataSourceWizardDBSchemaProviderExFactory.cs" />
@@ -275,6 +274,7 @@
     <Compile Include="Reports\JohnReport.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Services\IdentityHelper.cs" />
     <Compile Include="Services\Reports\OperationLogger.cs" />
     <Compile Include="Reports\PublicReport.cs">
       <SubType>Component</SubType>

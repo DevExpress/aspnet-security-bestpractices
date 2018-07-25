@@ -47,16 +47,12 @@ namespace SecurityBestPractices.Mvc.Services.Dashboards {
         }
 
         public bool IsAuthorized(string dashboardId) {
-            var identityName = GetIdentityName();
+            var identityName = IdentityHelper.GetIdentityName();
             if(!string.IsNullOrEmpty(identityName)) {
                 return authDictionary.ContainsKey(identityName) && authDictionary[identityName].Contains(dashboardId);
             }
 
             return false;
-        }
-
-        static string GetIdentityName() {
-            return HttpContext.Current.User?.Identity?.Name;
         }
 
         // Storage implementation
@@ -104,7 +100,7 @@ namespace SecurityBestPractices.Mvc.Services.Dashboards {
             currentRow[dashboardLayoutColumn] = dashboard;
         }
         string IEditableDashboardStorage.AddDashboard(XDocument dashboard, string dashboardName) {
-            var identityName = GetIdentityName();
+            var identityName = IdentityHelper.GetIdentityName();
 
             if(string.IsNullOrEmpty(identityName))
                 throw new UnauthorizedAccessException();

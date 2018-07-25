@@ -21,7 +21,7 @@ namespace SecurityBestPractices.Mvc {
             DefaultQueryBuilderContainer.Register<IDataSourceWizardConnectionStringsProvider, DataSourceWizardConnectionStringsProvider>();
             DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>();
 
-            //MVCxQueryBuilder.StaticInitialize(); 
+            // MVCxQueryBuilder.StaticInitialize(); // Don't need this line if ASPxReportDesigner.StaticInitialize() has been called
             #endregion
 
             #region Reports

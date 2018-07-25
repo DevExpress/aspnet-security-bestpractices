@@ -39,7 +39,7 @@ namespace SecurityBestPractices.Mvc.Services.Reports {
 
         public override void ReportOpening(string reportId, string documentId, XtraReport report) {
             if(report == null) {
-                var identityName = GetIdentityName();
+                var identityName = IdentityHelper.GetIdentityName();
                 if(string.IsNullOrEmpty(identityName))
                     identityName = "Public";
 
@@ -120,10 +120,6 @@ namespace SecurityBestPractices.Mvc.Services.Reports {
 
         #endregion IWebDocumentViewerAuthorizationService
 
-        static string GetIdentityName() {
-            return HttpContext.Current.User?.Identity?.Name;
-        }
-
         void SaveUsedEntityId(string dictionaryName, string user, string id) {
             if(string.IsNullOrEmpty(id))
                 return;
@@ -133,7 +129,7 @@ namespace SecurityBestPractices.Mvc.Services.Reports {
         }
 
         bool IsEntityAuthorizedForCurrentUser(string dictionaryName, string id) {
-            return IsEntityAuthorized(GetIdentityName(), dictionaryName, id);
+            return IsEntityAuthorized(IdentityHelper.GetIdentityName(), dictionaryName, id);
         }
 
         bool IsEntityAuthorized(string user, string dictionaryName, string id) {

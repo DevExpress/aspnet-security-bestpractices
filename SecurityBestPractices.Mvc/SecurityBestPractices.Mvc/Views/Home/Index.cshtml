@@ -8,7 +8,6 @@
                 <ul>
                     <li>@Html.RouteLink("Public Report", "ReportsAuthorization", new { controller = "Authorization", action = "PublicReport" })</li>
                     <li>@Html.RouteLink("Report Viewer", "ReportsAuthorization", new { controller = "Authorization", action = "ReportViewer" }) (with ability to edit report via Report Designer)</li>
-                    @*<li>@Html.RouteLink("ReportDesigner (note: entering via ReportViewer)", "ReportsAuthorization", new { controller = "Authorization", action = "ReportDesigner" })</li>*@
                 </ul>
             </li>
             <li>
@@ -22,10 +21,14 @@
             <li>
                 <h3>Query Builder</h3>
                 <ul>
-                    @*<li>@Html.RouteLink("Query Builder", "QueryBuilderAuthorization", new { controller = "Authorization", action = "QueryBuilder" })</li>*@
                     <li>@Html.ActionLink("Query Builder", "QueryBuilder", "Authorization")</li>
                 </ul>
             </li>
+        </ul>
+        
+        <h2>4. UsingAntiForgegyToken</h2>
+        <ul>
+            <li>@Html.ActionLink("Using AntiForgegyToken", "EditForm", "UsingAntiForgegyToken")</li>
         </ul>
     </li>
 </ul>

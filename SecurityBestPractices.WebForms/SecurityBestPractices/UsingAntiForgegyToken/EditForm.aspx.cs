@@ -8,7 +8,7 @@ using System.Web.UI.WebControls;
 namespace SecurityBestPractices.UsingAntiForgegyToken {
     public partial class EditForm : System.Web.UI.Page {
         protected void UpdateButton_Click(object sender, EventArgs e) {
-            // ChangeUserEmail(EmailTextBox.Text);
+            // if (ChangeUserEmail(EmailTextBox.Text))
             UpdateStatusLabel.Text = "Email is updated.";
         }
     }

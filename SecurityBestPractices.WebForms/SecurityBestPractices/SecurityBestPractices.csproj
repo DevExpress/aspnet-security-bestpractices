@@ -201,6 +201,7 @@
     <Content Include="Login.aspx" />
     <Content Include="Site.Master" />
     <Content Include="UsingAntiForgegyToken\MasterPageWithAntiForgeryToken.Master" />
+    <Content Include="web.sitemap" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
