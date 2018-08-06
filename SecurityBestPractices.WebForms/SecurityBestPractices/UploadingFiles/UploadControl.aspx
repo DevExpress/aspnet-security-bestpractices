@@ -10,7 +10,10 @@
     <form id="form1" runat="server">
         <div>
             <dx:ASPxUploadControl ID="uploadControl" runat="server" OnFilesUploadComplete="uploadControl_FilesUploadComplete" 
-                                  ShowProgressPanel="True" ShowUploadButton="True" UploadMode="Auto" Width="280px">
+                                  ShowProgressPanel="True" ShowUploadButton="True" UploadMode="Auto" Width="280px" >
+<%--Uncomment the tag below to prevent loading executable(aspx) files--%>
+<%--<ValidationSettings AllowedFileExtensions =".jpg,.png">
+                </ValidationSettings>--%>
             </dx:ASPxUploadControl>
         </div>
     </form>

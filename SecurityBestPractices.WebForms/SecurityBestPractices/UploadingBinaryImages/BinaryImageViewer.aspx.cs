@@ -10,9 +10,9 @@ namespace SecurityBestPractices.UploadingBinaryImages {
             // Now 'image' contains harmfull html: "<body onload=\'alert(1)\'></body>"
 
             Response.ClearHeaders();
-            Response.ContentType = "image";
-            // Response.ContentType = "image/jpeg"; // Use this line to prevent the vulnerability
-            // Response.Headers.Add("X-Content-Type-Options", "nosniff"); // Use this line to prevent the vulnerability
+            //Response.ContentType = "image"; // It is not secure
+            Response.ContentType = "image/jpeg"; // Specify content-type to prevent the vulnerability
+            Response.Headers.Add("X-Content-Type-Options", "nosniff"); // Additional valitation 
 
             using(MemoryStream ms = new MemoryStream(image))
                 ms.WriteTo(Response.OutputStream);

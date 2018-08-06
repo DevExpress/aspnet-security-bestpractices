@@ -3,10 +3,8 @@ using System.IO;
 using DevExpress.Web;
 
 namespace SecurityBestPractices.UploadingFiles {
-    public partial class UploadControlMemory : System.Web.UI.Page
-    {
-        protected void Page_Load(object sender, EventArgs e)
-        {
+    public partial class UploadControlMemory : System.Web.UI.Page {
+        protected void Page_Load(object sender, EventArgs e) {
 
         }
 
@@ -21,15 +19,15 @@ namespace SecurityBestPractices.UploadingFiles {
         protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
             for(int i = 0; i < uploadControl.UploadedFiles.Length; i++) {
                 UploadedFile file = uploadControl.UploadedFiles[i];
+                if(file.IsValid) {
+                    // Bad approach - possible Denial of Service
+                    // DoProcessing(file.FileBytes);
 
-                // Bad approach - possible Denial of Service
-                DoProcessing(file.FileBytes);
-            
-                // Good approach - use stream for large files
-                //using (var stream = file.FileContent) {
-                //    DoProcessing(stream);
-                //}
-
+                    // Good approach - use stream for large files
+                    using(var stream = file.FileContent) {
+                        DoProcessing(stream);
+                    }
+                }
             }
         }
     }

@@ -15,24 +15,13 @@ namespace SecurityBestPractices.UploadingFiles {
             if(uploadControl.UploadedFiles != null && uploadControl.UploadedFiles.Length > 0) {
                 for(int i = 0; i < uploadControl.UploadedFiles.Length; i++) {
                     UploadedFile file = uploadControl.UploadedFiles[i];
-                    if(file.FileName != "") {
+                    if(file.IsValid) {
                         string fileName = string.Format("{0}{1}", MapPath("~/UploadingFiles/Processing/"),
                             Path.GetRandomFileName() + ".tmp");
                         file.SaveAs(fileName, true);
                         // DoFileProcessing(fileName);
                     }
                 }
-            }
-        }
-
-        static bool IsValidImage(Stream stream) {
-            try {
-                using(var image = Image.FromStream(stream)) {
-                    return true;
-                }
-            }
-            catch(Exception) {
-                return false;
             }
         }
     }
