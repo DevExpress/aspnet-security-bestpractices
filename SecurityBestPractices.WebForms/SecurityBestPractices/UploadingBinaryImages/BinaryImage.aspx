@@ -9,10 +9,12 @@
 <body>
     <form id="form1" runat="server">
         <dx:ASPxBinaryImage ID="ASPxBinaryImage1" runat="server">
-            <EditingSettings Enabled="True">
+            <EditingSettings Enabled="True" UploadSettings-UploadValidationSettings-MaxFileSize="4194304">
             </EditingSettings>
+            <ClientSideEvents ValueChanged = "function () { SubmitButton.SetEnabled(true); }" />
         </dx:ASPxBinaryImage>
-        <dx:ASPxButton ID="ASPxButton1" runat="server" OnClick="ASPxButton1_Click" Text="Save">
+        <br />
+        <dx:ASPxButton ID="SubmitButton" ClientInstanceName="SubmitButton" ClientEnabled="false" runat="server" OnClick="ASPxButton1_Click" Text="Save">
         </dx:ASPxButton>
     </form>
 </body>

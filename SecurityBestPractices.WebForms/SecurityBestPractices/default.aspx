@@ -8,9 +8,10 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <dx:ASPxSiteMapControl runat="server" DataSourceID="SiteMapDataSource" Font-Size="115%" Theme="" Border-BorderStyle="None" ForeColor="Black">
+        <h1>DevExpress ASP.NET Security Best Practices (WebForms)</h1>
+        <dx:ASPxSiteMapControl runat="server" DataSourceID="SiteMapDataSource" Border-BorderStyle="None">
         </dx:ASPxSiteMapControl>
-        <dx:ASPxSiteMapDataSource ShowStartingNode="true" runat="server" ID="SiteMapDataSource" SiteMapFileName="~/web.sitemap"></dx:ASPxSiteMapDataSource>
+        <dx:ASPxSiteMapDataSource ShowStartingNode="false" runat="server" ID="SiteMapDataSource" SiteMapFileName="~/web.sitemap"></dx:ASPxSiteMapDataSource>
     </form>
 </body>
 </html>

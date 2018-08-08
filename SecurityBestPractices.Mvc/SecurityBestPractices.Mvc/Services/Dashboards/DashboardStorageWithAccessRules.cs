@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Web;
+using System.Web.Hosting;
 using System.Xml.Linq;
 using DevExpress.DashboardWeb;
 
@@ -31,8 +32,8 @@ namespace SecurityBestPractices.Mvc.Services.Dashboards {
 
             // Register dashboard layouts from you data source
             // Put yout logic to  get dashboard layouts from Database, for example
-            var adminId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"/App_Data/AdminDashboard.xml")), "Admin Dashboard");
-            var johnId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"/App_Data/JohnDashboard.xml")), "John Dashboard");
+            var adminId = AddDashboardCore(XDocument.Load(HostingEnvironment.MapPath(@"/App_Data/AdminDashboard.xml")), "Admin Dashboard");
+            var johnId = AddDashboardCore(XDocument.Load(HostingEnvironment.MapPath(@"/App_Data/JohnDashboard.xml")), "John Dashboard");
 
             // Authorization logic
             authDictionary.Add("Admin", new HashSet<string>(new [] { adminId, johnId })); // Admin can view/edit all dashboards

@@ -1,4 +1,5 @@
 ﻿using DevExpress.DashboardWeb;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Xml.Linq;
 
@@ -7,7 +8,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
         static readonly DashboardConfigurator dashboardConfigurator;
         static PublicDashboardController() {
             var dashboardInMemoryStorage = new DashboardInMemoryStorage();
-            dashboardInMemoryStorage.RegisterDashboard("publicId", XDocument.Load(System.Web.HttpContext.Current.Server.MapPath(@"/App_Data/PublicDashboard.xml")));
+            dashboardInMemoryStorage.RegisterDashboard("publicId", XDocument.Load(HostingEnvironment.MapPath(@"/App_Data/PublicDashboard.xml")));
 
             dashboardConfigurator = new DashboardConfigurator();
             dashboardConfigurator.SetDashboardStorage(dashboardInMemoryStorage);

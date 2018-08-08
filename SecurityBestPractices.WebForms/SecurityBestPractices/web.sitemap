@@ -7,9 +7,9 @@
       <siteMapNode url="~/UploadingFiles/UploadControlTempFileName.aspx" title="1.3. Protect Temporary Files" />
     </siteMapNode>
     <siteMapNode url="" title="2. Uploading and Displaying Binary Images" >
-      <siteMapNode url="~/UploadingBinaryImages/UploadControl.aspx" title="UploadControl.aspx" />
-      <siteMapNode url="~/UploadingBinaryImages/BinaryImageViewer.aspx" title="BinaryImageViewer.aspx" />
-      <siteMapNode url="~/UploadingBinaryImages/BinaryImage.aspx" title="BinaryImage.aspx" />
+      <siteMapNode url="~/UploadingBinaryImages/UploadControl.aspx" title="Upload Control" />
+      <siteMapNode url="~/UploadingBinaryImages/BinaryImageViewer.aspx" title="Binary Image Viewer" />
+      <siteMapNode url="~/UploadingBinaryImages/BinaryImage.aspx" title="Binary Image" />
     </siteMapNode>
     <siteMapNode url="" title="3. Authorization">
       <siteMapNode url="" title="3.1. Reporting">
@@ -22,7 +22,7 @@
         <siteMapNode url="~/Authorization/Dashboards/DashboardPage.aspx" title="Dashboard (Editable)" />
       </siteMapNode>
       <siteMapNode url="" title="3.3. Query Builder">
-        <siteMapNode url="~/Authorization/QueryBuilder/QueryBuilder.aspx" title="QueryBuilder" />
+        <siteMapNode url="~/Authorization/QueryBuilder/QueryBuilder.aspx" title="Query Builder" />
       </siteMapNode>
     </siteMapNode>
     <siteMapNode url="" title="4. Using AntiForgegy Token">

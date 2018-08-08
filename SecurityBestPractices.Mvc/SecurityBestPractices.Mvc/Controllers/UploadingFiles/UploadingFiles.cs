@@ -1,18 +1,19 @@
 ﻿using DevExpress.Web;
-using SecurityBestPractices.Mvc.Models;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using System.Linq;
 using DevExpress.Web.Mvc;
 using System.IO;
 using System.Drawing;
 using System;
+using System.Web.Hosting;
 
 namespace SecurityBestPractices.Mvc.Controllers {
     public class UploadingFilesController : Controller {
-        public ActionResult UploadValidation() {
-            return View("UploadValidation");
+        #region Validation
+        public ActionResult Validation() {
+            return View("Validation");
         }
+
         public ActionResult UploadValidationHandler([ModelBinder(typeof(UploadValidationBinder))]IEnumerable<UploadedFile> uploadControl) {
             return null;
         }
@@ -35,7 +36,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
                                     file.IsValid = false;
                                     e.ErrorText = "Validation failed!";
                                 } else {
-                                    string fileName = string.Format("{0}{1}", System.Web.HttpContext.Current.Server.MapPath("~/Upload/Images/"), file.FileName);
+                                    string fileName = string.Format("{0}{1}", HostingEnvironment.MapPath("~/Upload/Images/"), file.FileName);
                                     file.SaveAs(fileName, true);
                                 }
                             }
@@ -43,10 +44,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
                     }
                 }
             }
-
-
         }
-
         static bool IsValidImage(Stream stream) {
             try {
                 using(var image = Image.FromStream(stream)) {
@@ -56,5 +54,81 @@ namespace SecurityBestPractices.Mvc.Controllers {
                 return false;
             }
         }
+        #endregion
+
+        #region In Memory Processing
+        public ActionResult InMemoryProcessing() {
+            return View("InMemoryProcessing");
+        }
+
+        public ActionResult UploadInMemoryProcessingHandler([ModelBinder(typeof(UploadInMemoryProcessingBinder))]IEnumerable<UploadedFile> uploadControl) {
+            return null;
+        }
+
+        public class UploadInMemoryProcessingBinder : DevExpressEditorsBinder {
+            public UploadInMemoryProcessingBinder() {
+                // UploadControlBinderSettings.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
+                UploadControlBinderSettings.FilesUploadCompleteHandler = uploadControl_FilesUploadInMemoryProcessingComplete;
+            }
+
+            private void uploadControl_FilesUploadInMemoryProcessingComplete(object sender, FilesUploadCompleteEventArgs e) {
+                var uploadedFiles = ((MVCxUploadControl)sender).UploadedFiles;
+                if(uploadedFiles != null && uploadedFiles.Length > 0) {
+                    for(int i = 0; i < uploadedFiles.Length; i++) {
+                        UploadedFile file = uploadedFiles[i];
+                        if(file.IsValid && file.FileName != "") {
+                            // Bad approach - possible Denial of Service
+                            // DoProcessing(file.FileBytes);
+
+                            // Good approach - use stream for large files
+                            using(var stream = file.FileContent) {
+                                DoProcessing(stream);
+                            }
+                        }
+                    }
+                }
+            }
+
+            void DoProcessing(byte[] contenBytes) {
+                System.Threading.Thread.Sleep(60000); // Some processing emulation
+            }
+
+            void DoProcessing(Stream stream) {
+                System.Threading.Thread.Sleep(60000); // Some processing emulation
+            }
+        }
+        #endregion
+
+        #region Saving Temporary Files
+        public ActionResult SavingTemporaryFiles() {
+            return View("SavingTemporaryFiles");
+        }
+
+        public ActionResult UploadSavingTemporaryFilesHandler([ModelBinder(typeof(UploadSavingTemporaryFilesBinder))]IEnumerable<UploadedFile> uploadControl) {
+            return null;
+        }
+
+        public class UploadSavingTemporaryFilesBinder : DevExpressEditorsBinder {
+            public UploadSavingTemporaryFilesBinder() {
+                // UploadControlBinderSettings.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
+                UploadControlBinderSettings.FilesUploadCompleteHandler = uploadControl_FilesUploadSavingTemporaryFilesComplete;
+            }
+
+            private void uploadControl_FilesUploadSavingTemporaryFilesComplete(object sender, FilesUploadCompleteEventArgs e) {
+                var uploadedFiles = ((MVCxUploadControl)sender).UploadedFiles;
+                if(uploadedFiles != null && uploadedFiles.Length > 0) {
+                    for(int i = 0; i < uploadedFiles.Length; i++) {
+                        UploadedFile file = uploadedFiles[i];
+                        if(file.IsValid && file.FileName != "") {
+                            string fileName = string.Format("{0}{1}", HostingEnvironment.MapPath("~/Upload/Processing/"),
+                                Path.GetRandomFileName() + ".tmp");
+                            file.SaveAs(fileName, true);
+                            // DoFileProcessing(fileName);
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }

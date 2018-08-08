@@ -1,9 +1,18 @@
-<h1>DevExpress Mvc Security Best Practices</h1>
+<h1>DevExpress ASP.NET Security Best Practices (Mvc)</h1>
 <ul>
     <li style="list-style:none">
-        <h2>1. UploadingFiles</h2>
+        <h2>1. Uploading Files</h2>
         <ul>
-            <li>@Html.ActionLink("Upload Validation", "UploadValidation", "UploadingFiles")</li>
+            <li>@Html.ActionLink("Validation", "Validation", "UploadingFiles") (Prevent Uploading Malicious Files)</li>
+            <li>@Html.ActionLink("In Memory Processing", "InMemoryProcessing", "UploadingFiles") (Prevent Uncontrolled Resource Consumption)</li>
+            <li>@Html.ActionLink("Saving Temporary Files", "SavingTemporaryFiles", "UploadingFiles") (Protect Temporary Files)</li>
+        </ul>
+
+        <h2>2. Uploading and Displaying Binary Images</h2>
+        <ul>
+            <li>@Html.ActionLink("Upload Control", "UploadControl", "UploadingBinaryImages")</li>
+            <li>@Html.ActionLink("Binary Image Viewer", "BinaryImageViewer", "UploadingBinaryImages")</li>
+            <li>@Html.ActionLink("Binary Image", "BinaryImage", "UploadingBinaryImages")</li>
         </ul>
 
         <h2>3. Authorization</h2>

@@ -31,12 +31,12 @@ namespace SecurityBestPractices.UploadingBinaryImages {
         protected global::DevExpress.Web.ASPxBinaryImage ASPxBinaryImage1;
         
         /// <summary>
-        /// ASPxButton1 control.
+        /// SubmitButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxButton ASPxButton1;
+        protected global::DevExpress.Web.ASPxButton SubmitButton;
     }
 }
