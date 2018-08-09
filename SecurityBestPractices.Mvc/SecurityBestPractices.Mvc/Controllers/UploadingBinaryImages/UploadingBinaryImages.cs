@@ -95,7 +95,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
 
         [HttpPost]
         public ActionResult SaveBinaryImage() {
-            byte[] contentBytes = BinaryImageEditExtension.GetValue<byte[]>("BinaryImage");
+            byte[] contentBytes = BinaryImageEditExtension.GetValue<byte[]>("BinaryImage"); // Uploaded file content are valided by ASPxBinaryImage
 
             // Here contentBytes should be saved to a database
             // We will save it to a file for demonstration purposes

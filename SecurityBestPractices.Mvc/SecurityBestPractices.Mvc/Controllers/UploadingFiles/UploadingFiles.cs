@@ -67,7 +67,6 @@ namespace SecurityBestPractices.Mvc.Controllers {
 
         public class UploadInMemoryProcessingBinder : DevExpressEditorsBinder {
             public UploadInMemoryProcessingBinder() {
-                // UploadControlBinderSettings.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
                 UploadControlBinderSettings.FilesUploadCompleteHandler = uploadControl_FilesUploadInMemoryProcessingComplete;
             }
 
@@ -110,7 +109,6 @@ namespace SecurityBestPractices.Mvc.Controllers {
 
         public class UploadSavingTemporaryFilesBinder : DevExpressEditorsBinder {
             public UploadSavingTemporaryFilesBinder() {
-                // UploadControlBinderSettings.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
                 UploadControlBinderSettings.FilesUploadCompleteHandler = uploadControl_FilesUploadSavingTemporaryFilesComplete;
             }
 
