@@ -8,7 +8,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
         static readonly DashboardConfigurator dashboardConfigurator;
         static PublicDashboardController() {
             var dashboardInMemoryStorage = new DashboardInMemoryStorage();
-            dashboardInMemoryStorage.RegisterDashboard("publicId", XDocument.Load(HostingEnvironment.MapPath(@"/App_Data/PublicDashboard.xml")));
+            dashboardInMemoryStorage.RegisterDashboard("publicId", XDocument.Load(HostingEnvironment.MapPath(@"~/App_Data/PublicDashboard.xml")));
 
             dashboardConfigurator = new DashboardConfigurator();
             dashboardConfigurator.SetDashboardStorage(dashboardInMemoryStorage);

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityBestPractices", "SecurityBestPractices\SecurityBestPractices.csproj", "{FE893482-BC9C-4087-A82E-204A5A20697A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityBestPractices", "SecurityBestPractices\SecurityBestPractices.WebForms.csproj", "{FE893482-BC9C-4087-A82E-204A5A20697A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
