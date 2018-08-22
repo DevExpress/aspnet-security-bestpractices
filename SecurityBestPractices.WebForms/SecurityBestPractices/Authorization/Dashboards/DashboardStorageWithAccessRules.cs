@@ -30,7 +30,7 @@ namespace SecurityBestPractices.Authorization.Dashboards {
             dashboards.Tables.Add(table);
 
             // Register dashboard layouts from you data source
-            // Put yout logic to  get dashboard layouts from Database, for example
+            // Your logic to  get dashboard layouts from the database
             var adminId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"~/App_Data/AdminDashboard.xml")), "Admin Dashboard");
             var johnId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"~/App_Data/JohnDashboard.xml")), "John Dashboard");
 
@@ -64,7 +64,7 @@ namespace SecurityBestPractices.Authorization.Dashboards {
             if (!IsAuthorized(dashboardId))
                 return null;
 
-            // Put yout logic to get dashboard bytes from Database by <dashboardId>
+            // Your logic to get dashboard bytes from the database by <dashboardId>
 
             DataRow currentRow = dashboards.Tables[0].Rows.Find(dashboardId);
             if (currentRow == null)
@@ -95,7 +95,7 @@ namespace SecurityBestPractices.Authorization.Dashboards {
             if (!IsAuthorized(dashboardId))
                 return;
 
-            // Put yout logic to save dashboard bytes to Database by <dashboardId>
+            // Yout logic to save dashboard bytes to the database by <dashboardId>
 
             DataRow currentRow = dashboards.Tables[0].Rows.Find(dashboardId);
             if (currentRow == null)

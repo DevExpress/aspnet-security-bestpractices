@@ -7,11 +7,11 @@ namespace SecurityBestPractices.UploadingFiles {
     public partial class UploadControl : System.Web.UI.Page
     {
         protected void Page_Init(object sender, EventArgs e) {
-            // This code is not called be default because uploadControl.FileUploadMode = UploadControlFileUploadMode.BeforePageLoad
-            // To set validation settings in run-time set uploadControl.FileUploadMode = UploadControlFileUploadMode.OnPageLoad or 
-            // use uploadControl.Init envet
+            // This code is not called by default because uploadControl.FileUploadMode = UploadControlFileUploadMode.BeforePageLoad
+            // To specify validation settings at runtime, set uploadControl.FileUploadMode = UploadControlFileUploadMode.OnPageLoad or 
+            // use the uploadControl.Init envet
 
-//            uploadControl.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
+            //uploadControl.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
         }
 
         protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
@@ -20,7 +20,7 @@ namespace SecurityBestPractices.UploadingFiles {
                     UploadedFile file = uploadControl.UploadedFiles[i];
                     if(file.IsValid && file.FileName != "") {
                         using(var stream = file.FileContent) {
-                            // In case additional checks are needed perform them here before saving the file
+                            // If you need any additional checks, perform them here before saving the file
                             if(!IsValidImage(stream)) {
                                 file.IsValid = false;
                                 e.ErrorText = "Validation failed!";

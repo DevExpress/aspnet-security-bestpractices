@@ -145,7 +145,7 @@ namespace SecurityBestPractices.Authorization.Reports {
         }
 
         public bool CanReadExportedDocument(string id) {
-            return IsEntityAuthorizedForCurrentUser(ExportedDocumentDictionaryName, id); // for DevExpress.Report.Preview.AsyncExportApproach = true;
+            return IsEntityAuthorizedForCurrentUser(ExportedDocumentDictionaryName, id); // For DevExpress.Report.Preview.AsyncExportApproach = true;
         }
     }
 }

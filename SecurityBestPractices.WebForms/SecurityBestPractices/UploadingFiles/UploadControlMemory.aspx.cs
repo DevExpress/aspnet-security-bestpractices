@@ -9,11 +9,11 @@ namespace SecurityBestPractices.UploadingFiles {
         }
 
         void DoProcessing(byte[] contenBytes) {
-            System.Threading.Thread.Sleep(60000); // Some processing emulation
+            System.Threading.Thread.Sleep(60000); // Delay to emulate processig time
         }
 
         void DoProcessing(Stream stream) {
-            System.Threading.Thread.Sleep(60000); // Some processing emulation
+            System.Threading.Thread.Sleep(60000); // Delay to emulate processig time
         }
 
         protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {

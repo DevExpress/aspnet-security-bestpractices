@@ -33,7 +33,7 @@ namespace SecurityBestPractices.Authorization.Reports {
                 result.Add(reports[typeof(JohnReport)]);
             }
 
-            result.Add(reports[typeof(PublicReport)]); // for unauthenticated users (ie public)
+            result.Add(reports[typeof(PublicReport)]); // For unauthenticated users (i.e., public)
 
             return result;
         }
@@ -85,13 +85,13 @@ namespace SecurityBestPractices.Authorization.Reports {
         }
 
         public override void SetData(XtraReport report, string url) {
-            // TODO: Put your logic to save bytes to DB
+            // Your logic to save bytes to the database
             // Save report layout
             // https://documentation.devexpress.com/XtraReports/17553/Creating-End-User-Reporting-Applications/Web-Reporting/Report-Designer/API-and-Customization/Implementing-a-Report-Storage
         }
         public override string SetNewData(XtraReport report, string defaultUrl) {
-            // TODO: Put your logic to save bytes to DB
-            // Save new report layout and return report's URL
+            // Your logic to save bytes to the database
+            // Save new report layout and return the report's URL
             // https://documentation.devexpress.com/XtraReports/17553/Creating-End-User-Reporting-Applications/Web-Reporting/Report-Designer/API-and-Customization/Implementing-a-Report-Storage
             return "New name";
         }
