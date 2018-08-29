@@ -143,7 +143,7 @@ To avoid a security breach, you will need to ensure that these files are inacces
 To mitigate this vulnerability:
 
 1. Store temporary files in a folder unreachable by URL (for example, *App_Data*).
-2. Use a dedicated file extension for temporary files on the server (for example *‚Äú.mytmp‚Äù*). 
+2. Use a dedicated file extension for temporary files on the server (for example *ì.mytmpî*). 
 3. Consider assigning random file names using the [GetRandomName](https://msdn.microsoft.com/en-us/library/system.io.path.getrandomfilename(v=vs.110).aspx) method.
 ``` cs
 protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
@@ -271,7 +271,7 @@ This section provides information on using DevExpress controls in web applicatio
 * [3.3. Query Builder](#33-query-builder)
 
 ### 3.1. Reporting
-Normally, when you create a reporting application with access restrictions using one of the standard Microsoft mechanisms, you grant or restrict access to particular pages based on a user‚Äôs identity: 
+Normally, when you create a reporting application with access restrictions using one of the standard Microsoft mechanisms, you grant or restrict access to particular pages based on a userís identity: 
 
 ``` aspx
   <location path="Authorization/Reports">
@@ -356,7 +356,7 @@ public override bool IsValidUrl(string url) {
 }
 ```
 
-To prevent errors in the browser when handling unauthorized access attempts, check the access rights on the page‚Äôs [PageLoad](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportDesignerPage.aspx.cs#L6-L13) event. If the user is not authorized to open the report, redirect them to a public page.
+To prevent errors in the browser when handling unauthorized access attempts, check the access rights on the pageís [PageLoad](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportDesignerPage.aspx.cs#L6-L13) event. If the user is not authorized to open the report, redirect them to a public page.
 
 ``` cs
 protected void Page_Load(object sender, EventArgs e) {
@@ -388,37 +388,35 @@ The browser console will respond with the following error.
 
 ![console-output](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/authoriazation-reports-accessdenied.png?raw=true)
 
-
 #### Provide an Operation Logger
-The Web Document Viewer control maintain communication with the server side to obtain additional document data when it is required (e.g., when an end-user switches pages or exports the document).  As a result, for example, an end-user can navigate a report‚Äôs pages even after having been logged out. As a more complex scenario, a malefactor can forge a request emulating page switching to get access to the protected information. 
+The Web Document Viewer control maintains communication with the server side to obtain any additional document data when it is required, for example when a user switches pages or exports the document. Because of this feature, a user could navigate through a given reportís pages even after having been logged out. 
 
-To get a fine-grained control over which operations are available to an end-user based on authorization rules, implement a custom Operation Logger by extending the [WebDocumentViewerOperationLogger](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebWebDocumentViewerWebDocumentViewerOperationLoggertopic) class. Override this class's methods to implement the required access control rules (see the [OperationLogger.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices.WebForms/SecurityBestPractices/Authorization/Reports/OperationLogger.cs) file of the example project). 
+The possible security breach here occurs when a malefactor can forge a request that emulates page switching in order to get access to any protected information. 
 
-Register the operation logger in [Global.asax.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/586084eda743711618c8d3e01d52736aac70a8c8/SecurityBestPractices.WebForms/SecurityBestPractices/Global.asax.cs#L25) as shown below:
+To mitigate this vulnerability, implement a custom Operation Logger in order to enforce fine-grained control over which operations are available to a user. Extend the [WebDocumentViewerOperationLogger](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebWebDocumentViewerWebDocumentViewerOperationLoggertopic) class and override this class's methods to implement the required access control rules (see the [OperationLogger.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices.WebForms/SecurityBestPractices/Authorization/Reports/OperationLogger.cs) file of the example project). 
+
+Register the operation logger in [Global.asax.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/586084eda743711618c8d3e01d52736aac70a8c8/SecurityBestPractices.WebForms/SecurityBestPractices/Global.asax.cs#L25):
 
 ``` cs
 DefaultWebDocumentViewerContainer.Register<WebDocumentViewerOperationLogger, OperationLogger>();
 ```
 
-Note that in the example project the logger implementation obtains user account data from a static property. Such implementation can have difficulties running in a cloud environment or on a web farm. We recommend that in your application you store authentication information in an appropriate data storage. 
+Note that in order to simplify the example project the logger implementation obtains the required user account data from a static property. This is not a recommended solution: such an implementation could have difficulties running in a cloud environment or on a web farm. Instead, we recommend that you store authentication information in some appropriate data storage. 
 
-To get familiar with how the protection works,  use the following steps:
+To familiarize yourself with the solution:
 
 1. Run the example application, log in using the [/Login.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices.WebForms/SecurityBestPractices/Login.aspx) page. 
 2. Open the report preview ([/Authorization/Reports/ReportViewerPage.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices.WebForms/SecurityBestPractices/Authorization/Reports/ReportViewerPage.aspx)) in a separate browser tab. 
 3. Log out.
 4. Try switching report pages.
 
-You will receive an error as illustrated by the image below.
+The following error will be signalled:
 
 ![Operation Logger Error](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/authorization-reportopertaionlogger.png?raw=true)
 
 
-
-
-
 #### Restrict Access to Data Connections and Data Tables
-The [Report Designer](https://documentation.devexpress.com/XtraReports/17103/Creating-End-User-Reporting-Applications/Web-Reporting/Report-Designer) control allows an end-user to browse available data connection and data tables using the integrated [Query Builder](https://documentation.devexpress.com/AspNet/114930/ASP-NET-WebForms-Controls/Query-Builder). Refer to the [Query Builder](#33-query-builder) subsection in this document to learn how to restrict access to this information, based on authorization rules. 
+The [Report Designer](https://documentation.devexpress.com/XtraReports/17103/Creating-End-User-Reporting-Applications/Web-Reporting/Report-Designer) control allows a user to browse available data connection and data tables using the integrated [Query Builder](https://documentation.devexpress.com/AspNet/114930/ASP-NET-WebForms-Controls/Query-Builder). Refer to the [Query Builder](#33-query-builder) subsection in this document to learn how to restrict access to this information, based on authorization rules. 
 
 
 
@@ -455,12 +453,12 @@ The [DashboardStorageWithAccessRules](https://github.com/DevExpress/aspnet-secur
 
 ``` cs
 // Register dashboard layouts
-var adminId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"~/App_Data/AdminDashboard.xml")), "Admin Dashboard");
-var johnId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"~/App_Data/JohnDashboard.xml")), "John Dashboard");
+var adminId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"/App_Data/AdminDashboard.xml")), "Admin Dashboard");
+var johnId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(@"/App_Data/JohnDashboard.xml")), "John Dashboard");
 this.publicDashboardId = AddDashboardCore(XDocument.Load(HttpContext.Current.Server.MapPath(publicDashboardPath)), "Public Dashboard");
 ```
 
-The code below defines which user should have access to which dashboards.
+The following code defines which user should have access to which dashboards:
 
 ``` cs
 // Authorization logic
@@ -491,7 +489,7 @@ if (!new DashboardStorageWithAccessRules().IsAuthorized(args.DashboardId))
 };
 ```
 
-With this custom implementation of a dashboard storage, if a user named 'John' tries to use the client API to open a report with restricted access (e.g., a report with id=‚Äô1‚Äô), the handler will return error 404, File Not Found:
+With this custom implementation of a dashboard storage, if a user named 'John' tries to use the client API to open a report with restricted access (e.g., a report with id=í1í), the handler will return error 404, File Not Found:
 
 ``` js
 dashboard.LoadDashboard('1') // Load a dashboard available only to Admin.
@@ -504,14 +502,15 @@ GET http://localhost:65252/Authorization/Dashboards/DXDD.axd?action=DashboardAct
 
 ![console-output](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/authorization-dashboard-404.png?raw=true)
 
+
 #### Restrict Access to Data Connections and Data Tables
-The Web Dashboard control allows an end-user to browse available data connection and data tables using the integrated [Query Builder](https://documentation.devexpress.com/AspNet/114930/ASP-NET-WebForms-Controls/Query-Builder). Refer to the [Query Builder](#33-query-builder) subsection in this document to learn how to restrict access to this information based on authorization rules.
+The Web Dashboard control allows a user to browse available data connection and data tables using the integrated [Query Builder](https://documentation.devexpress.com/AspNet/114930/ASP-NET-WebForms-Controls/Query-Builder). Refer to the [Query Builder](#33-query-builder) subsection in this document to learn how to restrict access to this information based on authorization rules.
 
 
 
 ### 3.3. Query Builder
 
-The standalone [Query Builder](https://documentation.devexpress.com/AspNet/114930/ASP-NET-WebForms-Controls/Query-Builder) as well as the Query Builder integrated into the Report and Dashboard designers allows an end-user to browse a web application's data connections and the data tables available through those connections. In a web application that uses access control, you will to write code to restrict a user‚Äôs access to the available connections and data tables.
+The standalone [Query Builder](https://documentation.devexpress.com/AspNet/114930/ASP-NET-WebForms-Controls/Query-Builder) as well as the Query Builder integrated into the Report and Dashboard designers allows an end-user to browse a web application's data connections and the data tables available through those connections. In a web application that uses access control, you will to write code to restrict a userís access to the available connections and data tables.
 
 To restrict access to connection strings, implement a custom connection string provider:
 
@@ -600,32 +599,36 @@ DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx());
 
 **Security Risks**: [CWE-352](https://cwe.mitre.org/data/definitions/352.html)
 
-This section provides information on how to prevent cross-site request forgery attacks on your web application. The vulnerability affects controls supporting data editing through AJAX out-of-the-box. Authorization mechanisms allow you to deny access by Insecure Direct Object References, but it does not protect you from Cross-Site Request Forgery (CSRF).
+This section provides information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects those controls that support data editing through AJAX. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References, they do not protect you from CSRF attacks.
 
-A malefactor can abuse this vulnerability as described below.
+The possible security breach could occur as follows: 
+
 1.	A malefactor implements a phishing page. 
-2.	When your end-user visits this phishing page, it sends a malicious request to your web application using the end-user‚Äôs cookies.
-3.	As the result, the malicious action is performed on the end-user‚Äôs behalf, allowing the malefactor to modify the end-user‚Äôs data or account info.
+2.	A user inadvertently visits this phishing page, which then sends a malicious request to your web application using the userís cookies.
+3.	As a result, the malicious action is performed on the userís behalf, allowing the malefactor to access or modify the userís data or account info.
 
 For more information on the vulnerability, refer to the [CWE-352 - Cross-Site Request Forgery (CSRF)](https://cwe.mitre.org/data/definitions/352.html) article.
 
 
 To mitigate the vulnerability, use the **AntiForgeryToken** pattern. Refer to the [AntiForgery.Validate](https://msdn.microsoft.com/ru-ru/library/gg548011(v=vs.111).aspx) MSDN article to learn more.
 
-The best practice to prevent CSRF is to MasterPage code which generate an AntiForgery token and check this token on Pre_Load.
+The best practice to prevent CSRF is to create a MasterPage that: 
+
+1. Generates an AntiForgery token, and
+2. Checks this token within the Pre_Load event.
 
 ```xml
 <form id="form1" runat="server">
     <%= System.Web.Helpers.AntiForgery.GetHtml() %>
 ```
 
-On the client, this will generate a token and a cookie signed with a machine key:
+On the client, generate a token and a cookie signed with a machine key:
 
 ```html
 <input name="__RequestVerificationToken" type="hidden" value="SKZi1uvLbg_G1P-KoK2AJdmeorX1fBgdCbVhLUDim9sk6AFwReVEY6XsuPrvsXJLq5MWOVaGXMnpx09srXkLM_Yjtcfg_4tpc1747jOgo941" />
 ```
 
-On the server side, the cookie and token are checked in the Validate method:
+On the server, check the cookie and token in the Validate method:
 
 ```cs
 protected override void OnInit(EventArgs e) {
@@ -637,29 +640,32 @@ protected void OnPreLoad(object sender, EventArgs e) {
         System.Web.Helpers.AntiForgery.Validate();
 }
 ```
-If the validation has been failed, the MasterPage will generate an error:
+If the validation fails, the MasterPage will generate an error:
 
 ![AntiForgeryError](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/anti-forgery-error.png?raw=true)
 
-The sample project illustrates how to ensure your web application‚Äôs security in two use-case scenarios:
+The sample project illustrates how to ensure your web applicationís security in two use-case scenarios:
 
 ### Preventing Anauthorized CRUD Operations
-In this scenario, an attack is aimed to perform a CRUD operation on the server side by emulating a request from a data aware control (an [ASPxGridView](http://help.devexpress.com/#AspNet/clsDevExpressWebASPxGridViewtopic) in the example).
+In this scenario, an attack attempts to perform a CRUD operation on the server side by emulating a request from a data aware control (an [ASPxGridView](http://help.devexpress.com/#AspNet/clsDevExpressWebASPxGridViewtopic) in the example).
 
 ![AntiForgeryGrid](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/anti-forgery-grid.png?raw=true)
 
 ### Preventing Anauthorized Changes to User Account Information
-In this scenario, an attack is aimed to modify the user account information (the email address in the example).
+In this scenario, an attack attempts to modify the user account information (the email address in the example).
  
 ![AntiForgeryEmail](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/anti-forgery-email.png?raw=true)
 
 
 
-
-
-
-
-
-
-
 **See Also:** [Stack Overflow - preventing cross-site request forgery (csrf) attacks in asp.net web forms](https://stackoverflow.com/questions/29939566/preventing-cross-site-request-forgery-csrf-attacks-in-asp-net-web-forms)
+
+---
+
+
+
+
+
+
+
+
