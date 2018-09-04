@@ -106,13 +106,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="DevExpress.Web.ASPxThemes.v18.1">
-      
     </Reference>
     <Reference Include="DevExpress.Web.Resources.v18.1">
-      
     </Reference>
     <Reference Include="DevExpress.Web.v18.1">
-      
     </Reference>
     <Reference Include="DevExpress.Xpo.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -139,13 +136,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="DevExpress.XtraReports.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      
     </Reference>
     <Reference Include="DevExpress.XtraReports.v18.1.Web, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      
     </Reference>
     <Reference Include="DevExpress.XtraReports.v18.1.Web.WebForms, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -197,8 +191,6 @@
     <Content Include="Authorization\Reports\ReportDesignerPage.aspx" />
     <Content Include="Authorization\Reports\ReportViewerPage.aspx" />
     <Content Include="Login.aspx" />
-    <Content Include="Password\WebForm12.aspx" />
-    <Content Include="Password\.aspx" />
     <Content Include="Site.Master" />
     <Content Include="UsingAntiForgegyToken\EditForm.aspx" />
     <Content Include="UsingAntiForgegyToken\MasterPageWithAntiForgeryToken.Master" />
@@ -223,7 +215,6 @@
     <Content Include="UploadingFiles\UploadControl.aspx" />
     <Content Include="UploadingFiles\UploadControlMemory.aspx" />
     <Content Include="UploadingFiles\UploadControlTempFileName.aspx" />
-    <Content Include="ValidateInput\Form.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -260,6 +251,7 @@
     <Compile Include="Authorization\PublicPages\PublicReportPage.aspx.designer.cs">
       <DependentUpon>PublicReportPage.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Authorization\Reports\OperationLogger.cs" />
     <Compile Include="Authorization\Reports\ReportStorageWithAccessRules.cs" />
     <Compile Include="Authorization\Reports\JohnReport.cs">
       <SubType>Component</SubType>
@@ -294,20 +286,6 @@
     </Compile>
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Password\WebForm12.aspx.cs">
-      <DependentUpon>WebForm12.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Password\WebForm12.aspx.designer.cs">
-      <DependentUpon>WebForm12.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Password\.aspx.cs">
-      <DependentUpon>.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Password\.aspx.designer.cs">
-      <DependentUpon>.aspx</DependentUpon>
     </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
@@ -379,13 +357,6 @@
     <Compile Include="UsingAntiForgegyToken\MasterPageWithAntiForgeryToken.Master.designer.cs">
       <DependentUpon>MasterPageWithAntiForgeryToken.Master</DependentUpon>
     </Compile>
-    <Compile Include="ValidateInput\Form.aspx.cs">
-      <DependentUpon>Form.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ValidateInput\Form.aspx.designer.cs">
-      <DependentUpon>Form.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\UploadedData\" />
@@ -432,8 +403,6 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
