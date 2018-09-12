@@ -1,4 +1,4 @@
-# ASP.NET Security Best Practices
+# ASP.NET WebForms Security Best Practices
 
 This document provides information on some of the best practices developers should follow to avoid certain  security breaches. Each section of this document describes a possible use-case scenario that exposes the security issue and the vulnerabilities associated with it, together with information on how to mitigate the security problems.
 
@@ -21,7 +21,7 @@ This section provides information on how to provide file upload capabilities wit
 ### 1.1. Stop Malicious Files Being Uploaded
 Visit the **[UploadingFiles\UploadControl.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/UploadControl.aspx.cs)** page for a full code sample.
 
-Consider the situation where your web application allows for files to be uploaded. These files are then accessed using a specific URL. 
+Consider the situation where your web application allows for files to be uploaded. These files are then accessed using a specific URL (for example: *site.com/uploaded/<uploaded-filename>*). 
 
 The possible security breach here occurs when a malicious file is uploaded that can then be executed on the server side. For example, a malefactor could upload an ASPX file containing malicious code and guess at its URL. If the malefactor is correct and requests this URL, the file would be executed on the server as if it were part of the application.
 
@@ -599,7 +599,7 @@ DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx());
 
 **Security Risks**: [CWE-352](https://cwe.mitre.org/data/definitions/352.html)
 
-This section provides information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects those controls that support data editing through AJAX. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References, they do not protect you from CSRF attacks.
+This section provides information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects those controls that support data editing through AJAX. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References (for example: *http://example.com/app/SecureReport.aspx?id=1*), they do not protect you from CSRF attacks.
 
 The possible security breach could occur as follows: 
 
