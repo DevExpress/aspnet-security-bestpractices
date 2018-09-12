@@ -20,7 +20,7 @@ This section provides information on how to provide file upload capabilities wit
 ### 1.1. Stop Malicious Files Being Uploaded
 Visit the **[UploadingFiles\UploadControl.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/develop/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/UploadControl.aspx.cs)** page for a full code sample.
 
-Consider the situation where your web application allows for files to be uploaded. These files are then accessed using a specific URL (for example: *example.com/uploaded/<uploaded-filename>*). 
+Consider the situation where your web application allows for files to be uploaded. These files are then accessed using a specific URL (for example: *example.com/uploaded/uploaded-filename*). 
 
 The possible security breach here occurs when a malicious file is uploaded that can then be executed on the server side. For example, a malefactor could upload an ASPX file containing malicious code and guess at its URL. If the malefactor is correct and requests this URL, the file would be executed on the server as if it were part of the application.
 
