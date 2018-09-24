@@ -1,0 +1,16 @@
+﻿@Html.DevExpress().BinaryImage(biSettings => {
+    biSettings.Name = "BinaryImage";
+    biSettings.Properties.EditingSettings.Enabled = true;
+    biSettings.Properties.EditingSettings.UploadSettings.UploadValidationSettings.MaxFileSize = 4194304;
+    biSettings.CallbackRouteValues = new { Controller = "UploadingBinaryImages", Action = "UpdateBinaryImagePartial" };
+    biSettings.Properties.ClientSideEvents.ValueChanged = "function () { SubmitButton.SetEnabled(true); }";
+}).Bind(Model).GetHtml()
+<br />
+@Html.DevExpress().Button(b => {
+    b.Name = "SubmitButton";
+    b.ClientEnabled = false;
+    b.Text = "Save";
+    b.UseSubmitBehavior = true;
+}).GetHtml()
+
+

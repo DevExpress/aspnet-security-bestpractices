@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ASP.NET Security Best Practices
 
 This README document provides information on best practices that you should follow when you develop your applications to avoid introducing any security breaches. The document is divided into sections. Each section describes a use case scenario and possible vulnerabilities associated with it along with information on how to make sure that these vulnerabilities do not take place in you applications. Thus, you can use this document as check list to verify your applications security.
@@ -523,3 +524,10 @@ DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx());
 
 
 
+=======
+# DevExpress ASP.NET Security Best Practices
+This project provides information on best practices that you should follow when you develop your web applications and web sites to avoid introducing any security vulnerabilities when developing your web applications. This information is available for the following platforms:
+
+* [ASP.NET MVC](https://github.com/DevExpress/aspnet-security-bestpractices/tree/develop/SecurityBestPractices.Mvc)
+* [ASP.NET WebForms](https://github.com/DevExpress/aspnet-security-bestpractices/tree/develop/SecurityBestPractices.WebForms)
+>>>>>>> develop

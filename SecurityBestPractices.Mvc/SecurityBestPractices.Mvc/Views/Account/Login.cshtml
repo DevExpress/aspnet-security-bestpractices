@@ -1,0 +1,38 @@
+﻿@model LoginViewModel
+
+@{
+    ViewBag.Title = "Log in";
+}
+<h2>@ViewBag.Title</h2>
+<div>
+    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post)) {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(true)
+
+        @Html.DevExpress().FormLayout(settings => {
+       settings.Name = "loginLayout";
+
+       settings.Items.Add(model => model.UserName, i => {
+           i.NestedExtension().ComboBox(cb => {
+               //cb.Width = Unit.Percentage(100);
+               cb.ShowModelErrors = true;
+               cb.Properties.ValidationSettings.ErrorDisplayMode = ErrorDisplayMode.Text;
+
+               cb.Properties.Items.Add("Admin", "Admin");
+               cb.Properties.Items.Add("John", "John");
+           });
+           settings.Items.Add(b => {
+               b.ShowCaption = DefaultBoolean.False;
+               b.Paddings.PaddingTop = 20;
+               //b.HorizontalAlign = FormLayoutHorizontalAlign.Right;
+               b.NestedExtension().Button(s => {
+                   s.Name = "Button";
+                   s.Text = "Login";
+                   s.UseSubmitBehavior = true;
+               });
+           });
+       });
+   }).Bind(Model).GetHtml();
+    }
+</div>

@@ -1,0 +1,15 @@
+﻿@using(Html.BeginForm()) {
+    @Html.DevExpress().UploadControl(
+                settings => {
+                    settings.Name = "uploadControl";
+                    settings.UploadMode = UploadControlUploadMode.Auto;
+                    settings.CallbackRouteValues = new { Controller = "UploadingBinaryImages", Action = "UploadControlHandler" };
+
+                    settings.ShowProgressPanel = true;
+                    settings.ShowUploadButton = true;
+                    settings.AdvancedModeSettings.EnableDragAndDrop = true;
+
+                    // Warning! Property settings.ValidationSettings must be assigned in controller (see for example: UploadControlBinderSettings.ValidationSettings in UploadingFiles.cs). This setting works only on client-side for usability of end-user
+                    settings.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".jpeg" };
+                }).GetHtml()
+}

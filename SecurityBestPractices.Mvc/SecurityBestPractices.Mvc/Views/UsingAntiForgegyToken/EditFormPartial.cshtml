@@ -1,0 +1,30 @@
+﻿@{
+    var grid = Html.DevExpress().GridView<EditFormItem>(settings => {
+        settings.Name = "grid";
+        settings.CallbackRouteValues = new { Controller = "UsingAntiForgegyToken", Action = "EditFormPartial" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "UsingAntiForgegyToken", Action = "EditFormDeletePartial" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "UsingAntiForgegyToken", Action = "EditFormUpdatePartial" };
+
+        // Show Delete/Update actions for Authorized users
+        var identityName = IdentityHelper.GetIdentityName();
+        if(!string.IsNullOrEmpty(identityName)) {
+            settings.CommandColumn.Visible = true;
+            settings.CommandColumn.ShowDeleteButton = true;
+            settings.CommandColumn.ShowEditButton = true;
+        }
+        settings.KeyFieldName = "Id";
+
+        settings.Columns.Add(c => {
+            c.FieldName = "Id";
+            c.ReadOnly = true;
+        });
+        settings.Columns.Add("ProductName");
+        settings.Columns.Add("Price");
+    });
+
+    if(ViewData["EditError"] != null) {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+
