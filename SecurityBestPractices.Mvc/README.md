@@ -734,7 +734,7 @@ If the validation fails, the server will generate an error:
 Note that you should never perform data modifying requests using the **Get** verb.
 
 ---
-
+![Analytics](https://ga-beacon.appspot.com/UA-129603086-1/aspnet-security-bestpractices-mvc-page?pixel)
 
 
 
