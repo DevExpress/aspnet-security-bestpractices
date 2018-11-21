@@ -3,3 +3,4 @@ This project provides information on best practices that you should follow when 
 
 * [ASP.NET MVC](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.Mvc)
 * [ASP.NET WebForms](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.WebForms)
+![Analytics](https://ga-beacon.appspot.com/UA-129603086-1/aspnet-security-bestpractices-overview-page?pixel)
