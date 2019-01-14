@@ -5,7 +5,7 @@ This document provides information on some of the best practices developers shou
 The security issues are all shown using a simple Visual Studio solution. Fully commented code samples are  provided as part of that solution to show how to avoid each security breach. You will need to have DevExpress ASP.NET MVC extensions installed in order to load and compile the solution. You can download the installer from the [DevExpress website](https://devexpress.com).
 
 ---
-
+- [Uploading Files] (#1-uploading-files)
 
 ## 1. Uploading Files
 
