@@ -708,12 +708,17 @@ To mitigate the vulnerability, use the **AntiForgeryToken** pattern as described
 2. Be aware that complex AJAX-enabled controls do not automatically include the token field's value in their AJAX requests. You need to manually add the token value to such requests. You can achieve this using the code below:
    ``` cs
    <script>
-        // sending the __RequestVerificationToken value manually
+    // sending the __RequestVerificationToken value manually
+    if (window.jQuery) {
         $.ajaxPrefilter(function (options, originalOptions, xhr) {
-        var tokenValue = $('input:hidden[name="__RequestVerificationToken"]').val();
-        if (tokenValue && options && options.data && options.data.indexOf('RequestVerificationToken') === -1)
-            options.data += "&__RequestVerificationToken=" + tokenValue;
+            if (options.dataType && options.dataType !== "html")
+                return;
+
+            var tokenValue = $('input:hidden[name="__RequestVerificationToken"]').val();
+            if (tokenValue && options && options.data && options.data.indexOf('RequestVerificationToken') === -1)
+                options.data += "&__RequestVerificationToken=" + tokenValue;
         });
+    }
    </script>
    ```
 3. To automatically check the request token on the server side, apply the **ValidateAntiForgeryToken** attribute to the corresponding controller action:

@@ -143,7 +143,7 @@ To mitigate this vulnerability:
 
 1. Store temporary files in a folder unreachable by URL (for example, *App_Data*).
 2. Use a dedicated file extension for temporary files on the server (for example *".mytmp"). 
-3. Consider assigning random file names using the [GetRandomName](https://msdn.microsoft.com/en-us/library/system.io.path.getrandomfilename(v=vs.110).aspx) method.
+3. Consider assigning random file names using the [GetRandomFileName](https://msdn.microsoft.com/en-us/library/system.io.path.getrandomfilename(v=vs.110).aspx) method.
 ``` cs
 protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
     if (uploadControl.UploadedFiles != null && uploadControl.UploadedFiles.Length > 0) {
