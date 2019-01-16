@@ -227,6 +227,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Static\Postback.html" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
