@@ -1,0 +1,21 @@
+<script type="text/javascript">
+    function onBeforeRender(s, e) {
+        var dashboardControl = s.GetDashboardControl();
+        dashboardControl.remoteService.beforeSend = function (jqXHR, settings) {
+            jqXHR.setRequestHeader('__RequestVerificationToken', $('input[name=__RequestVerificationToken]').val());
+        }
+    }
+</script>
+
+@using(Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+
+    @Html.DevExpress().Dashboard(settings => {
+    settings.Name = "Dashboard";
+    settings.ControllerName = "DashboardWithAntiForgegyToken"; // see class DashboardWithAntiForgegyTokenController
+    settings.InitialDashboardId = "editId";
+    settings.ClientSideEvents.BeforeRender = "onBeforeRender";
+    settings.ClientSideEvents.Init = "onBeforeRender";
+}).GetHtml()
+    
+}

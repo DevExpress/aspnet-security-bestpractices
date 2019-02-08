@@ -8,12 +8,14 @@
     @Html.DevExpress().GetStyleSheets(
         new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
         new StyleSheet { ExtensionSuite = ExtensionSuite.Editors },
-        new StyleSheet { ExtensionSuite = ExtensionSuite.QueryBuilder }
+        new StyleSheet { ExtensionSuite = ExtensionSuite.QueryBuilder },
+        new StyleSheet { ExtensionSuite = ExtensionSuite.Dashboard }
         )
     @Html.DevExpress().GetScripts(
         new Script { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
         new Script { ExtensionSuite = ExtensionSuite.Editors },
-        new Script { ExtensionSuite = ExtensionSuite.QueryBuilder }
+        new Script { ExtensionSuite = ExtensionSuite.QueryBuilder },
+        new Script { ExtensionSuite = ExtensionSuite.Dashboard }
        )
 
     <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/Site.css")" />
