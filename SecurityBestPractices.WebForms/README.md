@@ -295,7 +295,7 @@ Normally, when you create a reporting application with access restrictions using
   </location>
 ```
 
-However, please note that, by restricting access to certain pages that contain the [Document Viewer](https://documentation.devexpress.com/XtraReports/17738/Creating-End-User-Reporting-Applications/Web-Reporting/Document-Viewer/HTML5-Document-Viewer) control, that access restriction is not automatically passed on to the report files that these pages might display. These files can still be accessed by the Document Viewer control from other pages through the client-side API. If a malefactor knows (or guesses) a report name, they can open it by calling the client-side [OpenReport](http://help.devexpress.com/#XtraReports/DevExpressXtraReportsWebScriptsASPxClientWebDocumentViewer_OpenReporttopic) method:
+However, please note that, by restricting access to certain pages that contain the [Document Viewer](https://documentation.devexpress.com/XtraReports/17738/Creating-End-User-Reporting-Applications/Web-Reporting/Document-Viewer/HTML5-Document-Viewer) control, that access restriction is not automatically passed on to the report files that these pages might display. These files can still be accessed by the Document Viewer control from other pages through the client-side API. If a malefactor knows (or guesses) a report ID, they can open it by calling the client-side [OpenReport](http://help.devexpress.com/#XtraReports/DevExpressXtraReportsWebScriptsASPxClientWebDocumentViewer_OpenReporttopic) method:
 
 ```js
 documentViewer.OpenReport("ReportTypeName");

@@ -33,7 +33,7 @@ To mitigate this vulnerability, do the following:
 ```cs
 public class UploadValidationBinder : DevExpressEditorsBinder {
     public UploadValidationBinder() {
-        // Specify allowed fie extensions
+        // Specify allowed file extensions
         UploadControlBinderSettings.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
         UploadControlBinderSettings.FilesUploadCompleteHandler = uploadControl_FilesUploadComplete;
     }
@@ -44,7 +44,7 @@ public class UploadValidationBinder : DevExpressEditorsBinder {
                 UploadedFile file = uploadedFiles[i];
                 if(file.IsValid && file.FileName != "") {
                     using(var stream = file.FileContent) {
-                        // In case additional checks are needed perform them here before saving the file
+                        // In case additional checks are needed, perform them here before saving the file
                         if(!IsValidImage(stream)) {
                             file.IsValid = false;
                             e.ErrorText = "Validation failed!";
@@ -377,7 +377,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
 
 ### 3.2. Reporting
 
-Note that, by restricting access to certain pages that contain the [Document Viewer](http://help.devexpress.com/#AspNet/CustomDocument114491) extension, that access restriction is not automatically passed on to the report files that these pages might display. These files can still be accessed by the Document Viewer control from other pages through the client-side API. If a malefactor knows (or guesses) a report name, they can open it by calling the client-side [OpenReport](http://help.devexpress.com/#XtraReports/DevExpressXtraReportsWebScriptsASPxClientWebDocumentViewer_OpenReporttopic) method:
+Note that, by restricting access to certain pages that contain the [Document Viewer](http://help.devexpress.com/#AspNet/CustomDocument114491) extension, that access restriction is not automatically passed on to the report files that these pages might display. These files can still be accessed by the Document Viewer control from other pages through the client-side API. If a malefactor knows (or guesses) a report ID, they can open it by calling the client-side [OpenReport](http://help.devexpress.com/#XtraReports/DevExpressXtraReportsWebScriptsASPxClientWebDocumentViewer_OpenReporttopic) method:
 
 ```js
 documentViewer.OpenReport("ReportTypeName");
@@ -663,7 +663,8 @@ DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx());
 
 ## 4. Preventing Cross-Site Request Forgery (CSRF)
 
-**Related Extension**: Extensions with data editing available by default (e.g., [Grid View](https://documentation.devexpress.com/AspNet/8998/ASP-NET-MVC-Extensions/Grid-View/Overview/Overview-GridView), [Card View](https://documentation.devexpress.com/AspNet/114559/ASP-NET-MVC-Extensions/Card-View/Overview/Overview-CardView), [Vertical Grid](https://documentation.devexpress.com/AspNet/116060/ASP-NET-MVC-Extensions/Vertical-Grid/Overview/Overview-VerticalGrid), [Tree List](https://documentation.devexpress.com/AspNet/13766/ASP-NET-MVC-Extensions/Tree-List/Overview/Overview-TreeList), etc.)
+**Related Extension**: Extensions with data editing available by default (e.g.,
+[Grid View](https://documentation.devexpress.com/AspNet/8998/ASP-NET-MVC-Extensions/Grid-View/Overview/Overview-GridView), [Card View](https://documentation.devexpress.com/AspNet/114559/ASP-NET-MVC-Extensions/Card-View/Overview/Overview-CardView), [Vertical Grid](https://documentation.devexpress.com/AspNet/116060/ASP-NET-MVC-Extensions/Vertical-Grid/Overview/Overview-VerticalGrid), [Tree List](https://documentation.devexpress.com/AspNet/13766/ASP-NET-MVC-Extensions/Tree-List/Overview/Overview-TreeList), [Dashboard Designer](https://documentation.devexpress.com/Dashboard/116518/Basic-Concepts-and-Terminology/Dashboard-Designer), etc.)
 
 **Security Risks**: [CWE-352](https://cwe.mitre.org/data/definitions/352.html)
 
@@ -720,5 +721,72 @@ If the validation fails, the server will generate an error:
 ![AntiForgeryError](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/anti-forgery-error.png?raw=true)
 
 Note that you should never perform data modifying requests using the **Get** verb.
+
+### Use Anti-Forgery Tokens With the Dashboard Designer
+
+1. Use the following view code to inject a anti-forgery token into a Dashboard.
+
+   ```cs
+    <script type="text/javascript">
+        function onBeforeRender(s, e) {
+            var dashboardControl = s.GetDashboardControl();
+            dashboardControl.remoteService.beforeSend = function (jqXHR, settings) {
+                jqXHR.setRequestHeader('__RequestVerificationToken', $('input[name=__RequestVerificationToken]').val());
+            }
+        }
+    </script>
+
+    @using(Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        @Html.DevExpress().Dashboard(settings => {
+        settings.Name = "Dashboard";
+        settings.ControllerName = "DashboardWithAntiForgegyToken"; // see class DashboardWithAntiForgegyTokenController
+        settings.InitialDashboardId = "editId";
+        settings.ClientSideEvents.BeforeRender = "onBeforeRender";
+        settings.ClientSideEvents.Init = "onBeforeRender";
+    }).GetHtml()
+    }
+   ```
+
+2. Define a custom attribute to validate the anti-forgery token on requests.
+
+   ```cs
+    public sealed class DashboardValidateAntiForgeryTokenAttribute : FilterAttribute, IAuthorizationFilter {
+        public void OnAuthorization(AuthorizationContext filterContext) {
+            if(filterContext == null) {
+                throw new ArgumentNullException(nameof(filterContext));
+            }
+
+            HttpContextBase httpContext = filterContext.HttpContext;
+            HttpCookie cookie = httpContext.Request.Cookies[AntiForgeryConfig.CookieName];
+            AntiForgery.Validate(cookie?.Value, httpContext.Request.Headers["__RequestVerificationToken"]);
+        }
+    }
+   ```
+
+3. You can apply this attribute to a controller action that handles the Dashboard's callbacks as shown below.
+
+   ```cs
+    [DashboardValidateAntiForgeryToken]
+    public class DashboardWithAntiForgegyTokenController : DevExpress.DashboardWeb.Mvc.DashboardController {
+        static readonly DashboardConfigurator dashboardConfigurator;
+        static DashboardWithAntiForgegyTokenController() {
+            // sample data
+            var dashboardInMemoryStorage = new DashboardInMemoryStorage();
+            dashboardInMemoryStorage.RegisterDashboard("editId", XDocument.Load(HostingEnvironment.MapPath(@"~/App_Data/PublicDashboard.xml")));
+
+            dashboardConfigurator = new DashboardConfigurator();
+            dashboardConfigurator.SetDashboardStorage(dashboardInMemoryStorage);
+        }
+
+        public DashboardWithAntiForgegyTokenController() : base(dashboardConfigurator) {
+        }
+    }
+   ```
+
+   If a malefactor tries to forge a request to this controller action, an error will occur:
+
+   ![Dashboard Anti Forgery](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/anti-forgery-dashboard.png)
 
 ---
