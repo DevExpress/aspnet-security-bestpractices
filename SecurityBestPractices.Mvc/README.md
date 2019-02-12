@@ -676,7 +676,29 @@ The possible security breach could occur as follows:
 2. A user inadvertently visits this phishing page, which then sends a malicious request to your web application using the user's cookies.
 3. As a result, the malicious action is performed on the user's behalf, allowing the malefactor to access or modify the user's data or account info.
 
+### Get Familiar With the Issue
+
+To familiarize yourself with the issue:
+
+1. Comment out the `[ValidateAntiForgeryToken]` attribute in the example project's [Controllers/UsingAntiForgegyToken/UsingAntiForgegyTokenController.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/e5ab0f706a2b8524208ff3df288a1b0f9b9d2c84/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UsingAntiForgegyToken/UsingAntiForgegyTokenController.cs#L25) file to disable protection:
+
+   ```cs
+        [Authorize]
+        [ValidateInput(false)]
+        ///[ValidateAntiForgeryToken]
+        public ActionResult EditFormDeletePartial(int id = -1) {
+            if(id >= 0)
+                EditFormItems.Delete(id);
+
+            return EditFormPartial();
+        }
+   ```
+
+2. Open the [Static/Postback.html](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Static/Postback.html) page in the browser and click the link on this page. The page will perform a POST request to the `EditFormDeletePartial` controller action and remove a data item.
+
 For more information on the vulnerability, refer to the [CWE-352 - Cross-Site Request Forgery (CSRF)](https://cwe.mitre.org/data/definitions/352.html) article.
+
+### How to Mitigate
 
 To mitigate the vulnerability, use the **AntiForgeryToken** pattern as described below:
 
@@ -706,7 +728,7 @@ To mitigate the vulnerability, use the **AntiForgeryToken** pattern as described
         });
    </script>
    ```
-3. To automatically check the request token on the server side, apply the **ValidateAntiForgeryToken** attribute to the corresponding controller action:
+3. To automatically check the request token on the server side, apply the `[ValidateAntiForgeryToken]` attribute to the corresponding controller action:
    ```cs
    [ValidateAntiForgeryToken]
    public ActionResult EditFormDeletePartial(int id = -1) {
@@ -720,7 +742,7 @@ If the validation fails, the server will generate an error:
 
 ![AntiForgeryError](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/anti-forgery-error.png?raw=true)
 
-Note that you should never perform data modifying requests using the **Get** verb.
+> Note that you should never perform data modifying requests using the **GET** method.
 
 ### Use Anti-Forgery Tokens With the Dashboard Designer
 
