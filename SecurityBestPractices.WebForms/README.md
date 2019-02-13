@@ -183,7 +183,7 @@ You can also define security permissions for folders and files accessible throug
 
 Consider the situation where an image is uploaded to the server. The server generates a page that contains the image, and a user opens that page in their browser.
 
-The possible security breach is this: a malefactor creates a file containing a malicious script. This file is an image file extension, is added to the generated page by the server, and that page is downloaded by the user's browser. This results in the malicious script being run in the browser. Essentially this is an example of XSS (Cross-site Scripting) via content-sniffing, a particular case of [CWE-79](https://cwe.mitre.org/data/definitions/79.html).
+The possible security breach is this: a malefactor creates a file containing a malicious script. This file has an image file extension. The file is added to the generated page by the server, and that page is downloaded by the user's browser. This results in the malicious script being run in the browser. Essentially this is an example of XSS (Cross-site Scripting) via content-sniffing, a particular case of [CWE-79](https://cwe.mitre.org/data/definitions/79.html).
 
 To familiarize yourself with the issue:
 
