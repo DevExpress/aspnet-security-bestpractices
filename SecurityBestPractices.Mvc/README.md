@@ -691,7 +691,7 @@ To familiarize yourself with the issue:
         }
    ```
 
-2. Open the [Static/Postback.html](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Static/Postback.html) page in the browser and click the link on this page. The page will perform a POST request to the `EditFormDeletePartial` controller action and remove a data item.
+2. Open the [Static/Postback.html](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Static/Postback.html) page in the browser and click the link on this page. The page will perform a POST request to the `EditFormDeletePartial` controller action and remove a data item (Row Id=3).
 
 For more information on the vulnerability, refer to the [CWE-352 - Cross-Site Request Forgery (CSRF)](https://cwe.mitre.org/data/definitions/352.html) article.
 
@@ -750,7 +750,7 @@ If the validation fails, the server will generate an error:
 
 ### Use Anti-Forgery Tokens With the Dashboard Designer
 
-1. Use the following view code to inject a anti-forgery token into a Dashboard.
+1. Use the following view code to inject a anti-forgery token into a Dashboard's AJAX request header.
 
    ```cs
     <script type="text/javascript">
@@ -814,7 +814,5 @@ If the validation fails, the server will generate an error:
    If a malefactor tries to forge a request to this controller action, an error will occur:
 
    ![Dashboard Anti Forgery](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/anti-forgery-dashboard.png)
-
----
 
 ![Analytics](https://ga-beacon.appspot.com/UA-129603086-1/aspnet-security-bestpractices-mvc-page?pixel)
