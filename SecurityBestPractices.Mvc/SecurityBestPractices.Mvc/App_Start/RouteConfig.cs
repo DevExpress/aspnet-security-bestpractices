@@ -7,6 +7,7 @@ namespace SecurityBestPractices.Mvc {
         public static void RegisterRoutes(RouteCollection routes) {
             routes.MapDashboardRoute(); // dashboards nessesary initialization
             routes.MapDashboardRoute("dashboard", "PublicDashboard", new[] { "SecurityBestPractices.Mvc.Controllers" });
+            routes.MapDashboardRoute("dashboardAFT", "DashboardWithAntiForgegyToken", new[] { "SecurityBestPractices.Mvc.Controllers" });
 
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute("{resource}.ashx/{*pathInfo}");
