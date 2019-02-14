@@ -382,15 +382,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
 
 ### 3.2. Reporting
 
-Note that, by restricting access to certain pages that contain the [Document Viewer](http://help.devexpress.com/#AspNet/CustomDocument114491) extension, that access restriction is not automatically passed on to the report files that these pages might display. These files can still be accessed by the Document Viewer control from other pages through the client-side API. If a malefactor knows (or guesses) a report ID, they can open it by calling the client-side [OpenReport](http://help.devexpress.com/#XtraReports/DevExpressXtraReportsWebScriptsASPxClientWebDocumentViewer_OpenReporttopic) method:
-
-```js
-documentViewer.OpenReport("ReportID");
-```
-
-It is not possible to utilize standard authorization mechanisms because the Document Viewer's AJAX requests are handled not by a controller action, but by a special HTTP handler (**DXXRDV.axd**).
-
-To mitigate this particular vulnerability, you should implement a custom report storage derived from the [ReportStorageWebExtension](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebExtensionsReportStorageWebExtensiontopic) class. This storage will be used by the HTTP handler to access your reports and here you can define your authorization rules. As a starting point, you can copy the reference implementation of such a storage class from the example project's [ReportStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs) file to your application and fine-tune it for your needs. The following customizations would have to be considered:
+To implement authorization logic for the Document Viewer, provide a custom report storage derived from the [ReportStorageWebExtension](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebExtensionsReportStorageWebExtensiontopic) class. This storage will be used by the HTTP handler to access your reports and here you can define your authorization rules. As a starting point, you can copy the reference implementation of such a storage class from the example project's [ReportStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs) file to your application and fine-tune it for your needs. The following customizations would have to be considered:
 
 #### A. Viewing Reports
 
