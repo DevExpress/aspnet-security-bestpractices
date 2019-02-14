@@ -288,25 +288,7 @@ This section provides information on using DevExpress controls in web applicatio
 
 ### 3.1. Reporting
 
-Normally, when you create a reporting application with access restrictions using one of the standard Microsoft mechanisms, you grant or restrict access to particular pages based on a user's identity:
-
-```aspx
-  <location path="Authorization/Reports">
-    <system.web>
-      <authorization>
-        <deny users="?" />
-      </authorization>
-    </system.web>
-  </location>
-```
-
-However, please note that, by restricting access to certain pages that contain the [Document Viewer](https://documentation.devexpress.com/XtraReports/17738/Creating-End-User-Reporting-Applications/Web-Reporting/Document-Viewer/HTML5-Document-Viewer) control, that access restriction is not automatically passed on to the report files that these pages might display. These files can still be accessed by the Document Viewer control from other pages through the client-side API. If a malefactor knows (or guesses) a report ID, they can open it by calling the client-side [OpenReport](http://help.devexpress.com/#XtraReports/DevExpressXtraReportsWebScriptsASPxClientWebDocumentViewer_OpenReporttopic) method:
-
-```js
-documentViewer.OpenReport("ReportID");
-```
-
-To mitigate this particular vulnerability, you should define your authorization rules in the server code. This is implemented by creating a custom report storage derived from the [ReportStorageWebExtension](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebExtensionsReportStorageWebExtensiontopic) class. As a starting point, you can copy the reference implementation of such a storage class from the example project's [ReportStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs) file to your application and fine-tune it for your needs. The following customizations would have to be considered:
+To implement authorization logic for the Document Viewer, provide a custom report storage derived from the [ReportStorageWebExtension](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebExtensionsReportStorageWebExtensiontopic) class. As a starting point, you can copy the reference implementation of such a storage class from the example project's [ReportStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs) file to your application and fine-tune it for your needs. The following customizations would have to be considered:
 
 #### A. Viewing Reports
 
