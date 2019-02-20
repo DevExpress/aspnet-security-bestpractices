@@ -608,7 +608,7 @@ The possible security breach could occur as follows:
 
 For more information on the vulnerability, refer to the [CWE-352 - Cross-Site Request Forgery (CSRF)](https://cwe.mitre.org/data/definitions/352.html) article.
 
-To mitigate the vulnerability, use the **AntiForgeryToken** pattern. Refer to the [AntiForgery.Validate](<https://msdn.microsoft.com/ru-ru/library/gg548011(v=vs.111).aspx>) MSDN article to learn more.
+To mitigate the vulnerability, use the **AntiForgeryToken** pattern. Refer to the [AntiForgery.Validate](<https://msdn.microsoft.com/en-us/library/gg548011(v=vs.111).aspx>) MSDN article to learn more.
 
 The best practice to prevent CSRF is to create a MasterPage that:
 
