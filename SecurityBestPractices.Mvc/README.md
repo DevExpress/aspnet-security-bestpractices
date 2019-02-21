@@ -677,7 +677,7 @@ The possible security breach could occur as follows:
 
 To familiarize yourself with the issue:
 
-1. Comment out the `[ValidateAntiForgeryToken]` attribute in the example project's [Controllers/UsingAntiForgegyToken/UsingAntiForgegyTokenController.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/e5ab0f706a2b8524208ff3df288a1b0f9b9d2c84/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UsingAntiForgegyToken/UsingAntiForgegyTokenController.cs#L25) file to disable protection:
+1. Comment out the `[ValidateAntiForgeryToken]` attribute in the example project's [Controllers/UsingAntiForgeryToken/UsingAntiForgeryTokenController.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/e5ab0f706a2b8524208ff3df288a1b0f9b9d2c84/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UsingAntiForgeryToken/UsingAntiForgeryTokenController.cs#L25) file to disable protection:
 
    ```cs
         [Authorize]
@@ -767,7 +767,7 @@ If the validation fails, the server will generate an error:
 
         @Html.DevExpress().Dashboard(settings => {
         settings.Name = "Dashboard";
-        settings.ControllerName = "DashboardWithAntiForgegyToken"; // see class DashboardWithAntiForgegyTokenController
+        settings.ControllerName = "DashboardWithAntiForgeryToken"; // see class DashboardWithAntiForgeryTokenController
         settings.InitialDashboardId = "editId";
         settings.ClientSideEvents.BeforeRender = "onBeforeRender";
         settings.ClientSideEvents.Init = "onBeforeRender";
@@ -795,9 +795,9 @@ If the validation fails, the server will generate an error:
 
    ```cs
     [DashboardValidateAntiForgeryToken]
-    public class DashboardWithAntiForgegyTokenController : DevExpress.DashboardWeb.Mvc.DashboardController {
+    public class DashboardWithAntiForgeryTokenController : DevExpress.DashboardWeb.Mvc.DashboardController {
         static readonly DashboardConfigurator dashboardConfigurator;
-        static DashboardWithAntiForgegyTokenController() {
+        static DashboardWithAntiForgeryTokenController() {
             // sample data
             var dashboardInMemoryStorage = new DashboardInMemoryStorage();
             dashboardInMemoryStorage.RegisterDashboard("editId", XDocument.Load(HostingEnvironment.MapPath(@"~/App_Data/PublicDashboard.xml")));
@@ -806,7 +806,7 @@ If the validation fails, the server will generate an error:
             dashboardConfigurator.SetDashboardStorage(dashboardInMemoryStorage);
         }
 
-        public DashboardWithAntiForgegyTokenController() : base(dashboardConfigurator) {
+        public DashboardWithAntiForgeryTokenController() : base(dashboardConfigurator) {
         }
     }
    ```

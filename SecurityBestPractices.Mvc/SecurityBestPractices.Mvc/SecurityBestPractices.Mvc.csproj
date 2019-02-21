@@ -270,7 +270,7 @@
     <Compile Include="Controllers\Authorization\AuthorizationController.QueryBuilder.cs" />
     <Compile Include="Controllers\UploadingBinaryImages\UploadingBinaryImages.cs" />
     <Compile Include="Controllers\UploadingFiles\UploadingFiles.cs" />
-    <Compile Include="Controllers\UsingAntiForgegyToken\UsingAntiForgegyTokenController.cs" />
+    <Compile Include="Controllers\UsingAntiForgeryToken\UsingAntiForgeryTokenController.cs" />
     <Compile Include="Models\EditFormModel.cs" />
     <Compile Include="Services\Dashboards\DashboardStorageWithAccessRules.cs" />
     <Compile Include="Services\DataSourceWizardConnectionStringsProvider.cs" />
