@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPageWithAntiForgeryToken.master.cs" Inherits="SecurityBestPractices.UsingAntiForgegyToken.MasterPageWithAntiForgeryToken" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPageWithAntiForgeryToken.master.cs" Inherits="SecurityBestPractices.UsingAntiForgeryToken.MasterPageWithAntiForgeryToken" %>
 
 <!DOCTYPE html>
 

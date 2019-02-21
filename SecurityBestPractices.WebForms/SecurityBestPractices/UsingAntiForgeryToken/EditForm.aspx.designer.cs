@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SecurityBestPractices.UsingAntiForgegyToken {
+namespace SecurityBestPractices.UsingAntiForgeryToken {
     
     
     public partial class EditForm {

@@ -8,10 +8,10 @@ using System.Web.Mvc;
 using System.Xml.Linq;
 
 namespace SecurityBestPractices.Mvc.Controllers {
-    public class UsingAntiForgegyTokenController : Controller {
+    public class UsingAntiForgeryTokenController : Controller {
         /* EditForm */
 
-        // GET: /UsingAntiForgegyTokenController/EditForm/
+        // GET: /UsingAntiForgeryTokenController/EditForm/
         public ActionResult EditForm() {
             return View("EditForm", EditFormItems.GetList());
         }
@@ -45,7 +45,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
 
         /* Dashboard View */
 
-        // GET: /UsingAntiForgegyTokenController/EditDashboard/
+        // GET: /UsingAntiForgeryTokenController/EditDashboard/
         [Authorize]
         public ActionResult EditDashboard() {
             return View("EditDashboard");
@@ -69,9 +69,9 @@ namespace SecurityBestPractices.Mvc.Controllers {
 
     /* Dashboard with ValidateAntiForgeryToken */
     [DashboardValidateAntiForgeryToken]
-    public class DashboardWithAntiForgegyTokenController : DevExpress.DashboardWeb.Mvc.DashboardController {
+    public class DashboardWithAntiForgeryTokenController : DevExpress.DashboardWeb.Mvc.DashboardController {
         static readonly DashboardConfigurator dashboardConfigurator;
-        static DashboardWithAntiForgegyTokenController() {
+        static DashboardWithAntiForgeryTokenController() {
             // sample data
             var dashboardInMemoryStorage = new DashboardInMemoryStorage();
             dashboardInMemoryStorage.RegisterDashboard("editId", XDocument.Load(HostingEnvironment.MapPath(@"~/App_Data/PublicDashboard.xml")));
@@ -80,7 +80,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
             dashboardConfigurator.SetDashboardStorage(dashboardInMemoryStorage);
         }
 
-        public DashboardWithAntiForgegyTokenController() : base(dashboardConfigurator) {
+        public DashboardWithAntiForgeryTokenController() : base(dashboardConfigurator) {
         }
     }
 }

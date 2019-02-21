@@ -12,7 +12,7 @@
 
     @Html.DevExpress().Dashboard(settings => {
     settings.Name = "Dashboard";
-    settings.ControllerName = "DashboardWithAntiForgegyToken"; // see class DashboardWithAntiForgegyTokenController
+    settings.ControllerName = "DashboardWithAntiForgeryToken"; // see class DashboardWithAntiForgeryTokenController
     settings.InitialDashboardId = "editId";
     settings.ClientSideEvents.BeforeRender = "onBeforeRender";
     settings.ClientSideEvents.Init = "onBeforeRender";

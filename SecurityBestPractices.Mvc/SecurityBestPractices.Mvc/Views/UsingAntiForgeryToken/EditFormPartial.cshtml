@@ -1,9 +1,9 @@
 ﻿@{
     var grid = Html.DevExpress().GridView<EditFormItem>(settings => {
         settings.Name = "grid";
-        settings.CallbackRouteValues = new { Controller = "UsingAntiForgegyToken", Action = "EditFormPartial" };
-        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "UsingAntiForgegyToken", Action = "EditFormDeletePartial" };
-        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "UsingAntiForgegyToken", Action = "EditFormUpdatePartial" };
+        settings.CallbackRouteValues = new { Controller = "UsingAntiForgeryToken", Action = "EditFormPartial" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "UsingAntiForgeryToken", Action = "EditFormDeletePartial" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "UsingAntiForgeryToken", Action = "EditFormUpdatePartial" };
 
         // Show Delete/Update actions for Authorized users
         var identityName = IdentityHelper.GetIdentityName();

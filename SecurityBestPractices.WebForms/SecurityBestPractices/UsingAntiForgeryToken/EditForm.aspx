@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Using AntiForgegyToken" Language="C#" MasterPageFile="~/UsingAntiForgegyToken/MasterPageWithAntiForgeryToken.Master" AutoEventWireup="true" CodeBehind="EditForm.aspx.cs" Inherits="SecurityBestPractices.UsingAntiForgegyToken.EditForm" %>
+﻿<%@ Page Title="Using AntiForgeryToken" Language="C#" MasterPageFile="~/UsingAntiForgeryToken/MasterPageWithAntiForgeryToken.Master" AutoEventWireup="true" CodeBehind="EditForm.aspx.cs" Inherits="SecurityBestPractices.UsingAntiForgeryToken.EditForm" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>

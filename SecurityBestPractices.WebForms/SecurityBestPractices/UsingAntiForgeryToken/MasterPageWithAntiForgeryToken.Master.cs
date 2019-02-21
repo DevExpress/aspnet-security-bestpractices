@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.UI;
 
-namespace SecurityBestPractices.UsingAntiForgegyToken {
+namespace SecurityBestPractices.UsingAntiForgeryToken {
     public partial class MasterPageWithAntiForgeryToken : System.Web.UI.MasterPage {
         protected override void OnInit(EventArgs e) {
             base.OnInit(e);

@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace SecurityBestPractices.UsingAntiForgegyToken {
+namespace SecurityBestPractices.UsingAntiForgeryToken {
     public partial class EditForm : System.Web.UI.Page {
         protected void UpdateButton_Click(object sender, EventArgs e) {
             // if (ChangeUserEmail(EmailTextBox.Text))

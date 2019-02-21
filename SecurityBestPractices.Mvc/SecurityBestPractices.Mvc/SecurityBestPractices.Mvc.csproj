@@ -247,15 +247,15 @@
     <Content Include="Views\Authorization\Dashboards\Dashboard.cshtml" />
     <Content Include="Views\Authorization\Reports\_ViewStart.cshtml" />
     <Content Include="Views\Authorization\Reports\_Layout.cshtml" />
-    <Content Include="Views\UsingAntiForgegyToken\EditForm.cshtml" />
-    <Content Include="Views\UsingAntiForgegyToken\EditFormPartial.cshtml" />
+    <Content Include="Views\UsingAntiForgeryToken\EditForm.cshtml" />
+    <Content Include="Views\UsingAntiForgeryToken\EditFormPartial.cshtml" />
     <Content Include="Views\UploadingFiles\Validation.cshtml" />
     <Content Include="Views\UploadingFiles\InMemoryProcessing.cshtml" />
     <Content Include="Views\UploadingFiles\SavingTemporaryFiles.cshtml" />
     <Content Include="Views\UploadingBinaryImages\UploadControl.cshtml" />
     <Content Include="Views\UploadingBinaryImages\BinaryImage.cshtml" />
     <Content Include="Views\UploadingBinaryImages\BinaryImagePartial.cshtml" />
-    <Content Include="Views\UsingAntiForgegyToken\EditDashboard.cshtml" />
+    <Content Include="Views\UsingAntiForgeryToken\EditDashboard.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

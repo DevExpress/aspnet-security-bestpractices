@@ -25,8 +25,8 @@
         <siteMapNode url="~/Authorization/QueryBuilder/QueryBuilder.aspx" title="Query Builder" />
       </siteMapNode>
     </siteMapNode>
-    <siteMapNode url="" title="4. Using AntiForgegy Token">
-      <siteMapNode url="~/UsingAntiForgegyToken/EditForm.aspx" title="Edit Form" />
+    <siteMapNode url="" title="4. Using AntiForgery Token">
+      <siteMapNode url="~/UsingAntiForgeryToken/EditForm.aspx" title="Edit Form" />
     </siteMapNode>
   </siteMapNode>
 </siteMap>
