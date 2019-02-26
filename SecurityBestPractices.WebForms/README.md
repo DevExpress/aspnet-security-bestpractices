@@ -579,15 +579,16 @@ DefaultReportDesignerContainer.RegisterDataSourceWizardDBSchemaProviderExFactory
 **Dashboard Designer:**
 
 ```cs
-DefaultQueryBuilderContainer.Register<IDataSourceWizardConnectionStringsProvider, DataSourceWizardConnectionStringsProvider>();
-DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>();
+DashboardConfigurator.Default.SetConnectionStringsProvider(new DataSourceWizardConnectionStringsProvider());
+DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx());
+
 ```
 
 **Query Builder:**
 
 ```cs
-DashboardConfigurator.Default.SetConnectionStringsProvider(new DataSourceWizardConnectionStringsProvider());
-DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx());
+DefaultQueryBuilderContainer.Register<IDataSourceWizardConnectionStringsProvider, DataSourceWizardConnectionStringsProvider>();
+DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>();
 ```
 
 ---
