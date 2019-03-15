@@ -28,5 +28,12 @@
     <siteMapNode url="" title="4. Using AntiForgery Token">
       <siteMapNode url="~/UsingAntiForgeryToken/EditForm.aspx" title="Edit Form" />
     </siteMapNode>
+    <siteMapNode url="" title="5. Sensitive Information Exposure">
+      <siteMapNode url="~/InformationExposure/ErrorMessage.aspx" title="Information Exposure Through an Error Message" />
+    </siteMapNode>
+    <siteMapNode url="" title="6. Encoding - Preventing  cross-site scripting (XSS) attack">
+      <siteMapNode url="~/HtmlEncoding/EncodeHtml.aspx" title="Html Encoding in Controls" />
+      <siteMapNode url="~/HtmlEncoding/Templates.aspx" title="Html Encoding in Templates" />
+    </siteMapNode>
   </siteMapNode>
 </siteMap>

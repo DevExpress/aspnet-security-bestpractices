@@ -190,6 +190,9 @@
     <Content Include="Authorization\PublicPages\PublicReportPage.aspx" />
     <Content Include="Authorization\Reports\ReportDesignerPage.aspx" />
     <Content Include="Authorization\Reports\ReportViewerPage.aspx" />
+    <Content Include="HtmlEncoding\Templates.aspx" />
+    <Content Include="HtmlEncoding\EncodeHtml.aspx" />
+    <Content Include="InformationExposure\ErrorMessage.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Site.Master" />
     <Content Include="UsingAntiForgeryToken\EditForm.aspx" />
@@ -280,6 +283,27 @@
     </Compile>
     <Compile Include="default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HtmlEncoding\Templates.aspx.cs">
+      <DependentUpon>Templates.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HtmlEncoding\Templates.aspx.designer.cs">
+      <DependentUpon>Templates.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HtmlEncoding\EncodeHtml.aspx.cs">
+      <DependentUpon>EncodeHtml.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HtmlEncoding\EncodeHtml.aspx.designer.cs">
+      <DependentUpon>EncodeHtml.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="InformationExposure\ErrorMessage.aspx.cs">
+      <DependentUpon>ErrorMessage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="InformationExposure\ErrorMessage.aspx.designer.cs">
+      <DependentUpon>ErrorMessage.aspx</DependentUpon>
     </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
