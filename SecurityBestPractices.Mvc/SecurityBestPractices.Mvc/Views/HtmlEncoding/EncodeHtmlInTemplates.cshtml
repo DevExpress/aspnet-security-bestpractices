@@ -1,0 +1,7 @@
+﻿@model IEnumerable
+
+<h2>Html Encoding in Templates</h2>
+
+@using(Html.BeginForm()) {
+    @Html.Partial("EncodeHtmlInTemplatesPartial", Model)
+}

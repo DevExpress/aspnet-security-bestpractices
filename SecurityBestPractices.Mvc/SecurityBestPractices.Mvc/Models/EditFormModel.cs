@@ -12,7 +12,7 @@ namespace SecurityBestPractices.Mvc.Models {
     public static class EditFormItems {
         static List<EditFormItem> items = new List<EditFormItem>();
         static EditFormItems() {
-            items.Add(new EditFormItem { Id = 1, Price = 10, ProductName = "Chai" });
+            items.Add(new EditFormItem { Id = 1, Price = 10, ProductName = "Chai <img src=1 onerror=alert('XSS') />" });
             items.Add(new EditFormItem { Id = 2, Price = 20, ProductName = "Chang" });
             items.Add(new EditFormItem { Id = 3, Price = 30, ProductName = "Aniseed Syrup" });
         }
@@ -21,6 +21,7 @@ namespace SecurityBestPractices.Mvc.Models {
         }
 
         internal static void Update(EditFormItem item) {
+            // throw new Exception("Some sensitive data ***");
             var updatedItem = items.SingleOrDefault(x => x.Id == item.Id);
             if(updatedItem != null) {
                 updatedItem.ProductName = item.ProductName;

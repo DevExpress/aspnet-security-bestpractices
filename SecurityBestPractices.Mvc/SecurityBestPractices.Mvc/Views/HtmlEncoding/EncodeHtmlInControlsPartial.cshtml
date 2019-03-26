@@ -1,0 +1,26 @@
+﻿@{
+    var grid = Html.DevExpress().GridView<EditFormItem>(settings => {
+        settings.Name = "grid";
+        settings.CallbackRouteValues = new { Controller = "HtmlEncoding", Action = "EncodeHtmlInControlsPartial" };
+
+        settings.KeyFieldName = "Id";
+
+        settings.Columns.Add(c => {
+            c.FieldName = "Id";
+            c.ReadOnly = true;
+        });
+        settings.Columns.Add(column => {
+            column.FieldName = "ProductName";
+        //    column.PropertiesEdit.EncodeHtml = false;
+        });
+
+        settings.Columns.Add("Price");
+
+    });
+
+    if(ViewData["EditError"] != null) {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()
+

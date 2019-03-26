@@ -17,6 +17,7 @@
                 <asp:Label ID="ProductNameLabel" runat="server" Text='<%# System.Web.HttpUtility.HtmlEncode(Eval("ProductName")) %>' />
                 <%--<asp:Label ID="Label1" runat="server" Text='<%# Eval("ProductName") %>' />--%>
             </ItemTemplate>
+            <ItemStyle Border-BorderWidth="1" Border-BorderStyle="Dashed" Border-BorderColor="LightBlue" />
         </dx:ASPxDataView>
         <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:nwindConnection %>" DeleteCommand="DELETE FROM [Products] WHERE [ProductID] = ?" InsertCommand="INSERT INTO [Products] ([ProductID], [ProductName], [UnitPrice]) VALUES (?, ?, ?)" ProviderName="<%$ ConnectionStrings:nwindConnection.ProviderName %>" SelectCommand="SELECT [ProductID], [ProductName], [UnitPrice] FROM [Products]" UpdateCommand="UPDATE [Products] SET [ProductName] = ?, [UnitPrice] = ? WHERE [ProductID] = ?">
             <DeleteParameters>

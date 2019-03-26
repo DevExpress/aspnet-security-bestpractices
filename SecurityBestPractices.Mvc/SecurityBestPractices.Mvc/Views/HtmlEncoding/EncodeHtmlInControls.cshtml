@@ -1,0 +1,8 @@
+﻿@model IEnumerable
+
+<h2>Html Encoding in Controls</h2>
+<p>Data values are encoded automatically when EncodeHtml = true (for example: GridView "Produt Name" cell values). Meta-data properties are not encoded (for example: GridView.Caption).</p>
+
+@using(Html.BeginForm()) {
+    @Html.Partial("EncodeHtmlInControlsPartial", Model)
+}

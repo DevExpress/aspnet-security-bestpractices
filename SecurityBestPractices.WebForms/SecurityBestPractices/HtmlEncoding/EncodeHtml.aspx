@@ -9,7 +9,8 @@
 <body>
     <form id="form1" runat="server">
         <h2>Html Encoding in Controls</h2>
-        <dx:ASPxGridView ID="GridView" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSource1" KeyFieldName="ProductID">
+        <p>Data values are encoded automatically when EncodeHtml = true (for example: GridView "Produt Name" cell values). Meta-data properties are not encoded (for example: GridView.Caption).</p>
+        <dx:ASPxGridView ID="GridView" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSource1" KeyFieldName="ProductID" Caption="<b>Caption</b> text">
             <SettingsAdaptivity>
                 <AdaptiveDetailLayoutProperties ColCount="1">
                 </AdaptiveDetailLayoutProperties>

@@ -1,0 +1,28 @@
+﻿@model EditFormItem
+@using SecurityBestPractices.Mvc.Controllers;
+
+<h2>Information Exposure Through an Error Message</h2>
+
+@{
+    Html.EnableClientValidation();
+    Html.EnableUnobtrusiveJavaScript();
+}
+
+@using(Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    
+    @Html.HiddenFor(m => m.Id)
+
+    @Html.DevExpress().TextBoxFor(m => m.ProductName, settings => {
+            settings.Properties.Caption = "ProductName";
+        }).GetHtml()
+    <br />
+    <br />
+    @Html.DevExpress().Button(settings => {
+            settings.Name = "UpdateButton";
+            settings.Text = "Submit";
+            settings.UseSubmitBehavior = true;
+        }).GetHtml()
+    <br />
+    @ViewData[InformationExposureController.UpdateStatusKey]
+}

@@ -1,0 +1,24 @@
+﻿@Html.DevExpress().DataView(
+    settings => {
+        settings.Name = "dataView";
+        settings.CallbackRouteValues = new { Controller = "HtmlEncoding", Action = "EncodeHtmlInTemplatesPartial" };
+        settings.SettingsTableLayout.RowsPerPage = 2;
+        settings.SettingsTableLayout.ColumnCount = 1;
+
+        settings.SetItemTemplateContent(
+            c => {
+                ViewContext.Writer.Write(
+                    "<b>ProductID</b>: " + DataBinder.Eval(c.DataItem, "Id") +
+                    "<br/>" +
+                    //"<b>ProductName</b>: " + DataBinder.Eval(c.DataItem, "ProductName")
+                    "<b>ProductName</b>: " + System.Web.HttpUtility.HtmlEncode(DataBinder.Eval(c.DataItem, "ProductName"))
+                );
+            }
+        );
+
+        settings.Styles.Item.Border.BorderColor = System.Drawing.Color.LightBlue;
+        settings.Styles.Item.Border.BorderStyle = BorderStyle.Dashed;
+        settings.Styles.Item.Border.BorderWidth = new Unit("1px");
+    }
+).Bind(Model).GetHtml()
+
