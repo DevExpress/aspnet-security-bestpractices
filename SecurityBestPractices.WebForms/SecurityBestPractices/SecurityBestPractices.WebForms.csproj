@@ -190,6 +190,7 @@
     <Content Include="Authorization\PublicPages\PublicReportPage.aspx" />
     <Content Include="Authorization\Reports\ReportDesignerPage.aspx" />
     <Content Include="Authorization\Reports\ReportViewerPage.aspx" />
+    <Content Include="HtmlEncoding\General.aspx" />
     <Content Include="HtmlEncoding\Templates.aspx" />
     <Content Include="HtmlEncoding\EncodeHtml.aspx" />
     <Content Include="InformationExposure\ErrorMessage.aspx" />
@@ -283,6 +284,13 @@
     </Compile>
     <Compile Include="default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HtmlEncoding\General.aspx.cs">
+      <DependentUpon>General.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HtmlEncoding\General.aspx.designer.cs">
+      <DependentUpon>General.aspx</DependentUpon>
     </Compile>
     <Compile Include="HtmlEncoding\Templates.aspx.cs">
       <DependentUpon>Templates.aspx</DependentUpon>
