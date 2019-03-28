@@ -31,7 +31,8 @@
     <siteMapNode url="" title="5. Sensitive Information Exposure">
       <siteMapNode url="~/InformationExposure/ErrorMessage.aspx" title="Information Exposure Through an Error Message" />
     </siteMapNode>
-    <siteMapNode url="" title="6. Encoding - Preventing  cross-site scripting (XSS) attack">
+    <siteMapNode url="" title="6. Preventing  cross-site scripting (XSS) attack (Encoding)">
+      <siteMapNode url="~/HtmlEncoding/General.aspx" title="General" />
       <siteMapNode url="~/HtmlEncoding/EncodeHtml.aspx" title="Html Encoding in Controls" />
       <siteMapNode url="~/HtmlEncoding/Templates.aspx" title="Html Encoding in Templates" />
     </siteMapNode>
