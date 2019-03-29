@@ -261,6 +261,7 @@
     <Content Include="Views\HtmlEncoding\EncodeHtmlInControlsPartial.cshtml" />
     <Content Include="Views\HtmlEncoding\EncodeHtmlInTemplates.cshtml" />
     <Content Include="Views\HtmlEncoding\EncodeHtmlInTemplatesPartial.cshtml" />
+    <Content Include="Views\HtmlEncoding\General.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -273,7 +274,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\Authorization\AuthorizationController.QueryBuilder.cs" />
-    <Compile Include="Controllers\HtmlEncoding\EncodeHtmlInControls.cs" />
+    <Compile Include="Controllers\HtmlEncoding\HtmlEncoding.cs" />
     <Compile Include="Controllers\InformationExposure\InformationExposureController.cs" />
     <Compile Include="Controllers\UploadingBinaryImages\UploadingBinaryImages.cs" />
     <Compile Include="Controllers\UploadingFiles\UploadingFiles.cs" />
