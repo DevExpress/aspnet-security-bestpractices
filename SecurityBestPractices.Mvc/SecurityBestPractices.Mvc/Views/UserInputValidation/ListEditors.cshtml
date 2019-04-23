@@ -1,0 +1,32 @@
+﻿@model int
+
+<h1>List Editors</h1>
+<h2>ComboBox sample</h2>
+<form autocomplete="off" method="post">
+    @*@Html.AntiForgeryToken()*@
+
+    @Html.DevExpress().ComboBox(settings => {
+        settings.Name = "productItemId";
+        settings.Width = 180;
+        settings.Properties.Caption = "Select desired bonus";
+        settings.Properties.TextField = "ProductName";
+        settings.Properties.ValueField = "Id";
+        settings.Properties.ValueType = typeof(int);
+    }).BindList(ProductItems.GetAvailableForUserList()).Bind(Model).GetHtml()
+    <br />
+
+    @Html.DevExpress().Button(settings => {
+            settings.Name = "UpdateButton";
+            settings.Text = "Update";
+            settings.UseSubmitBehavior = true;
+        }).GetHtml()
+
+    <hr />
+    <p>ModelState.IsValid: @ViewContext.ViewData.ModelState.IsValid</p>
+    <p>Id: @Model</p>
+    <p>ProductName: @ProductItems.GetAllItems().Find(i => i.Id == Model).ProductName</p>
+    <p>Price: @ProductItems.GetAllItems().Find(i => i.Id == Model).Price</p>
+
+    <br /><br />
+    <a href="~/Static/ComboBoxForgeryTest.html">ComboBoxForgeryTest.html</a> (Try to select value out of the list)
+</form>

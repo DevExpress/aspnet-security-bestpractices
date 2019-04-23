@@ -1,0 +1,35 @@
+﻿@model UserProfileEx
+
+<h1>Additional Data Annotation Attributes</h1>
+
+@using(Html.BeginForm()) {
+    @*@Html.AntiForgeryToken()*@
+    <h2>Mask Edit</h2>
+    @Html.DevExpress().TextBoxFor(m => m.Phone, settings => {
+        settings.Properties.Caption = "Phone";
+    }).GetHtml()
+    <br />
+    <h2>Date Range Validation</h2>
+    @Html.DevExpress().DateEditFor(m => m.StartDate, settings => {
+        settings.Properties.Caption = "Start Date";
+        settings.ShowModelErrors = true;
+    }).GetHtml()
+    <br />
+    @Html.DevExpress().DateEditFor(m => m.EndDate, settings => {
+    settings.Properties.Caption = "End Date";
+        settings.ShowModelErrors = true;
+    }).GetHtml()
+    <br />
+
+    @Html.DevExpress().Button(settings => {
+            settings.Name = "UpdateButton";
+            settings.Text = "Update";
+            settings.UseSubmitBehavior = true;
+        }).GetHtml()
+
+    <hr />
+    <p>ModelState.IsValid: @ViewContext.ViewData.ModelState.IsValid</p>
+    <p>Phone: @Model.Phone</p>
+    <p>StartDate: @Model.StartDate</p>
+    <p>EndDate: @Model.EndDate</p>
+}

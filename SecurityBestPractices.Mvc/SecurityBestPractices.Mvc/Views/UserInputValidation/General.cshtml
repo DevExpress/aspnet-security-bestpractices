@@ -1,0 +1,43 @@
+﻿@model UserProfile
+
+<h2>User Profile</h2>
+@using(Html.BeginForm()) {
+    @*@Html.AntiForgeryToken()*@
+
+    @Html.DevExpress().TextBoxFor(m => m.Name, settings => {
+        settings.Properties.Caption = "New Name";
+    }).GetHtml()
+    <br />
+    <div>...</div>
+    <br />
+
+    @Html.DevExpress().TextBox(settings => {
+        settings.Name = "UserPassword";
+        settings.Properties.Password = true;
+        settings.Properties.Caption = "Password";
+    }).GetHtml()
+    <br />
+
+    var errorState = ViewContext.ViewData.ModelState["UserPassword"];
+    if(errorState != null && errorState.Errors.Count > 0) {
+        @Html.DevExpress().Label(s => {
+        s.Text = errorState.Errors[0].ErrorMessage;
+        s.ControlStyle.CssClass = "general-error-text";
+    }).GetHtml()
+    }
+    <br />
+
+    @Html.DevExpress().Button(settings => {
+        settings.Name = "UpdateButton";
+        settings.Text = "Save Changes";
+        settings.UseSubmitBehavior = true;
+    }).GetHtml()
+
+    <hr />
+    <p>ModelState.IsValid: @ViewContext.ViewData.ModelState.IsValid</p>
+    <p>Name: @Model.Name</p>
+    <p>Salary: @Model.Salary</p>
+
+    <br /><br />
+    <a href="~/Static/UserInputForgeryTest.html">UserInputForgeryTest.html</a> <span>// try to submit non-editable Model value (Salary)</span>
+}

@@ -14,3 +14,8 @@ hr
 {
     float:right;
 }
+
+.general-error-text
+{
+    color: red;
+}

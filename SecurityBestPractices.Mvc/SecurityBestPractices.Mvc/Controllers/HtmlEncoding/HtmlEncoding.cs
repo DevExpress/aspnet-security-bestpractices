@@ -31,7 +31,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
         // GET: /HtmlEncoding/General/
         [HttpGet]
         public ActionResult General() {
-            return View("General", new EditFormItem() { Id = 1, ProductName = "\"<b>’test’</b>" });
+            return View("General", new EditFormItem() { Id = 1, ProductName = "\"<b>'test'</b>" });
         }
 
         [HttpPost]

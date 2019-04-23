@@ -227,6 +227,9 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Static\CallPublicMethod.html" />
+    <Content Include="Static\ComboBoxForgeryTest.html" />
+    <Content Include="Static\UserInputForgeryTest.html" />
     <Content Include="Static\Postback.html" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
@@ -262,6 +265,10 @@
     <Content Include="Views\HtmlEncoding\EncodeHtmlInTemplates.cshtml" />
     <Content Include="Views\HtmlEncoding\EncodeHtmlInTemplatesPartial.cshtml" />
     <Content Include="Views\HtmlEncoding\General.cshtml" />
+    <Content Include="Views\UserInputValidation\General.cshtml" />
+    <Content Include="Views\UserInputValidation\SvgInline.cshtml" />
+    <Content Include="Views\UserInputValidation\AdditionalDataAnnotationAttributes.cshtml" />
+    <Content Include="Views\UserInputValidation\ListEditors.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -274,11 +281,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\Authorization\AuthorizationController.QueryBuilder.cs" />
+    <Compile Include="Controllers\UserInputValidation\UserInputValidation.cs" />
     <Compile Include="Controllers\HtmlEncoding\HtmlEncoding.cs" />
     <Compile Include="Controllers\InformationExposure\InformationExposureController.cs" />
     <Compile Include="Controllers\UploadingBinaryImages\UploadingBinaryImages.cs" />
     <Compile Include="Controllers\UploadingFiles\UploadingFiles.cs" />
     <Compile Include="Controllers\UsingAntiForgeryToken\UsingAntiForgeryTokenController.cs" />
+    <Compile Include="Models\UserInputValidationModel.cs" />
     <Compile Include="Models\EditFormModel.cs" />
     <Compile Include="Services\Dashboards\DashboardStorageWithAccessRules.cs" />
     <Compile Include="Services\DataSourceWizardConnectionStringsProvider.cs" />
@@ -344,9 +353,11 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>2088</DevelopmentServerPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:2088/</IISUrl>
+          <IISUrl>http://localhost:12682/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:12682/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

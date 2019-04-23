@@ -182,6 +182,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ValidateInput\SvgInline.aspx" />
+    <Content Include="ValidateInput\General.aspx" />
     <None Include="packages.config" />
     <Content Include="App_Data\AdminDashboard.xml" />
     <Content Include="App_Data\JohnDashboard.xml" />
@@ -389,6 +391,20 @@
     </Compile>
     <Compile Include="UsingAntiForgeryToken\MasterPageWithAntiForgeryToken.Master.designer.cs">
       <DependentUpon>MasterPageWithAntiForgeryToken.Master</DependentUpon>
+    </Compile>
+    <Compile Include="ValidateInput\SvgInline.aspx.cs">
+      <DependentUpon>SvgInline.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ValidateInput\SvgInline.aspx.designer.cs">
+      <DependentUpon>SvgInline.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ValidateInput\General.aspx.cs">
+      <DependentUpon>General.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ValidateInput\General.aspx.designer.cs">
+      <DependentUpon>General.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

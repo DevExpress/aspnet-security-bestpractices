@@ -3,11 +3,6 @@
 
 <h2>Information Exposure Through an Error Message</h2>
 
-@{
-    Html.EnableClientValidation();
-    Html.EnableUnobtrusiveJavaScript();
-}
-
 @using(Html.BeginForm()) {
     @Html.AntiForgeryToken()
     
