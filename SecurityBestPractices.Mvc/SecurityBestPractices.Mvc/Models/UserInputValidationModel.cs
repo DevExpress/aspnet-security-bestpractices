@@ -13,7 +13,7 @@ namespace SecurityBestPractices.Mvc.Models {
         public string Name { get; set; }
         public string Email { get; set; }
 
-        public double Salary { get; set; } // non editable for end user
+        public double Salary { get; set; } // Not editable by an end user
     }
 
     public class UserProfileEx {
@@ -41,7 +41,7 @@ namespace SecurityBestPractices.Mvc.Models {
             items.Add(new ProductItem { Id = 1, Price = 10, ProductName = "Small headphones" });
             items.Add(new ProductItem { Id = 2, Price = 100, ProductName = "Hi-fi headphones" });
             items.Add(new ProductItem { Id = 3, Price = 500, ProductName = "Mobile phone" });
-            items.Add(new ProductItem { Id = 4, Price = 1000, ProductName = "Notebook" });
+            items.Add(new ProductItem { Id = 4, Price = 1000, ProductName = "Laptop" });
         }
         public static List<ProductItem> GetAllItems() {
             return items;

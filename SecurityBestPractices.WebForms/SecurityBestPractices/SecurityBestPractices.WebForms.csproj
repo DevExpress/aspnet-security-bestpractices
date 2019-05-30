@@ -101,10 +101,13 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DevExpress.Spreadsheet.v18.2.Core, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Utils.v18.2, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DevExpress.Web.ASPxRichEdit.v18.2, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Web.ASPxSpreadsheet.v18.2, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Web.ASPxThemes.v18.2">
     </Reference>
     <Reference Include="DevExpress.Web.Resources.v18.2">
@@ -182,8 +185,15 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ClientSideApi\SpreadsheetReadingModeOnly.aspx" />
+    <Content Include="ClientSideApi\GridView.aspx" />
+    <Content Include="ClientSideApi\OfficeControlsFileOperations.aspx" />
+    <Content Include="HtmlEncoding\Callback.aspx" />
+    <Content Include="HtmlEncoding\DangerousNavigateUrl.aspx" />
+    <Content Include="ValidateInput\EditorsTest.aspx" />
     <Content Include="ValidateInput\SvgInline.aspx" />
     <Content Include="ValidateInput\General.aspx" />
+    <Content Include="App_Data\WorkDirectory\test.xlsx" />
     <None Include="packages.config" />
     <Content Include="App_Data\AdminDashboard.xml" />
     <Content Include="App_Data\JohnDashboard.xml" />
@@ -280,6 +290,27 @@
     <Compile Include="Authorization\Reports\ReportViewerPage.aspx.designer.cs">
       <DependentUpon>ReportViewerPage.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ClientSideApi\SpreadsheetReadingModeOnly.aspx.cs">
+      <DependentUpon>SpreadsheetReadingModeOnly.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ClientSideApi\SpreadsheetReadingModeOnly.aspx.designer.cs">
+      <DependentUpon>SpreadsheetReadingModeOnly.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ClientSideApi\GridView.aspx.cs">
+      <DependentUpon>GridView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ClientSideApi\GridView.aspx.designer.cs">
+      <DependentUpon>GridView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ClientSideApi\OfficeControlsFileOperations.aspx.cs">
+      <DependentUpon>OfficeControlsFileOperations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ClientSideApi\OfficeControlsFileOperations.aspx.designer.cs">
+      <DependentUpon>OfficeControlsFileOperations.aspx</DependentUpon>
+    </Compile>
     <Compile Include="default.aspx.cs">
       <DependentUpon>default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -287,12 +318,26 @@
     <Compile Include="default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="HtmlEncoding\Callback.aspx.cs">
+      <DependentUpon>Callback.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HtmlEncoding\Callback.aspx.designer.cs">
+      <DependentUpon>Callback.aspx</DependentUpon>
+    </Compile>
     <Compile Include="HtmlEncoding\General.aspx.cs">
       <DependentUpon>General.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="HtmlEncoding\General.aspx.designer.cs">
       <DependentUpon>General.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HtmlEncoding\DangerousNavigateUrl.aspx.cs">
+      <DependentUpon>DangerousNavigateUrl.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HtmlEncoding\DangerousNavigateUrl.aspx.designer.cs">
+      <DependentUpon>DangerousNavigateUrl.aspx</DependentUpon>
     </Compile>
     <Compile Include="HtmlEncoding\Templates.aspx.cs">
       <DependentUpon>Templates.aspx</DependentUpon>
@@ -391,6 +436,13 @@
     </Compile>
     <Compile Include="UsingAntiForgeryToken\MasterPageWithAntiForgeryToken.Master.designer.cs">
       <DependentUpon>MasterPageWithAntiForgeryToken.Master</DependentUpon>
+    </Compile>
+    <Compile Include="ValidateInput\EditorsTest.aspx.cs">
+      <DependentUpon>EditorsTest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ValidateInput\EditorsTest.aspx.designer.cs">
+      <DependentUpon>EditorsTest.aspx</DependentUpon>
     </Compile>
     <Compile Include="ValidateInput\SvgInline.aspx.cs">
       <DependentUpon>SvgInline.aspx</DependentUpon>

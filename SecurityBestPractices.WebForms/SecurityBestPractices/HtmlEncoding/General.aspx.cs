@@ -10,21 +10,21 @@ namespace SecurityBestPractices.HtmlEncoding {
         protected void Page_Load(object sender, EventArgs e) {
             if(IsPostBack) {
                 // *** Input ***
-                // not secure
+                // Not secure
                 //SearchResultLiteral.Text = string.Format("Your search - {0} - did not match any documents.", SearchBox.Text);
 
-                // secure
+                // Secure
                 SearchResultLiteral.Text = string.Format("Your search - {0} - did not match any documents.", HttpUtility.HtmlEncode(SearchBox.Text));
                 // or ASPxLabel
                 SearchResultLabel.Text = string.Format("Your search - {0} - did not match any documents.", SearchBox.Text);
             }
 
             // *** URL ***
-            // not secure
+            // Not secure
             //if(Request.QueryString["returnUrl"] != null)
             //    urlLink.HRef = Request.QueryString["returnUrl"].ToString();
 
-            // secure
+            // Secure
             if(Request.QueryString["returnUrl"] != null)
                 urlLink.HRef = HttpUtility.HtmlEncode(Request.QueryString["returnUrl"].ToString());
         }

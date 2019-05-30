@@ -1,0 +1,20 @@
+﻿@Html.DevExpress().Spreadsheet(
+    settings => {
+        settings.Name = "spreadsheet";
+        settings.CallbackRouteValues = new { Controller = "ClientSideApi", Action = "SpreadsheetReadingModeOnlyPartial" };
+        settings.Width = Unit.Percentage(100);
+        settings.Height = 500;
+        settings.WorkDirectory = "~/App_Data/WorkDirectory";
+        // Hide the File tab
+        settings.PreRender = (s, e) => {
+            MVCxSpreadsheet spreadsheet = (MVCxSpreadsheet)s;
+            spreadsheet.CreateDefaultRibbonTabs(true);
+            spreadsheet.RibbonTabs.RemoveAt(0);
+        };
+        settings.ActiveTabIndex = 0;
+
+        // Reading Mode Only
+        settings.SettingsView.Mode = DevExpress.Web.ASPxSpreadsheet.SpreadsheetViewMode.Reading;
+        settings.Settings.Behavior.SwitchViewModes = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+    }
+).GetHtml()

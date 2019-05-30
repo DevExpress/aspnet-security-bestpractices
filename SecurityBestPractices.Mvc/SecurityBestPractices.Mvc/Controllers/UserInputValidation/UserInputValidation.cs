@@ -68,11 +68,11 @@ namespace SecurityBestPractices.Mvc.Controllers {
         //[ValidateAntiForgeryToken]
         public ActionResult ListEditors(int productItemId) {
             if(ModelState.IsValid) {
-                // Custom Validation: combobox value should be in the list
+                // Custom Validation: the selected combobox value should be in the list
                 if(ProductItems.GetAvailableForUserList().FindIndex(i=>i.Id == productItemId) != -1) { 
                     // DoSomethig(productItemId);
                 } else {
-                    ModelState.AddModelError("", "Not correct input. Looks like hacker attack.");
+                    ModelState.AddModelError("", "Invalid input. Looks like a hacker attack.");
                 }
             }
             return View("ListEditors", productItemId);

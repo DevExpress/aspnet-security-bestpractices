@@ -4,6 +4,7 @@
         settings.CallbackRouteValues = new { Controller = "UsingAntiForgeryToken", Action = "EditFormPartial" };
         settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "UsingAntiForgeryToken", Action = "EditFormDeletePartial" };
         settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "UsingAntiForgeryToken", Action = "EditFormUpdatePartial" };
+        settings.SettingsDataSecurity.AllowReadUnexposedColumnsFromClientApi = DefaultBoolean.False;
 
         // Show Delete/Update actions for Authorized users
         var identityName = IdentityHelper.GetIdentityName();
@@ -20,6 +21,22 @@
         });
         settings.Columns.Add("ProductName");
         settings.Columns.Add("Price");
+
+        settings.Columns.Add(c => {
+            c.FieldName = "SecretKey";
+            c.Visible = false;
+        });
+
+        settings.Columns.Add(c => {
+            c.FieldName = "Url";
+            c.ColumnType = MVCxGridViewColumnType.HyperLink;
+            var hyperLinkProperties = c.PropertiesEdit as HyperLinkProperties;
+            hyperLinkProperties.TextField = "UrlCaption";
+            //hyperLinkProperties.RemovePotentiallyDangerousNavigateUrl = DefaultBoolean.False;
+        });
+        settings.Columns.Add(c => {
+            c.FieldName = "UrlCaption";
+        });
     });
 
     if(ViewData["EditError"] != null) {

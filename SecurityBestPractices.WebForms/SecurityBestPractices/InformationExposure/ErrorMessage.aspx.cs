@@ -9,10 +9,10 @@ namespace SecurityBestPractices.InformationExposure {
             } catch(Exception ex) {
                 UpdateStatusLabel.Visible = true;
 
-                // UpdateStatusLabel.Text = ex.Message; // showing an Exception text - not a safe way
+                // Unsafe approach - showing an Exception text
+                // UpdateStatusLabel.Text = ex.Message; 
 
-                // Safe way - show sensitive info free text
-
+                // Safe approach - showing text without sensitive information
                 if(ex is InvalidOperationException) {
                     UpdateStatusLabel.Text = "Some error occured...";
                 } else {

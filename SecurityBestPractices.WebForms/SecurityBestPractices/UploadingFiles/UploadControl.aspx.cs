@@ -9,7 +9,7 @@ namespace SecurityBestPractices.UploadingFiles {
         protected void Page_Init(object sender, EventArgs e) {
             // This code is not called by default because uploadControl.FileUploadMode = UploadControlFileUploadMode.BeforePageLoad
             // To specify validation settings at runtime, set uploadControl.FileUploadMode = UploadControlFileUploadMode.OnPageLoad or 
-            // use the uploadControl.Init envet
+            // use the uploadControl.Init event
 
             //uploadControl.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
         }

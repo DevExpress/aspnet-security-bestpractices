@@ -50,7 +50,7 @@
         <ul>
             <li>@Html.ActionLink("Information Exposure Through an Error Message", "FormWithErrorMessage", "InformationExposure")</li>
         </ul>
-        
+
         <h2>6. Encoding - Preventing cross-site scripting (XSS) attack</h2>
         <ul>
             <li>@Html.ActionLink("General", "General", "HtmlEncoding")</li>
@@ -63,7 +63,13 @@
             <li>@Html.ActionLink("General", "General", "UserInputValidation")</li>
             <li>@Html.ActionLink("Additional Data Annotation Attributes", "AdditionalDataAnnotationAttributes", "UserInputValidation")</li>
             <li>@Html.ActionLink("List Editors (ComboBox, etc)", "ListEditors", "UserInputValidation")</li>
-            <li>@Html.ActionLink("Inline Svg Images (be careful)", "SvgInline", "UserInputValidation")</li>
+            <li>@Html.ActionLink("Inline SVG Images (use only trusted sources)", "SvgInline", "UserInputValidation")</li>
+        </ul>
+
+        <h2>8. Unauthorized server operations via Client-Side API</h2>
+        <ul>
+            <li>@Html.ActionLink("Office Controls File Operations (RichEdit, Spreadsheet)", "OfficeControlsFileOperations", "ClientSideApi")</li>
+            <li>@Html.ActionLink("Spreadsheet Reading Mode Only", "SpreadsheetReadingModeOnly", "ClientSideApi")</li>
         </ul>
     </li>
 </ul>
