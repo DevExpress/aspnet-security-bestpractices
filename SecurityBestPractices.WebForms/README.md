@@ -711,39 +711,31 @@ protected void UpdateButton_Click(object sender, EventArgs e) {
 
 ### 5.2 Availability of Invisible Column Values Through the Client-Side API
 
-#### When Columns are Hidden
+#### Prevent Access to Hidden Column Data
 
 This vulnerability is associated with grid-based controls. Consider a situation, in which a control has a hidden column bound to some sensitive data that is not displayed to an end-user and is only used on the server. A malefactor can still reques a value of such column using the control's client API:
 
 ```js
-gridView.GetRowValues(0, "UnitPrice", OnGetRowValues);
+gridView.GetRowValues(0, "UnitPrice", function(Value) { alert(Value) });
 ```
 
-Use the AllowReadUnexposedColumnsFromClientApi property to control this behavior:
+Set the AllowReadUnexposedColumnsFromClientApi property to false to disable this behavior:
 
 ```js
 AllowReadUnexposedColumnsFromClientApi = "False";
 ```
 
-#### When Columns are Not Defined
+#### Prevent Access by Field Name
 
 Another vulnerability can occur when a malefactor tries to get a row value for a data field for which there is no column in the control:
 
 ```js
-function OnGetRowValues(Value) {
-  alert(Value);
-}
-```
-
-or
-
-```js
-grid.GetRowValues(0, "SecretKey", OnGetRowValues);
+gridView.GetRowValues(0, "GuidField", function(Value) { alert(Value) });
 ```
 
 The capability to do so is controlled by the AllowReadUnlistedFieldsFromClientApi property and is disabled by default (safe configuration).
 
-When it comes to protecting a grid control's data source data, a general recommendation is never to return(?) fields that are not intended to be displayed in the UI.
+When it comes to protecting a grid control's data source data, a general recommendation is never to return(?) fields that are not intended to be displayed in the UI. (Use separate query for the control's data)
 
 ### 5.3 Information Exposure Through Source Code
 
@@ -759,14 +751,15 @@ The DevExpress default HTTP handler (DXR.axd) serves static files including imag
 For example, consider the following code:
 
 ```js
-SetAdminMode(true);
-SetUserMode(Mode.User); // Mode.SuperVisor
+function GetSystemState() {
+...
+}
 ```
 
 The minified version gives considerably less information about the backend structure:
 
 ```js
-SetAdminMode -> s1()
+function s1(){...}
 ```
 
 ---
