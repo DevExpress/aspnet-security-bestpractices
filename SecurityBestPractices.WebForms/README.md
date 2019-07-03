@@ -10,6 +10,7 @@ The security issues are all shown using a simple Visual Studio solution. Fully c
 - [2. Uploading and Displaying Binary Images](#2-uploading-and-displaying-binary-images)
 - [3. Authorization](#3-authorization)
 - [4. Preventing Cross-Site Request Forgery (CSRF)](#4-preventing-cross-site-request-forgery-csrf)
+- [5. Preventing Sensitive Information Exposure](#4-preventing-cross-site-request-forgery-csrf)
 
 ## 1. Uploading Files
 
@@ -663,6 +664,124 @@ In this scenario, an attack attempts to modify the user account information (the
 ![AntiForgeryEmail](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/anti-forgery-email.png?raw=true)
 
 **See Also:** [Stack Overflow - preventing cross-site request forgery (csrf) attacks in asp.net web forms](https://stackoverflow.com/questions/29939566/preventing-cross-site-request-forgery-csrf-attacks-in-asp-net-web-forms)
+
+---
+
+## 5. Preventing Sensitive Information Exposure
+
+This section describes security vulnerabilities that can make some sensitive information available to untrusted parties.
+
+### 5.1 Information Exposure Through Error Messages
+
+The possible security breach сфт occur when the server generates an exception. If an application is configured incorrectly, a detailed information on the error is displayed to an end-user. This information can include sensible parts giving a malefactor an insight on the application's infrastructure, file names and so on.
+
+This behavior is controlled by the customErrors web.config option. By default, this option is set to RemoteOnly. In this mode, detailed errors are displayed only for connections from the local machine. Setting this option to Off forces private messages for all connections. Setting it to On ensures that private messages are never displayed.
+
+#### Manually Displaying Error Messages
+
+It is recommended that you never show exception messages (Exception.Message) in your application's UI because this text con contain sensitive information. For example, the following code sample demonstrates an unsafe approach:
+
+```cs
+protected void UpdateButton_Click(object sender, EventArgs e) {
+    try {
+        // DoSomething()
+        throw new InvalidOperationException("Some sensitive information");
+    } catch(Exception ex) {
+        UpdateStatusLabel.Visible = true;
+        UpdateStatusLabel.Text = ex.Message;
+    }
+}
+```
+
+Consider displaying custom error messages if you want to inform end-users about occurred errors:
+
+```cs
+protected void UpdateButton_Click(object sender, EventArgs e) {
+    try {
+        // DoSomething()
+        throw new InvalidOperationException("Some sensitive information");
+    } catch(Exception ex) {
+        if(ex is InvalidOperationException)
+            UpdateStatusLabel.Text = "Some error occured...";
+        else
+            UpdateStatusLabel.Text = "General error occured...";
+    }
+}
+```
+
+### 5.2 Availability of Invisible Column Values Through the Client-Side API
+
+#### When Columns are Hidden
+
+This vulnerability is associated with grid-based controls. Consider a situation, in which a control has a hidden column bound to some sensitive data that is not displayed to an end-user and is only used on the server. A malefactor can still reques a value of such column using the control's client API:
+
+```js
+gridView.GetRowValues(0, "UnitPrice", OnGetRowValues);
+```
+
+Use the AllowReadUnexposedColumnsFromClientApi property to control this behavior:
+
+```js
+AllowReadUnexposedColumnsFromClientApi = "False";
+```
+
+#### When Columns are Not Defined
+
+Another vulnerability can occur when a malefactor tries to get a row value for a data field for which there is no column in the control:
+
+```js
+function OnGetRowValues(Value) {
+  alert(Value);
+}
+```
+
+or
+
+```js
+grid.GetRowValues(0, "SecretKey", OnGetRowValues);
+```
+
+The capability to do so is controlled by the AllowReadUnlistedFieldsFromClientApi property and is disabled by default (safe configuration).
+
+When it comes to protecting a grid control's data source data, a general recommendation is never to return(?) fields that are not intended to be displayed in the UI.
+
+### 5.3 Information Exposure Through Source Code
+
+CWE-540
+
+The DevExpress default HTTP handler (DXR.axd) serves static files including images, scripts and styles. We assume that these static files are intended for public access and do not expose any sensitive information or server-side code. However there are additional recommendation for writing custom scripts and styles:
+
+- Do not hardcode any credentials in scripts
+- Consider obfuscating these files in the following cases:
+  - Program code that should be protected as an intellectual property;
+  - The file's content can give a malefactor an idea about the backend system's architecture and possible vulnerabilities
+
+For example, consider the following code:
+
+```js
+SetAdminMode(true);
+SetUserMode(Mode.User); // Mode.SuperVisor
+```
+
+The minified version gives considerably less information about the backend structure:
+
+```js
+SetAdminMode -> s1()
+```
+
+---
+
+## 6. Preventing Cross-Site Scripting (XSS) Attacks with Encoding
+
+CWE-80: Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)
+CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
+CWE-20: Improper Input Validation
+
+The vulnerability occurs when a web page is rendered using a content specified by an end user. If user input is not properly sanitized, a resulting page can be injected with a malicious script.
+
+### Encoding in DevExpress Controls
+
+### Encoding in Templates
 
 ---
 
