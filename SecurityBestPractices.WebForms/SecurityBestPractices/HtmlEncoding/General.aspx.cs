@@ -27,6 +27,7 @@ namespace SecurityBestPractices.HtmlEncoding {
             // Secure
             if(Request.QueryString["returnUrl"] != null)
                 urlLink.HRef = HttpUtility.HtmlEncode(Request.QueryString["returnUrl"].ToString());
+                //urlLink.HRef = (Request.QueryString["returnUrl"].ToString()); // Not secure
         }
     }
 }

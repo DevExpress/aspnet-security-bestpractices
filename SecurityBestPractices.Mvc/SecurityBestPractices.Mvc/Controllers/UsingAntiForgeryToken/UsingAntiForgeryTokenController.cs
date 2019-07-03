@@ -16,6 +16,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
             return View("EditForm", EditFormItems.GetList());
         }
 
+        [HttpPost]
         public ActionResult EditFormPartial() {
             return PartialView("EditFormPartial", EditFormItems.GetList());
         }
