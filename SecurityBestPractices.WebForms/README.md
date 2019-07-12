@@ -657,7 +657,7 @@ In this scenario, an attack attempts to perform a CRUD operation on the server s
 
 ![AntiForgeryGrid](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/anti-forgery-grid.png?raw=true)
 
-### Preventing Anauthorized Changes to User Account Information
+### Preventing Unauthorized Changes to User Account Information
 
 In this scenario, an attack attempts to modify the user account information (the email address in the example).
 
@@ -673,9 +673,9 @@ This section describes security vulnerabilities that can make some sensitive inf
 
 ### 5.1 Information Exposure Through Error Messages
 
-The possible security breach сфт occur when the server generates an exception. If an application is configured incorrectly, a detailed information on the error is displayed to an end-user. This information can include sensible parts giving a malefactor an insight on the application's infrastructure, file names and so on.
+The possible security breach can occur when the server generates an exception. If an application is configured incorrectly, a detailed information on the error is displayed to an end-user. This information can include sensitive parts giving a malefactor an insight on the application's infrastructure, file names and so on.
 
-This behavior is controlled by the customErrors web.config option. By default, this option is set to RemoteOnly. In this mode, detailed errors are displayed only for connections from the local machine. Setting this option to Off forces private messages for all connections. Setting it to On ensures that private messages are never displayed.
+This behavior is controlled by the customErrors web.config option. By default, this option is set to RemoteOnly. In this mode, detailed errors are displayed only for connections from the local machine. Setting this option to **Off** forces private messages for all connections. Setting it to On ensures that private messages are never displayed.
 
 #### Manually Displaying Error Messages
 
@@ -713,13 +713,15 @@ protected void UpdateButton_Click(object sender, EventArgs e) {
 
 #### Prevent Access to Hidden Column Data
 
-This vulnerability is associated with grid-based controls. Consider a situation, in which a control has a hidden column bound to some sensitive data that is not displayed to an end-user and is only used on the server. A malefactor can still reques a value of such column using the control's client API:
+This vulnerability is associated with grid-based controls. Consider a situation, in which a control has a hidden column bound to some sensitive data that is not displayed to an end-user and is only used on the server. A malefactor can still request a value of such column using the control's client API:
 
 ```js
-gridView.GetRowValues(0, "UnitPrice", function(Value) { alert(Value) });
+gridView.GetRowValues(0, "UnitPrice", function(Value) {
+  alert(Value);
+});
 ```
 
-Set the AllowReadUnexposedColumnsFromClientApi property to false to disable this behavior:
+Set the **AllowReadUnexposedColumnsFromClientApi** property to false to disable this behavior:
 
 ```js
 AllowReadUnexposedColumnsFromClientApi = "False";
@@ -727,15 +729,18 @@ AllowReadUnexposedColumnsFromClientApi = "False";
 
 #### Prevent Access by Field Name
 
+'
 Another vulnerability can occur when a malefactor tries to get a row value for a data field for which there is no column in the control:
 
 ```js
-gridView.GetRowValues(0, "GuidField", function(Value) { alert(Value) });
+gridView.GetRowValues(0, "GuidField", function(Value) {
+  alert(Value);
+});
 ```
 
-The capability to do so is controlled by the AllowReadUnlistedFieldsFromClientApi property and is disabled by default (safe configuration).
+The capability to do so is controlled by the **AllowReadUnlistedFieldsFromClientAp**i property and is disabled by default (safe configuration).
 
-When it comes to protecting a grid control's data source data, a general recommendation is never to return(?) fields that are not intended to be displayed in the UI. (Use separate query for the control's data)
+When it comes to protecting a grid control's data source data, a general recommendation to perform separate queries for data sources whose data is displayed in UI. These queries should never request data that should be kept in secret.
 
 ### 5.3 Information Exposure Through Source Code
 
@@ -766,15 +771,43 @@ function s1(){...}
 
 ## 6. Preventing Cross-Site Scripting (XSS) Attacks with Encoding
 
-CWE-80: Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)
-CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
-CWE-20: Improper Input Validation
+**Security Risks**: [CWE-80](https://cwe.mitre.org/data/definitions/80.html), [CWE-70](https://cwe.mitre.org/data/definitions/70.html), [CWE-20](https://cwe.mitre.org/data/definitions/20.html)
 
 The vulnerability occurs when a web page is rendered using a content specified by an end user. If user input is not properly sanitized, a resulting page can be injected with a malicious script.
 
+It is strongly suggested that you always sanitize page contents that can be specified by a user. You should be aware of what kind of sanitization you use so it both compatible with the displayed content and provides the intended level of safety.
+For example, you can remove HTML tags throughout the content but it can corrupt text that is intended to contain code samples. The more generic approach would be to substitute all '<' and '>' symbols with <code>&lt;</code> and <code>&gt;</code> character references.
+
+Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/dotnet/api/system.web.httputility.htmlencode?view=netframework-4.7.2) class that you can use to encode data in various use-case scenarios. It provides the following methods:
+
+| Method              | Usage                                                    |
+| ------------------- | -------------------------------------------------------- |
+| HtmlEncode          | Sanitizes an untrusted input inserted into a HTML output |
+| HtmlAttributeEncode | Sanitizes an untrusted input assigned to a tag attribute |
+| JavaScriptEncode    | Sanitizes an untrusted input used within a script        |
+| UrlEncode           | Sanitizes an untrusted input used to generate a URL      |
+
 ### Encoding in DevExpress Controls
 
+By default, DevExpress controls encode displayed values that can be obtained from a data source. Refer to the [HTML-Encoding](https://documentation.devexpress.com/AspNet/117902/Common-Concepts/HTML-Encoding) document for more information.
+
+This behavior is specified by a control's EncodeHtml property. If a control displays a value that can be modified by an untrusted party, we recommend that you never disable this setting or sanitize the displayed content manually.
+
+To get familiar with the vulnerability, open the example project's EncodeHtml.aspx page and uncomment the following line in the code behind:
+
+```cs
+((GridViewDataTextColumn)GridView.Columns["ProductName"]).PropertiesEdit.EncodeHtml = false;
+```
+
+Launch the project and open the page in the browser. A data field's content will be interpreted as a script and you well see an alert popup.
+
 ### Encoding in Templates
+
+If you inject dat field values in templates, we recommend that you always sanitize the data field values. DevExpress controls by default wrap templated contents with a HttpUtility.HtmlEncode call.
+
+### Encoding Callback Data
+
+### Dangerous Links
 
 ---
 
