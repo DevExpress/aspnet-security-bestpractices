@@ -186,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\AdminDashboard.xml" />
+    <Content Include="App_Data\ConfidentialImages\ConfedentialImageFile.jpg" />
     <Content Include="App_Data\JohnDashboard.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -273,6 +274,7 @@
     <Content Include="Views\ClientSideApi\SpreadsheetReadingModeOnly.cshtml" />
     <Content Include="Views\ClientSideApi\OfficeControlsFileOperationsSpreadsheetPartial.cshtml" />
     <Content Include="Views\UploadingFiles\LimitDirectorySize.cshtml" />
+    <Content Include="Views\DownloadingFiles\DownloadFileFromUrl.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -286,6 +288,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\Authorization\AuthorizationController.QueryBuilder.cs" />
     <Compile Include="Controllers\ClientSideApi\ClientSideApiController.cs" />
+    <Compile Include="Controllers\DownloadingFiles\DownloadFileFromUrl.cs" />
     <Compile Include="Controllers\UserInputValidation\UserInputValidation.cs" />
     <Compile Include="Controllers\HtmlEncoding\HtmlEncoding.cs" />
     <Compile Include="Controllers\InformationExposure\InformationExposureController.cs" />

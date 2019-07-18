@@ -1,0 +1,20 @@
+﻿@Html.DevExpress().BinaryImage(biSettings => {
+    biSettings.Name = "BinaryImage";
+}).Bind(Model).GetHtml()
+<hr />
+@using(Html.BeginForm("DownloadPublicFileFromUrl", "DownloadingFiles")) {
+    @Html.DevExpress().Button(b => {
+        b.Name = "downloadPublicImage";
+        b.Text = "Download Public Image";
+        b.UseSubmitBehavior = true;
+    }).GetHtml()
+}
+<br />
+@using(Html.BeginForm("DownloadConfedentialFileFromUrl", "DownloadingFiles")) {
+    @Html.DevExpress().Button(b => {
+        b.Name = "downloadConfedentialImage";
+        b.Text = "Download Confedential Image";
+        b.UseSubmitBehavior = true;
+    }).GetHtml()
+}
+
