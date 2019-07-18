@@ -17,11 +17,12 @@ namespace SecurityBestPractices.UsingAntiForgeryToken {
             }
 
             // Init OnValidation
-            spinEdit.Validation += ASPxValidationHelper.Validation;
-            someEdit.Validation += ASPxValidationHelper.Validation;
+            //spinEdit.Validation += ASPxValidationHelper.Validation;
+            //someEdit.Validation += ASPxValidationHelper.Validation;
         }
 
         protected void UpdateButton_Click(object sender, EventArgs e) {
+            ASPxEdit.ValidateEditorsInContainer(Page); // TODO: Check and correct documenation 
             if(ASPxEdit.AreEditorsValid(Page)) {
                 UpdateStatusLabel.Text = string.Format("Submitted value: {0}", spinEdit.Value);
             } else {

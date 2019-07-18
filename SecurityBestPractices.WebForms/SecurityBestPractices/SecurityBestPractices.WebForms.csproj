@@ -185,11 +185,14 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\ConfidentialImages\ConfedentialImageFile.jpg" />
     <Content Include="ClientSideApi\SpreadsheetReadingModeOnly.aspx" />
     <Content Include="ClientSideApi\GridView.aspx" />
     <Content Include="ClientSideApi\OfficeControlsFileOperations.aspx" />
+    <Content Include="DownloadingFiles\DownloadFileFromUrl.aspx" />
     <Content Include="HtmlEncoding\Callback.aspx" />
     <Content Include="HtmlEncoding\DangerousNavigateUrl.aspx" />
+    <Content Include="UploadingFiles\LimitDirectorySize.aspx" />
     <Content Include="ValidateInput\EditorsTest.aspx" />
     <Content Include="ValidateInput\SvgInline.aspx" />
     <Content Include="ValidateInput\General.aspx" />
@@ -318,6 +321,13 @@
     <Compile Include="default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="DownloadingFiles\DownloadFileFromUrl.aspx.cs">
+      <DependentUpon>DownloadFileFromUrl.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DownloadingFiles\DownloadFileFromUrl.aspx.designer.cs">
+      <DependentUpon>DownloadFileFromUrl.aspx</DependentUpon>
+    </Compile>
     <Compile Include="HtmlEncoding\Callback.aspx.cs">
       <DependentUpon>Callback.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -401,6 +411,13 @@
     </Compile>
     <Compile Include="UploadingBinaryImages\UploadControl.aspx.designer.cs">
       <DependentUpon>UploadControl.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UploadingFiles\LimitDirectorySize.aspx.cs">
+      <DependentUpon>LimitDirectorySize.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UploadingFiles\LimitDirectorySize.aspx.designer.cs">
+      <DependentUpon>LimitDirectorySize.aspx</DependentUpon>
     </Compile>
     <Compile Include="UploadingFiles\UploadControl.aspx.cs">
       <DependentUpon>UploadControl.aspx</DependentUpon>

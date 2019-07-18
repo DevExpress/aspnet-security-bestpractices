@@ -5,6 +5,7 @@
       <siteMapNode url="~/UploadingFiles/UploadControl.aspx" title="1.1. Prevent Uploading Malicious Files" />
       <siteMapNode url="~/UploadingFiles/UploadControlMemory.aspx" title="1.2. Prevent Uncontrolled Resource Consumption" />
       <siteMapNode url="~/UploadingFiles/UploadControlTempFileName.aspx" title="1.3. Protect Temporary Files" />
+      <siteMapNode url="~/UploadingFiles/LimitDirectorySize.aspx" title="1.4. Limit Directory Size" />
     </siteMapNode>
     <siteMapNode url="" title="2. Uploading and Displaying Binary Images" >
       <siteMapNode url="~/UploadingBinaryImages/UploadControl.aspx" title="Upload Control" />
@@ -47,6 +48,9 @@
       <siteMapNode url="~/ClientSideApi/GridView.aspx" title="CRUD Operations (GridView, CardView, VerticalGrid, TreeList)" />
       <siteMapNode url="~/ClientSideApi/OfficeControlsFileOperations.aspx" title="Office Controls File Operations (RichEdit, Spreadsheet)" />
       <siteMapNode url="~/ClientSideApi/SpreadsheetReadingModeOnly.aspx" title="Spreadsheet Reading Mode Only" />
+    </siteMapNode>
+    <siteMapNode url="" title="9. Downloading Files">
+      <siteMapNode url="~/DownloadingFiles/DownloadFileFromUrl.aspx" title="Download File From Url" />
     </siteMapNode>
   </siteMapNode>
 </siteMap>

@@ -272,6 +272,7 @@
     <Content Include="Views\ClientSideApi\OfficeControlsFileOperationsRichEditPartial.cshtml" />
     <Content Include="Views\ClientSideApi\SpreadsheetReadingModeOnly.cshtml" />
     <Content Include="Views\ClientSideApi\OfficeControlsFileOperationsSpreadsheetPartial.cshtml" />
+    <Content Include="Views\UploadingFiles\LimitDirectorySize.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

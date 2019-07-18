@@ -6,12 +6,12 @@ using Image = System.Drawing.Image;
 namespace SecurityBestPractices.UploadingFiles {
     public partial class UploadControl : System.Web.UI.Page
     {
-        protected void Page_Init(object sender, EventArgs e) {
+        protected void Page_Load(object sender, EventArgs e) {
             // This code is not called by default because uploadControl.FileUploadMode = UploadControlFileUploadMode.BeforePageLoad
             // To specify validation settings at runtime, set uploadControl.FileUploadMode = UploadControlFileUploadMode.OnPageLoad or 
             // use the uploadControl.Init event
 
-            //uploadControl.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
+            uploadControl.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
         }
 
         protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
