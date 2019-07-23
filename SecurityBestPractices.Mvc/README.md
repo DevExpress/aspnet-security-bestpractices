@@ -655,6 +655,7 @@ DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx());
 DefaultQueryBuilderContainer.Register<IDataSourceWizardConnectionStringsProvider, DataSourceWizardConnectionStringsProvider>();
 DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>();
 ```
+
 ---
 
 ## 4. Preventing Cross-Site Request Forgery (CSRF)
@@ -813,5 +814,218 @@ If the validation fails, the server will generate an error:
    If a malefactor tries to forge a request to this controller action, an error will occur:
 
    ![Dashboard Anti Forgery](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/anti-forgery-dashboard.png)
+
+## 5. Preventing Sensitive Information Exposure
+
+This section describes security vulnerabilities that can make some sensitive information available to untrusted parties.
+
+### 5.1 Information Exposure Through Error Messages
+
+The possible security breach can occur when the server generates an exception. If an application is configured incorrectly, a detailed information on the error is displayed to an end-user. This information can include sensitive parts giving a malefactor an insight on the application's infrastructure, file names and so on.
+
+This behavior is controlled by the customErrors web.config option. By default, this option is set to RemoteOnly. In this mode, detailed errors are displayed only for connections from the local machine. Setting this option to **Off** forces private messages for all connections. Setting it to On ensures that private messages are never displayed.
+
+#### Manually Displaying Error Messages
+
+It is recommended that you never display exception messages (Exception.Message) on your application's view because this text con contain sensitive information. For example, the following code sample demonstrates an unsafe approach:
+
+```cs
+public ActionResult FormWithErrorMessage(EditFormItem item) {
+    if(ModelState.IsValid) {
+        try {
+            // DoSomething()
+            throw new InvalidOperationException("Some sensitive information");
+        } catch(Exception ex) {
+            ViewData[UpdateStatusKey] = ex.Message;
+        }
+    } else
+        ViewData[UpdateStatusKey] = "Please, correct all errors.";
+    return View(item);
+}
+```
+
+Consider displaying custom error messages if you want to inform end-users about occurred errors:
+
+```cs
+public ActionResult FormWithErrorMessage(EditFormItem item) {
+    if(ModelState.IsValid) {
+        try {
+            // DoSomething()
+            throw new InvalidOperationException("Some sensitive information");
+        } catch(Exception ex) {
+            if(ex is InvalidOperationException) {
+                ViewData[UpdateStatusKey] = "Some error occured...";
+            } else {
+                ViewData[UpdateStatusKey] = "General error occured...";
+            }
+        }
+    } else
+        ViewData[UpdateStatusKey] = "Please, correct all errors.";
+    return View(item);
+}
+```
+
+### 5.2 Availability of Invisible Column Values Through the Client-Side API
+
+#### Prevent Access to Hidden Column Data
+
+This vulnerability is associated with grid-based controls. Consider a situation, in which a control has a hidden column bound to some sensitive data that is not displayed to an end-user and is only used on the server. A malefactor can still request a value of such column using the control's client API:
+
+```js
+gridView.GetRowValues(0, "UnitPrice", function(Value) {
+  alert(Value);
+});
+```
+
+Set the **AllowReadUnexposedColumnsFromClientApi** property to false to disable this behavior:
+
+```cs
+settings.SettingsDataSecurity.AllowReadUnexposedColumnsFromClientApi = DefaultBoolean.False;
+```
+
+#### Prevent Access by Field Name
+
+'
+Another vulnerability can occur when a malefactor tries to get a row value for a data field for which there is no column in the control:
+
+```js
+gridView.GetRowValues(0, "GuidField", function(Value) {
+  alert(Value);
+});
+```
+
+The capability to do so is controlled by the **AllowReadUnlistedFieldsFromClientApi** property and is disabled by default (safe configuration).
+
+When it comes to protecting a grid control's data source data, a general recommendation to perform separate queries for data sources whose data is displayed in UI. These queries should never request data that should be kept in secret.
+
+### 5.3 Information Exposure Through Source Code
+
+**Security Risks**: [CWE-540](https://cwe.mitre.org/data/definitions/540.html)
+
+The DevExpress default HTTP handler (DXR.axd) serves static files including images, scripts and styles. We assume that these static files are intended for public access and do not expose any sensitive information or server-side code. However there are additional recommendation for writing custom scripts and styles:
+
+- Do not hardcode any credentials in scripts
+- Consider obfuscating these files in the following cases:
+  - Program code that should be protected as an intellectual property;
+  - The file's content can give a malefactor an idea about the backend system's architecture and possible vulnerabilities
+
+For example, consider the following code:
+
+```js
+function GetSystemState() {
+...
+}
+```
+
+The minified version gives considerably less information about the backend structure:
+
+```js
+function s1(){...}
+```
+
+---
+
+## 6. Preventing Cross-Site Scripting (XSS) Attacks with Encoding
+
+**Security Risks**: [CWE-80](https://cwe.mitre.org/data/definitions/80.html), [CWE-70](https://cwe.mitre.org/data/definitions/70.html), [CWE-20](https://cwe.mitre.org/data/definitions/20.html)
+
+The vulnerability occurs when a web page is rendered using a content specified by an end user. If user input is not properly sanitized, a resulting page can be injected with a malicious script.
+
+It is strongly suggested that you always sanitize page contents that can be specified by a user. You should be aware of what kind of sanitization you use so it is both compatible with the displayed content and provides the intended level of safety. For example, you can remove HTML tags throughout the content but it can corrupt text that is intended to contain code samples. The more generic approach would be to substitute all '<' and '>' symbols with <code>&amp;lt;</code> and <code>&amp;gt;</code> character codes.
+
+In ASP.NET MVC, all content inserted into a Razor view via `@` operator is sanitized by default:
+
+```cs
+<p>Entered value: @Model.ProductName</p>
+```
+
+If you want to insert an unencoded value from a trusted source, use the `@Html.Raw` method.
+
+Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/dotnet/api/system.web.httputility.htmlencode?view=netframework-4.7.2) class that you can use to encode data in various use-case scenarios. It provides the following methods:
+
+| Method              | Usage                                                    |
+| ------------------- | -------------------------------------------------------- |
+| HtmlEncode          | Sanitizes an untrusted input inserted into a HTML output |
+| HtmlAttributeEncode | Sanitizes an untrusted input assigned to a tag attribute |
+| JavaScriptEncode    | Sanitizes an untrusted input used within a script        |
+| UrlEncode           | Sanitizes an untrusted input used to generate a URL      |
+
+To insert user input into a JavaScript block, you need to first prepare the string using the `HttpUtility.JavaScriptStringEncode` and then inser this string into the script using `@Html.Raw`:
+
+```html
+<script>
+  var s =
+    "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(Model.ProductName))";
+  // DoSomething(s);
+</script>
+```
+
+### Encoding in DevExpress Controls
+
+By default, DevExpress controls encode displayed values that can be obtained from a data source. Refer to the [HTML-Encoding](https://documentation.devexpress.com/AspNet/117902/Common-Concepts/HTML-Encoding) document for more information.
+
+This behavior is specified by a control's EncodeHtml property. If a control displays a value that can be modified by an untrusted party, we recommend that you never disable this setting or sanitize the displayed content manually.
+
+To get familiar with the vulnerability, open the example project's EncodeHtmlInControlsPartial.cshtm view and uncomment the following line:
+
+```cs
+column.PropertiesEdit.EncodeHtml = false;
+```
+
+Launch the project and open the page in the browser. A data field's content will be interpreted as a script and you well see an alert popup.
+
+### Encoding in Templates
+
+If you inject data field values in templates, we recommend that you always sanitize the data field values:
+
+```cs
+settings.SetItemTemplateContent(
+     c => {
+        ViewContext.Writer.Write(
+            "<b>ProductID</b>: " + DataBinder.Eval(c.DataItem, "Id") +
+            "<br/>" +
+            //"<b>ProductName</b>: " + DataBinder.Eval(c.DataItem, "ProductName")
+            "<b>ProductName</b>: " + System.Web.HttpUtility.HtmlEncode(DataBinder.Eval(c.DataItem, "ProductName"))
+        );
+    }
+);
+
+```
+
+DevExpress controls by default wrap templated contents with a `HttpUtility.HtmlEncode` method call.
+
+### Encoding Callback Data
+
+When a client displays data received from the server via a callback, a security breach can take place if this data has not been properly encoded. For example, in the code below, such content is assigned to an element's `innerHTML`:
+
+```xml
+<dx:ASPxCallback runat="server" ID="CallbackControl" OnCallback="Callback_Callback" ClientInstanceName="callbackControl" >
+    <ClientSideEvents CallbackComplete="function(s, e) {
+        document.getElementById('namePlaceHodler').innerHTML = e.result;
+            if(callbackControl.cpSomeInfo)
+                document.getElementById('someInfo').innerHTML = callbackControl.cpSomeInfo;
+        }" />
+</dx:ASPxCallback>
+
+```
+
+### Dangerous Links
+
+It is potentially dangerous to use render a hyperlink's HREF attribute using a value from a database or user input.
+
+DevExpress grid based controls remove all potentially dangerous contents (for example, "javascript:") from HREF values when rendering hyperlink columns. This behavior is controlled by a column's `RemovePotentiallyDangerousNavigateUrl` option:
+
+```cs
+settings.Columns.Add(c => {
+    ...
+    var hyperLinkProperties = c.PropertiesEdit as HyperLinkProperties;
+    hyperLinkProperties.RemovePotentiallyDangerousNavigateUrl = DefaultBoolean.False;
+});
+
+```
+
+We recommend that you never set this setting to `false` if the URL value in the database can be modified by untrusted parties.
+
+---
 
 ![Analytics](https://ga-beacon.appspot.com/UA-129603086-1/aspnet-security-bestpractices-mvc-page?pixel)
