@@ -682,7 +682,7 @@ This behavior is controlled by the customErrors web.config option. By default, t
 
 #### Manually Displaying Error Messages
 
-It is recommended that you never show exception messages (Exception.Message) in your application's UI because this text con contain sensitive information. For example, the following code sample demonstrates an unsafe approach:
+It is recommended that you never show exception messages (Exception.Message) in your application's UI because this text can contain sensitive information. For example, the following code sample demonstrates an unsafe approach:
 
 ```cs
 protected void UpdateButton_Click(object sender, EventArgs e) {
@@ -732,7 +732,6 @@ AllowReadUnexposedColumnsFromClientApi = "False";
 
 #### Prevent Access by Field Name
 
-'
 Another vulnerability can occur when a malefactor tries to get a row value for a data field for which there is no column in the control:
 
 ```js
@@ -789,6 +788,36 @@ Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/d
 | HtmlAttributeEncode | Sanitizes an untrusted input assigned to a tag attribute |
 | JavaScriptEncode    | Sanitizes an untrusted input used within a script        |
 | UrlEncode           | Sanitizes an untrusted input used to generate a URL      |
+
+To safely insert user input value into markup, wrap it with the `HttpUtility.HtmlEncode` method call:
+
+```cs
+SearchResultLiteral.Text = 
+  string.Format("Your search - {0} - did not match any documents.", HttpUtility.HtmlEncode(SearchBox.Text));
+```
+
+To insert user input into a JavaScript block, you need to prepare the string using the `HttpUtility.JavaScriptStringEncode`:
+
+```html
+<script>
+  var s = "<%= HttpUtility.JavaScriptStringEncode(SearchBox.Text) %>"; 
+  // DoSomething(s);
+</script>
+
+```
+
+Input text containing unsafe symbols will be converted to a safe form. In this example, if a user specifies the following unsafe string...
+
+```
+"<b>'test'</b>
+```
+
+... the script will be rendered as shown below:
+
+```js
+var s = "\"\u003cb\u003e'test'\u003c/b\u003e";
+```
+
 
 ### Encoding in DevExpress Controls
 

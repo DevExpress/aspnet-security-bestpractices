@@ -827,7 +827,7 @@ This behavior is controlled by the customErrors web.config option. By default, t
 
 #### Manually Displaying Error Messages
 
-It is recommended that you never display exception messages (Exception.Message) on your application's view because this text con contain sensitive information. For example, the following code sample demonstrates an unsafe approach:
+It is recommended that you never display exception messages (Exception.Message) on your application's view because this text can contain sensitive information. For example, the following code sample demonstrates an unsafe approach:
 
 ```cs
 public ActionResult FormWithErrorMessage(EditFormItem item) {
@@ -885,7 +885,7 @@ settings.SettingsDataSecurity.AllowReadUnexposedColumnsFromClientApi = DefaultBo
 
 #### Prevent Access by Field Name
 
-'
+
 Another vulnerability can occur when a malefactor tries to get a row value for a data field for which there is no column in the control:
 
 ```js
@@ -933,14 +933,6 @@ The vulnerability occurs when a web page is rendered using a content specified b
 
 It is strongly suggested that you always sanitize page contents that can be specified by a user. You should be aware of what kind of sanitization you use so it is both compatible with the displayed content and provides the intended level of safety. For example, you can remove HTML tags throughout the content but it can corrupt text that is intended to contain code samples. The more generic approach would be to substitute all '<' and '>' symbols with <code>&amp;lt;</code> and <code>&amp;gt;</code> character codes.
 
-In ASP.NET MVC, all content inserted into a Razor view via `@` operator is sanitized by default:
-
-```cs
-<p>Entered value: @Model.ProductName</p>
-```
-
-If you want to insert an unencoded value from a trusted source, use the `@Html.Raw` method.
-
 Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/dotnet/api/system.web.httputility.htmlencode?view=netframework-4.7.2) class that you can use to encode data in various use-case scenarios. It provides the following methods:
 
 | Method              | Usage                                                    |
@@ -950,7 +942,15 @@ Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/d
 | JavaScriptEncode    | Sanitizes an untrusted input used within a script        |
 | UrlEncode           | Sanitizes an untrusted input used to generate a URL      |
 
-To insert user input into a JavaScript block, you need to first prepare the string using the `HttpUtility.JavaScriptStringEncode` and then inser this string into the script using `@Html.Raw`:
+In ASP.NET MVC, all content inserted into a Razor view via the `@` operator is sanitized by default:
+
+```cs
+<p>Entered value: @Model.ProductName</p>
+```
+
+If you want to insert an unencoded value from a trusted source, use the `@Html.Raw` method.
+
+To insert user input into a JavaScript block, you need to first prepare the string using the `HttpUtility.JavaScriptStringEncode` and then insert this string into the script using `@Html.Raw`:
 
 ```html
 <script>
@@ -958,6 +958,18 @@ To insert user input into a JavaScript block, you need to first prepare the stri
     "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(Model.ProductName))";
   // DoSomething(s);
 </script>
+```
+
+Input text containing unsafe symbols will be converted to a safe form. In this example, if a user specifies the following unsafe string...
+
+```
+"<b>'test'</b>
+```
+
+... the script will be rendered as shown below:
+
+```js
+var s = "\"\u003cb\u003e'test'\u003c/b\u003e";
 ```
 
 ### Encoding in DevExpress Controls
@@ -1025,6 +1037,193 @@ settings.Columns.Add(c => {
 ```
 
 We recommend that you never set this setting to `false` if the URL value in the database can be modified by untrusted parties.
+
+---
+
+## 7. User Input Validation
+
+### 7.1 General Recommendations
+
+It is strongly recommended that you validate values obtained from an end user before you save them to a data base or use in any other way. The values should be validated on several levels:
+
+1. Specify the required restrictions for inputs on the client.
+
+2. Validate submitted values on the server before saving. 
+
+3. Specifies the required data integrity conditions on the database level.
+
+4. Validate the values in the code that directly uses them.
+
+<span style="color: red">IMAGE<span>
+
+The ASP.NET MVC framework allows you to assign validation attributes to model properties. On the client, these attributes are taken into account for all model-bound input elements.
+
+For example, below is a simple model definition:
+
+```cs
+public class UserProfile {
+    [Required]
+    public string Name { get; set; }
+```
+
+View code:
+
+```cs
+@Html.DevExpress().TextBoxFor(m => m.Name, settings => {
+    settings.Properties.Caption = "Name";
+}).GetHtml()
+```
+
+On form submit, the corresponding controller action will receive the model-bound input's value. Here you can check for the user input's validity using the `ModelState.IsValid` property:
+
+```cs
+public ActionResult AdditionalDataAnnotationAttributes(EmployeeItem employeeItem) {
+    if(ModelState.IsValid) {
+        // DoSomethig(employeeItem);
+    }
+}
+```
+
+On the client, if a user's input does not meet limitations specified by validation attributes, validation warnings are displayed next to corresponding inputs. For the client validation to be performed automatically based on validation attributes, you need to enable client validation and unobtrusive validation. You can do this in **web.cofig**:
+
+```xml
+<add key="ClientValidationEnabled" value="true" />
+<add key="UnobtrusiveJavaScriptEnabled" value="true" />
+```
+
+
+### 7.2 Model Binding Restrictions
+
+In many cases, your input forms do not provide access to all properties of the model because some properties are not intended to be edited by a user. For example, the model contains a *salary* field that should never be available for an employee.
+
+
+A malefactor can forge a request that attempts to modify this field:
+
+```html
+<form name="test" method="post" action="http://localhost:2088/UserInputValidation/General">
+    <input type="text" hidden="hidden" name="Name" value="name 1" />
+    <input type="text" hidden="hidden" name="Salary" value="100000" />
+</form>
+<a href="#" onclick="test.submit();">Send Postback</a>
+```
+
+You can prohibit model binding for a specific model property using the Bind attribute's Exclude property as shown below:
+
+```cs
+[Bind(Exclude = "Salary")]
+public class EmployeeItem {
+    [Required]
+    public string Name { get; set; }
+    ...
+    public double Salary { get; set; }
+}
+```
+
+### 7.3 Additional Data Annotation Attributes
+
+DevExpress ASP.NET MVC extensions provide data annotation attributes that can be used for validation both on the server and client:
+
+#### Mask Check
+
+The `Mask` attribute allows you to check a value against a mask both on the client and server. This attribute allows you to reject invalid values on server even if a malefactor succeeds to get around the mask check on the client.
+
+```cs
+[Mask("+1 (999) 000-0000", 
+  IncludeLiterals = MaskIncludeLiteralsMode.None, 
+  ErrorMessage = "Invalid Phone Number")]
+public string Phone { get; set; }
+```
+
+#### Date Range Check
+
+The `DateRange` attribute ties two DateTime properties together allowing you to check whether a value falls within a specific date range.
+
+```cs
+[Display(Name = "Start Date")]
+public DateTime StartDate { get; set; }
+
+[Display(Name = "End Date")]
+[DateRange(StartDateEditFieldName = "StartDate", MinDayCount = 1, MaxDayCount = 30)]
+public DateTime EndDate { get; set; }
+```
+
+### 7.4 Custom Validation
+
+In some cases you may need to validate values of inputs that are not bound to a model. For example, you may want to validate a password that a user types as a plain string but that is stored as hash. The password is entered via an editor without model binding:
+
+```cs
+@Html.DevExpress().TextBox(settings => {
+    settings.Name = "UserPassword";
+    settings.Properties.Password = true;
+    settings.Properties.Caption = "Password";
+}).GetHtml()
+```
+
+On server you can access this editor's value through a controller action's parameter with the same name as the input. You can validate this value using any custom logic. If validation did not pass, you can register a validation error using the `ModelState.AddModelError` method. Calling this method automatically sets the `IsValid` property to false.
+
+```cs
+public ActionResult General(UserProfile userProfile, string UserPassword) {
+    if(ModelState.IsValid) {
+        if(IsUserPasswordCorrect(UserPassword)) { // Custom Validation
+            DoSomethig(userProfile);
+        } else {
+            ModelState.AddModelError(nameof(UserPassword), "Password is not correct!");
+        }
+    }
+    return View("General", userProfile);
+}
+```
+
+To display an error message to a user, you need to add a custom markup to the view:
+
+```cs
+@{
+    var errorState = ViewContext.ViewData.ModelState["UserPassword"];
+    if(errorState != null && errorState.Errors.Count > 0) {
+        @Html.DevExpress().Label(s => {
+            s.Text = errorState.Errors[0].ErrorMessage;
+            s.ControlStyle.CssClass = "general-error-text";
+        }).GetHtml()
+    }
+}
+```
+
+### 7.5 Custom Validation in List Editors
+
+A special case of custom validation is validation of list items. Consider a use-case scenario when a online shop application allows a user to select a gift option from a list based on the state of their bonus account (see the example project's **UserInputValidation/ListEditors**) page.
+
+To familiarize yourself with the possible vulnerability:
+
+1. Open the example project's **Controllers/UserInputValidation** controller, locate the ListEditors action and comment out the following lines:
+
+   ```cs
+   if(ProductItems.GetAvailableForUserList().FindIndex(i=>i.Id == productItemId) != -1) { 
+   // DoSomethig(productItemId);
+   } 
+   else {
+       ModelState.AddModelError("", "Not correct input. Looks like hacker attack.");
+   }
+   ```
+
+2. Open the **Static/ComboBoxForgeryTest.html** page.
+
+3. Submit a forged request with the Id=3, which should not be available to an end user.
+
+To prevent request forgery, you should check if the selected list items falls within the allowed range:
+
+```cs
+public ActionResult ListEditors(int productItemId) {
+    if(ModelState.IsValid) {
+        // Custom Validation: combobox value should be in the list
+        if(ProductItems.GetAvailableForUserList().FindIndex(i=>i.Id == productItemId) != -1) { 
+            // DoSomethig(productItemId);
+        } else {
+            ModelState.AddModelError("", "Not correct input. Looks like hacker attack.");
+        }
+    }
+    return View("ListEditors", productItemId);
+}
+```
 
 ---
 
