@@ -80,7 +80,7 @@ Note that it is not enough to specify the allowed file extension on the View sid
 
 This option only affects the client behavior. It prevents input errors but does not strictly prohibit sending a malicious file to the server.
 
-2. Aditionally, you can disable file execution in the upload folder ([relevant StackOverflow question](https://stackoverflow.com/questions/3776847/how-to-restrict-folder-access-in-asp-net)):
+2. Additionally, you can disable file execution in the upload folder ([relevant StackOverflow question](https://stackoverflow.com/questions/3776847/how-to-restrict-folder-access-in-asp-net)):
 
 ```aspx
   <location path="UploadingFiles/Images">
@@ -885,7 +885,6 @@ settings.SettingsDataSecurity.AllowReadUnexposedColumnsFromClientApi = DefaultBo
 
 #### Prevent Access by Field Name
 
-
 Another vulnerability can occur when a malefactor tries to get a row value for a data field for which there is no column in the control:
 
 ```js
@@ -1048,7 +1047,7 @@ It is strongly recommended that you validate values obtained from an end user be
 
 1. Specify the required restrictions for inputs on the client.
 
-2. Validate submitted values on the server before saving. 
+2. Validate submitted values on the server before saving.
 
 3. Specifies the required data integrity conditions on the database level.
 
@@ -1084,25 +1083,27 @@ public ActionResult AdditionalDataAnnotationAttributes(EmployeeItem employeeItem
 }
 ```
 
-On the client, if a user's input does not meet limitations specified by validation attributes, validation warnings are displayed next to corresponding inputs. For the client validation to be performed automatically based on validation attributes, you need to enable client validation and unobtrusive validation. You can do this in **web.cofig**:
+On the client, if a user's input does not meet limitations specified by validation attributes, validation warnings are displayed next to corresponding inputs. For the client validation to be performed automatically based on validation attributes, you need to enable client validation and unobtrusive validation. You can do this in **web.config**:
 
 ```xml
 <add key="ClientValidationEnabled" value="true" />
 <add key="UnobtrusiveJavaScriptEnabled" value="true" />
 ```
 
-
 ### 7.2 Model Binding Restrictions
 
-In many cases, your input forms do not provide access to all properties of the model because some properties are not intended to be edited by a user. For example, the model contains a *salary* field that should never be available for an employee.
-
+In many cases, your input forms do not provide access to all properties of the model because some properties are not intended to be edited by a user. For example, the model contains a _salary_ field that should never be available for an employee.
 
 A malefactor can forge a request that attempts to modify this field:
 
 ```html
-<form name="test" method="post" action="http://localhost:2088/UserInputValidation/General">
-    <input type="text" hidden="hidden" name="Name" value="name 1" />
-    <input type="text" hidden="hidden" name="Salary" value="100000" />
+<form
+  name="test"
+  method="post"
+  action="http://localhost:2088/UserInputValidation/General"
+>
+  <input type="text" hidden="hidden" name="Name" value="name 1" />
+  <input type="text" hidden="hidden" name="Salary" value="100000" />
 </form>
 <a href="#" onclick="test.submit();">Send Postback</a>
 ```
@@ -1128,8 +1129,8 @@ DevExpress ASP.NET MVC extensions provide data annotation attributes that can be
 The `Mask` attribute allows you to check a value against a mask both on the client and server. This attribute allows you to reject invalid values on server even if a malefactor succeeds to get around the mask check on the client.
 
 ```cs
-[Mask("+1 (999) 000-0000", 
-  IncludeLiterals = MaskIncludeLiteralsMode.None, 
+[Mask("+1 (999) 000-0000",
+  IncludeLiterals = MaskIncludeLiteralsMode.None,
   ErrorMessage = "Invalid Phone Number")]
 public string Phone { get; set; }
 ```
@@ -1197,9 +1198,9 @@ To familiarize yourself with the possible vulnerability:
 1. Open the example project's **Controllers/UserInputValidation** controller, locate the ListEditors action and comment out the following lines:
 
    ```cs
-   if(ProductItems.GetAvailableForUserList().FindIndex(i=>i.Id == productItemId) != -1) { 
+   if(ProductItems.GetAvailableForUserList().FindIndex(i=>i.Id == productItemId) != -1) {
    // DoSomethig(productItemId);
-   } 
+   }
    else {
        ModelState.AddModelError("", "Not correct input. Looks like hacker attack.");
    }
@@ -1215,7 +1216,7 @@ To prevent request forgery, you should manually check if the selected list item 
 public ActionResult ListEditors(int productItemId) {
     if(ModelState.IsValid) {
         // Custom Validation: combobox value should be in the list
-        if(ProductItems.GetAvailableForUserList().FindIndex(i=>i.Id == productItemId) != -1) { 
+        if(ProductItems.GetAvailableForUserList().FindIndex(i=>i.Id == productItemId) != -1) {
             // DoSomethig(productItemId);
         } else {
             ModelState.AddModelError("", "Not correct input. Looks like hacker attack.");
@@ -1223,6 +1224,61 @@ public ActionResult ListEditors(int productItemId) {
     }
     return View("ListEditors", productItemId);
 }
+```
+
+### 7.6 Disable Inbuilt Request Value Checks
+
+ASP.NET checks input values for potentially dangerous content. For example, 3if an end-user types `<b>` into a text input and submits the form, they will be redirected to an error page with the following message:
+
+```
+System.Web.HttpRequestValidationException: A potentially dangerous Request value was detected from the client (Property="<b>")
+```
+
+In many cases such checks can have undesired side effects:
+
+- An end user cannot enter text containing elements that are common in technical texts, for example "Use the &lt;b&gt; tag to make text bold".
+
+- Request is intersected before they reach a controller action so you cannot handle them and render user-friendly error messages.
+
+Because of these reasons, the inbuilt request value checks are commonly disabled. You can do this using the `ValidateInputAttribute`:
+
+```cs
+[ValidateInput(false)]
+public class UserInputValidationController : Controller {
+...
+```
+
+You can assign this attribute to the controller class or a controller's action method.
+
+> Regardless or whether or not request checks are enabled, you should use encoding to protect your application from XSS attacks. Refer to the [section 6](#6-preventing-cross-site-scripting-xss-attacks-with-encoding) of this document to learn more.
+
+### 7.7 Using Non-Action Controller Methods
+
+You should always keep in mind that any public method of a controller can be triggered by an HTTP request. For example, assume that your controller that has the following public method:
+
+```cs
+public void ChangePassword(string newPassword) {
+    ...
+}
+```
+
+This method can be accessed from the client as shown below:
+
+```html
+<form name="test" method="post" action="/UserInputValidation/ChangePassword">
+  <input type="text" hidden="hidden" name="newPassword" value="test1" />
+</form>
+<a href="#" onclick="test.submit();">Send Postback</a>
+```
+
+To mitigate this, assign the `NonActionAttribute` to the method:
+
+```cs
+[NonAction]
+protected void ChangePassword(string newPassword) {
+    ...
+}
+
 ```
 
 ---
