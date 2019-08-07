@@ -1205,11 +1205,11 @@ To familiarize yourself with the possible vulnerability:
    }
    ```
 
-2. Open the **Static/ComboBoxForgeryTest.html** page.
+2. Run the project and open the **Static/ComboBoxForgeryTest.html** page.
 
-3. Submit a forged request with the Id=3, which should not be available to an end user.
+3. Using this page, submit a forged request with the Id=3, which should not be available to an end user.
 
-To prevent request forgery, you should check if the selected list items falls within the allowed range:
+To prevent request forgery, you should manually check if the selected list item falls within the allowed range:
 
 ```cs
 public ActionResult ListEditors(int productItemId) {
