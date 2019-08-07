@@ -1278,8 +1278,27 @@ To mitigate this, assign the `NonActionAttribute` to the method:
 protected void ChangePassword(string newPassword) {
     ...
 }
-
 ```
+
+### 7.8 Inlining SVG Images
+
+SVG markup can contain scripts that will be executed if this SVG is inlined into a page. For example, the code below executes a script embedded into SVG markup:
+
+```html
+@{ var svgImageWithJavaScriptCode = "<svg height="100" width="100">
+  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="2" fill="red" />
+  <script>
+    alert('XXS')
+  </script></svg
+>";
+
+<div style="width:100px;">
+  @Html.Raw(svgImageWithJavaScriptCode)
+</div>
+}
+```
+
+Because of this, you should never inline SVG images obtained from untrusted sources.
 
 ---
 
