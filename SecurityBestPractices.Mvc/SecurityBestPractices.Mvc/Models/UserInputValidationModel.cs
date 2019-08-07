@@ -9,7 +9,7 @@ using System.Web.Mvc;
 namespace SecurityBestPractices.Mvc.Models {
     [Bind(Exclude = "Salary")]
     public class UserProfile {
-        [Required]
+        [Required, MaxLength(50)]
         public string Name { get; set; }
         public string Email { get; set; }
 

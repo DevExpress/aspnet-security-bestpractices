@@ -22,7 +22,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
                 if(IsUserPasswordCorrect(UserPassword)) { // Custom Validation
                     DoSomethig(userProfile);
                 } else {
-                    ModelState.AddModelError(nameof(UserPassword), "Password is not correct!");
+                    ModelState.AddModelError("UserPassword", "Password is not correct!");
                 }
             }
             return View("General", userProfile);
