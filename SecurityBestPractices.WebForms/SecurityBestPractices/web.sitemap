@@ -41,7 +41,7 @@
       <siteMapNode url="~/HtmlEncoding/DangerousNavigateUrl.aspx" title="Dangerous Navigate Url" />
     </siteMapNode>
     <siteMapNode url="" title="7. User Input Validation">
-      <!--<siteMapNode url="~/ValidateInput/General.aspx" title="General (TODO)" />-->
+      <siteMapNode url="~/ValidateInput/General.aspx" title="General" />
       <siteMapNode url="~/ValidateInput/SvgInline.aspx" title="Inline SVG Images (use only trusted sources)" />
     </siteMapNode>
     <siteMapNode url="" title="8. Unauthorized server operations via Client-Side API">
