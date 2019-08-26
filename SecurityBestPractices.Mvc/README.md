@@ -1228,7 +1228,7 @@ public ActionResult ListEditors(int productItemId) {
 
 ### 7.6 Disable Inbuilt Request Value Checks
 
-ASP.NET checks input values for potentially dangerous content. For example, 3if an end-user types `<b>` into a text input and submits the form, they will be redirected to an error page with the following message:
+ASP.NET checks input values for potentially dangerous content. For example, if an end-user types `<b>` into a text input and submits the form, they will be redirected to an error page with the following message:
 
 ```
 System.Web.HttpRequestValidationException: A potentially dangerous Request value was detected from the client (Property="<b>")
