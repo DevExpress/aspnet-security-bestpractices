@@ -907,7 +907,7 @@ In many cases such checks can have undesired side effects:
 
 - An end user cannot enter text containing elements that are common in technical texts, for example "Use the &lt;b&gt; tag to make text bold".
 
-- Request is intersected before they reach a controller action so you cannot handle them and render user-friendly error messages.
+- On a validation error, ASP.NET raises an responds with the default error page. Because of this, you cannot handle the error and display a user-friendly error message.
 
 Because of these reasons, the inbuilt request value checks are commonly disabled. You can do this using the `validateRequest` setting available in the `/system.web/pages` section of web.config:
 
@@ -916,8 +916,6 @@ Because of these reasons, the inbuilt request value checks are commonly disabled
   <httpRuntime requestValidationMode="2.0" />
   <pages validateRequest="false">
 ```
-
-You can assign this attribute to the controller class or a controller's action method.
 
 > Regardless or whether or not request checks are enabled, you should use encoding to protect your application from XSS attacks. Refer to the [section 6](#6-preventing-cross-site-scripting-xss-attacks-with-encoding) of this document to learn more.
 

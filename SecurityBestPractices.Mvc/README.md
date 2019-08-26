@@ -1238,7 +1238,7 @@ In many cases such checks can have undesired side effects:
 
 - An end user cannot enter text containing elements that are common in technical texts, for example "Use the &lt;b&gt; tag to make text bold".
 
-- Request is intersected before they reach a controller action so you cannot handle them and render user-friendly error messages.
+- Requests are intersected before they reach a controller action so you cannot handle them and render user-friendly error messages.
 
 Because of these reasons, the inbuilt request value checks are commonly disabled. You can do this using the `ValidateInputAttribute`:
 
