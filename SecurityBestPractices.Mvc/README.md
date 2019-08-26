@@ -1189,7 +1189,7 @@ To display an error message to a user, you need to add a custom markup to the vi
 }
 ```
 
-### 7.5 Custom Validation in List Editors
+### 7.5 Validation in List Editors
 
 A special case of custom validation is validation of list items. Consider a use-case scenario when a online shop application allows a user to select a gift option from a list based on the state of their bonus account (see the example project's **UserInputValidation/ListEditors**) page.
 
@@ -1285,12 +1285,13 @@ protected void ChangePassword(string newPassword) {
 SVG markup can contain scripts that will be executed if this SVG is inlined into a page. For example, the code below executes a script embedded into SVG markup:
 
 ```html
-@{ var svgImageWithJavaScriptCode = "<svg height="100" width="100">
+@{ var svgImageWithJavaScriptCode =
+<svg height="100" width="100">
   <circle cx="50" cy="50" r="40" stroke="black" stroke-width="2" fill="red" />
   <script>
     alert('XXS')
   </script></svg
->";
+>;
 
 <div style="width:100px;">
   @Html.Raw(svgImageWithJavaScriptCode)

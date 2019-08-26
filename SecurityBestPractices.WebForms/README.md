@@ -792,7 +792,7 @@ Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/d
 To safely insert user input value into markup, wrap it with the `HttpUtility.HtmlEncode` method call:
 
 ```cs
-SearchResultLiteral.Text = 
+SearchResultLiteral.Text =
   string.Format("Your search - {0} - did not match any documents.", HttpUtility.HtmlEncode(SearchBox.Text));
 ```
 
@@ -800,10 +800,9 @@ To insert user input into a JavaScript block, you need to prepare the string usi
 
 ```html
 <script>
-  var s = "<%= HttpUtility.JavaScriptStringEncode(SearchBox.Text) %>"; 
+  var s = "<%= HttpUtility.JavaScriptStringEncode(SearchBox.Text) %>";
   // DoSomething(s);
 </script>
-
 ```
 
 Input text containing unsafe symbols will be converted to a safe form. In this example, if a user specifies the following unsafe string...
@@ -817,7 +816,6 @@ Input text containing unsafe symbols will be converted to a safe form. In this e
 ```js
 var s = "\"\u003cb\u003e'test'\u003c/b\u003e";
 ```
-
 
 ### Encoding in DevExpress Controls
 
@@ -872,6 +870,80 @@ DevExpress grid based controls remove all potentially dangerous contents (for ex
 ```
 
 We recommend that you never set this setting to `false` if the URL value in the database can be modified by untrusted parties.
+
+---
+
+## 7. User Input Validation
+
+### 7.1 General Recommendations
+
+It is strongly recommended that you validate values obtained from an end user before you save them to a data base or use in any other way. The values should be validated on several levels:
+
+1. Specify the required restrictions for inputs on the client.
+
+2. Validate submitted values on the server before saving.
+
+3. Specifies the required data integrity conditions on the database level.
+
+4. Validate the values in the code that directly uses them.
+
+<span style="color: red">IMAGE<span>
+
+You can specify value restrictions using a control's properties such as MaxLength, Min/Max Values, Required, etc. Server side validation does not allow to submit an invalid value even if you manage to send an invalid value bypassing the client validation. If the value is invalid, the editor's value is set to the previous value set on the editor's `init`. Note that this value can be invalid if it is obtained from a database where it was saved without validation.
+
+### 7.2 Validation in List Editors
+
+List controls in the DevExpress ASP.NET suite provide the `DataSecurity` property that specifies how a control handles input values that do not exist in the list. By default, this property is set to `Default`. With this setting, an editor accepts values that aren't in the list. Set the `DataSecurity` property to `Strict` to prohibit such values.
+
+### 7.3 Disable Inbuilt Request Value Checks
+
+ASP.NET checks input values for potentially dangerous content. For example, 3if an end-user types `<b>` into a text input and submits the form, they will be redirected to an error page with the following message:
+
+```
+System.Web.HttpRequestValidationException: A potentially dangerous Request value was detected from the client (Property="<b>")
+```
+
+In many cases such checks can have undesired side effects:
+
+- An end user cannot enter text containing elements that are common in technical texts, for example "Use the &lt;b&gt; tag to make text bold".
+
+- Request is intersected before they reach a controller action so you cannot handle them and render user-friendly error messages.
+
+Because of these reasons, the inbuilt request value checks are commonly disabled. You can do this using the `validateRequest` setting available in the `/system.web/pages` section of web.config:
+
+```xml
+<system.web>
+  <httpRuntime requestValidationMode="2.0" />
+  <pages validateRequest="false">
+```
+
+You can assign this attribute to the controller class or a controller's action method.
+
+> Regardless or whether or not request checks are enabled, you should use encoding to protect your application from XSS attacks. Refer to the [section 6](#6-preventing-cross-site-scripting-xss-attacks-with-encoding) of this document to learn more.
+
+### 7.4 Inlining SVG Images
+
+SVG markup can contain scripts that will be executed if this SVG is inlined into a page. For example, the code below executes a script embedded into SVG markup:
+
+##### APSX file:
+
+```aspx
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <p>Inline Svg images are not secure! You must trust the source!</p>
+    <p>For example: Svg bytes uploaded by end user, stored in the data source and embedded inline. JavaScript is excecuted:</p>
+    <div id="svgInlineImageContainer" runat="server"></div>
+</asp:Content>
+```
+
+##### Code-behind:
+
+```cs
+protected void Page_Load(object sender, EventArgs e) {
+    // Init Value from DataSource
+    var svgImageWithJavaScriptCode = "<svg height=100 width=100><circle cx=50 cy=50 r=40 stroke=black stroke-width=2 fill=red /><script>alert('XXS')</script></svg>";
+    svgInlineImageContainer.InnerHtml = svgImageWithJavaScriptCode;
+}
+```
 
 ---
 
