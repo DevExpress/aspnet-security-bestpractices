@@ -907,7 +907,7 @@ In many cases such checks can have undesired side effects:
 
 - An end user cannot enter text containing elements that are common in technical texts, for example "Use the &lt;b&gt; tag to make text bold".
 
-- On a validation error, ASP.NET raises an responds with the default error page. Because of this, you cannot handle the error and display a user-friendly error message.
+- On a validation error, ASP.NET raises an exception and responds with the default error page. Because of this, you cannot handle the error and display a user-friendly error message.
 
 Because of these reasons, the inbuilt request value checks are commonly disabled. You can do this using the `validateRequest` setting available in the `/system.web/pages` section of web.config:
 
