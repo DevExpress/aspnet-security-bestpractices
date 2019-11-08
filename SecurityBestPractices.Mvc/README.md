@@ -1061,7 +1061,7 @@ For example, below is a simple model definition:
 
 ```cs
 public class UserProfile {
-    [Required]
+    [Required, MaxLength(50)]
     public string Name { get; set; }
 ```
 
@@ -1090,11 +1090,13 @@ On the client, if a user's input does not meet limitations specified by validati
 <add key="UnobtrusiveJavaScriptEnabled" value="true" />
 ```
 
+Note that client validation is for optimization only. To ensure safety, always use client validation in conjunction with server validation.
+
 ### 7.2 Model Binding Restrictions
 
 In many cases, your input forms do not provide access to all properties of the model because some properties are not intended to be edited by a user. For example, the model contains a _salary_ field that should never be available for an employee.
 
-A malefactor can forge a request that attempts to modify this field:
+A malefactor can forge a request that attempts to modify this field (name="Salary" value="100000"):
 
 ```html
 <form
@@ -1122,7 +1124,7 @@ public class EmployeeItem {
 
 ### 7.3 Additional Data Annotation Attributes
 
-DevExpress ASP.NET MVC extensions provide data annotation attributes that can be used for validation both on the server and client:
+In addition to data annotation attributes supported by ASP.NET MVC, DevExpress ASP.NET MVC extensions provide supplementary attributes that can be used for validation both on the server and client:
 
 #### Mask Check
 
@@ -1279,6 +1281,8 @@ protected void ChangePassword(string newPassword) {
     ...
 }
 ```
+
+> We strongly recommend not to use non-action methods in controllers. Consider implementing separate classes for such code.
 
 ### 7.8 Inlining SVG Images
 
