@@ -27,9 +27,10 @@ namespace SecurityBestPractices.Mvc.Controllers {
                     // DoSomething()
                     throw new InvalidOperationException("Some sensitive information");
                 } catch(Exception ex) {
-                    // ViewData[UpdateStatusKey] = ex.Message; // showing an Exception text - not a safe way
+                    // Unsafe approach - showing an Exception text
+                    // ViewData[UpdateStatusKey] = ex.Message;
 
-                    // Safe way - show sensitive info free text
+                    // Safe approach - showing text without sensitive information
                     if(ex is InvalidOperationException) {
                         ViewData[UpdateStatusKey] = "Some error occured...";
                     } else {

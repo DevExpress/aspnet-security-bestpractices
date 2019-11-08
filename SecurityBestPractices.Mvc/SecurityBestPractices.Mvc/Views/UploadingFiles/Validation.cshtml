@@ -8,7 +8,7 @@
                     settings.ShowProgressPanel = true;
                     settings.ShowUploadButton = true;
 
-                    // Warning! Property settings.ValidationSettings must be assigned in controller (see for example: UploadControlBinderSettings.ValidationSettings in UploadingFiles.cs). This setting works only on client-side for usability of end-user
+                    // Warning! The settings specified below work only on the client-side. Additionally, the settings.ValidationSettings property must be configured on the controller side (refer to UploadingFiles.cs). 
                     settings.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
                 }).GetHtml()
 }

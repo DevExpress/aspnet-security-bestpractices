@@ -15,6 +15,7 @@
                 <b>ProductID</b>: <asp:Label ID="ProductIDLabel" runat="server" Text='<%# Eval("ProductID") %>' /> <br/>
                 <b>ProductName</b>: 
                 <asp:Label ID="ProductNameLabel" runat="server" Text='<%# System.Web.HttpUtility.HtmlEncode(Eval("ProductName")) %>' />
+                <%-- Unsafe configuration --%>
                 <%--<asp:Label ID="Label1" runat="server" Text='<%# Eval("ProductName") %>' />--%>
             </ItemTemplate>
             <ItemStyle Border-BorderWidth="1" Border-BorderStyle="Dashed" Border-BorderColor="LightBlue" />

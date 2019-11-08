@@ -1,0 +1,15 @@
+﻿@using(Html.BeginForm()) {
+    @Html.DevExpress().UploadControl(
+                settings => {
+                    settings.Name = "uploadControl";
+                    settings.UploadMode = UploadControlUploadMode.Auto;
+                    settings.CallbackRouteValues = new { Controller = "UploadingFiles", Action = "UploadLimitDirectorySizeHandler" };
+
+                    settings.AutoStartUpload = true;
+                    settings.ShowProgressPanel = true;
+                    settings.ShowUploadButton = true;
+
+                    // Warning! The settings specified below work only on the client-side. Additionally, the settings.ValidationSettings property must be configured on the controller side (refer to UploadingFiles.cs). 
+                    settings.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
+                }).GetHtml()
+}

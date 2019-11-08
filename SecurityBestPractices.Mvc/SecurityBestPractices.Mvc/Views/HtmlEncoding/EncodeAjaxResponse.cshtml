@@ -1,0 +1,14 @@
+﻿<p>Click the link below to send an AJAX request to the server. The response data is properly encoded on the server.</p>
+<script>
+    function sendRequest() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("EncodeAjaxResponseCallback", "HtmlEncoding")',
+            success: function (response) {
+                $("#content").html(response);
+            }
+        });
+    }
+</script>
+<a href="javascript:sendRequest()">Send Ajax Request</a>
+<p id="content"></p>

@@ -1,15 +1,20 @@
-﻿using DevExpress.DashboardWeb;
-using SecurityBestPractices.Mvc.Models;
-using System;
+﻿using SecurityBestPractices.Mvc.Models;
 using System.Web;
-using System.Web.Helpers;
-using System.Web.Hosting;
 using System.Web.Mvc;
-using System.Xml.Linq;
 
 namespace SecurityBestPractices.Mvc.Controllers {
     [ValidateInput(false)]
     public class HtmlEncodingController : Controller {
+        // GET: /HtmlEncoding/EncodeAjaxResponse/
+        public ActionResult EncodeAjaxResponse() {
+            return View("EncodeAjaxResponse");
+        }
+        public ActionResult EncodeAjaxResponseCallback() {
+            // return Content("1</title><script>alert(1);</script><title>");  // Not secure
+
+            return Content(HttpUtility.HtmlEncode("1</title><script>alert(1);</script><title>")); // Secure
+        }
+
         // GET: /HtmlEncoding/EncodeHtmlInControls/
         public ActionResult EncodeHtmlInControls() {
             return View("EncodeHtmlInControls", EditFormItems.GetList());

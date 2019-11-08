@@ -6,6 +6,7 @@
             <li>@Html.ActionLink("Validation", "Validation", "UploadingFiles") (Prevent Uploading Malicious Files)</li>
             <li>@Html.ActionLink("In Memory Processing", "InMemoryProcessing", "UploadingFiles") (Prevent Uncontrolled Resource Consumption)</li>
             <li>@Html.ActionLink("Saving Temporary Files", "SavingTemporaryFiles", "UploadingFiles") (Protect Temporary Files)</li>
+            <li>@Html.ActionLink("Limit Directory Size", "LimitDirectorySize", "UploadingFiles") (Prevent Storage Space Overconsumption)</li>
         </ul>
 
         <h2>2. Uploading and Displaying Binary Images</h2>
@@ -50,7 +51,7 @@
         <ul>
             <li>@Html.ActionLink("Information Exposure Through an Error Message", "FormWithErrorMessage", "InformationExposure")</li>
         </ul>
-        
+
         <h2>6. Encoding - Preventing cross-site scripting (XSS) attack</h2>
         <ul>
             <li>@Html.ActionLink("General", "General", "HtmlEncoding")</li>
@@ -63,7 +64,19 @@
             <li>@Html.ActionLink("General", "General", "UserInputValidation")</li>
             <li>@Html.ActionLink("Additional Data Annotation Attributes", "AdditionalDataAnnotationAttributes", "UserInputValidation")</li>
             <li>@Html.ActionLink("List Editors (ComboBox, etc)", "ListEditors", "UserInputValidation")</li>
-            <li>@Html.ActionLink("Inline Svg Images (be careful)", "SvgInline", "UserInputValidation")</li>
+            <li>@Html.ActionLink("Inline SVG Images (use only trusted sources)", "SvgInline", "UserInputValidation")</li>
+        </ul>
+
+        <h2>8. Unauthorized server operations via Client-Side API</h2>
+        <ul>
+            <li>@Html.ActionLink("Office Controls File Operations (RichEdit, Spreadsheet)", "OfficeControlsFileOperations", "ClientSideApi")</li>
+            <li>@Html.ActionLink("Spreadsheet Reading Mode Only", "SpreadsheetReadingModeOnly", "ClientSideApi")</li>
+        </ul>
+
+        <h2>9. Downloading Files</h2>
+        <ul>
+            <li>@Html.ActionLink("Download File From Url", "DownloadFileFromUrl", "DownloadingFiles")</li>
         </ul>
     </li>
 </ul>
+<p>&nbsp;</p>

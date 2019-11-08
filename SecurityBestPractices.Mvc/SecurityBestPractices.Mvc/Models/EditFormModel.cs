@@ -7,14 +7,23 @@ namespace SecurityBestPractices.Mvc.Models {
         public int Id { get; set; }
         public string ProductName { get; set; }
         public decimal Price { get; set; }
+        public Guid SecretKey { get; set; }
+
+        public string Url { get; set; }
+        public string UrlCaption { get; set; }
+
+        public EditFormItem() {
+            SecretKey = Guid.NewGuid();
+        }
     }
 
     public static class EditFormItems {
         static List<EditFormItem> items = new List<EditFormItem>();
         static EditFormItems() {
-            items.Add(new EditFormItem { Id = 1, Price = 10, ProductName = "Chai <img src=1 onerror=alert('XSS') />" });
-            items.Add(new EditFormItem { Id = 2, Price = 20, ProductName = "Chang" });
-            items.Add(new EditFormItem { Id = 3, Price = 30, ProductName = "Aniseed Syrup" });
+            items.Add(new EditFormItem { Id = 1, Price = 10,
+                ProductName = "Chai <img src=1 onerror=alert('XSS') />", Url= "javascript:alert('XSS')", UrlCaption = "Link 1" });
+            items.Add(new EditFormItem { Id = 2, Price = 20, ProductName = "Chang", Url = "https://demos.devexpress.com/RWA/ResponsiveTemplate/", UrlCaption = "Link 2" });
+            items.Add(new EditFormItem { Id = 3, Price = 30, ProductName = "Aniseed Syrup", Url = "https://devexpress.com", UrlCaption = "Link 3" });
         }
         public static List<EditFormItem> GetList() {
             return items;

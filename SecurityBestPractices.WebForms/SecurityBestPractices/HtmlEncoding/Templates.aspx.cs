@@ -9,7 +9,6 @@ using System.Web.UI.WebControls;
 namespace SecurityBestPractices.HtmlEncoding {
     public partial class EncodeHtmlInTemplate : System.Web.UI.Page {
         protected void Page_Load(object sender, EventArgs e) {
-            // <img src=1 onerror=alert('XSS') />
         }
     }
 }

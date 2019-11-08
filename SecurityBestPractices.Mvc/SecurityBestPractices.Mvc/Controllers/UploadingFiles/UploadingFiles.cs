@@ -6,6 +6,7 @@ using System.IO;
 using System.Drawing;
 using System;
 using System.Web.Hosting;
+using System.Linq;
 
 namespace SecurityBestPractices.Mvc.Controllers {
     public class UploadingFilesController : Controller {
@@ -54,6 +55,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
                 return false;
             }
         }
+
         #endregion
 
         #region In Memory Processing
@@ -128,5 +130,57 @@ namespace SecurityBestPractices.Mvc.Controllers {
             }
         }
         #endregion
+
+        #region Limit Directory Size
+        public ActionResult LimitDirectorySize() {
+            return View("LimitDirectorySize");
+        }
+
+        public ActionResult UploadLimitDirectorySizeHandler([ModelBinder(typeof(UploadLimitDirectorySizeBinder))]IEnumerable<UploadedFile> uploadControl) {
+            return null;
+        }
+
+        public class UploadLimitDirectorySizeBinder : DevExpressEditorsBinder {
+            public UploadLimitDirectorySizeBinder() {
+                UploadControlBinderSettings.ValidationSettings.AllowedFileExtensions = new[] { ".jpg", ".png" };
+                UploadControlBinderSettings.FilesUploadCompleteHandler = uploadControl_FilesUploadComplete;
+            }
+
+            private void uploadControl_FilesUploadComplete(object sender, FilesUploadCompleteEventArgs e) {
+                var uploadedFiles = ((MVCxUploadControl)sender).UploadedFiles;
+                if(uploadedFiles != null && uploadedFiles.Length > 0) {
+                    for(int i = 0; i < uploadedFiles.Length; i++) {
+                        UploadedFile file = uploadedFiles[i];
+                        if(file.IsValid && file.FileName != "") {
+                            using(var stream = file.FileContent) {
+                                // Check if the uploaded file overflows the maximum directory size
+                                const long MaxDirectorySize = 10000000; // bytes
+                                long directorySize = GetDirectorySize(HostingEnvironment.MapPath("~/Upload/Images/"));
+                                if(file.ContentLength + directorySize > MaxDirectorySize) {
+                                    file.IsValid = false;
+                                    e.ErrorText = "Maximum directory size exceeded!";
+                                } else {
+                                    string fileName = string.Format("{0}{1}", HostingEnvironment.MapPath("~/Upload/Images/"), file.FileName);
+                                    file.SaveAs(fileName, true);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        static long GetDirectorySize(string rootFolder) {
+            var files = Directory.EnumerateFiles(rootFolder);
+            var size = (from file in files let fileInfo = new FileInfo(file) select fileInfo.Length).Sum();
+
+            var subDirectories = Directory.EnumerateDirectories(rootFolder);
+            var subDirectoriesSize = (from directory in subDirectories select GetDirectorySize(directory)).Sum();
+
+            return size + subDirectoriesSize;
+        }
+
+        #endregion
+
     }
 }
