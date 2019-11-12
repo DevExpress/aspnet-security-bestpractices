@@ -817,7 +817,7 @@ Input text containing unsafe symbols will be converted to a safe form. In this e
 var s = "\"\u003cb\u003e'test'\u003c/b\u003e";
 ```
 
-### Encoding in DevExpress Controls
+### 6.1 Encoding in DevExpress Controls
 
 By default, DevExpress controls encode displayed values that can be obtained from a data source. Refer to the [HTML-Encoding](https://documentation.devexpress.com/AspNet/117902/Common-Concepts/HTML-Encoding) document for more information.
 
@@ -831,7 +831,7 @@ To get familiar with the vulnerability, open the example project's EncodeHtml.as
 
 Launch the project and open the page in the browser. A data field's content will be interpreted as a script and you well see an alert popup.
 
-### Encoding in Templates
+### 6.2 Encoding in Templates
 
 If you inject data field values in templates, we recommend that you always sanitize the data field values:
 
@@ -842,7 +842,7 @@ If you inject data field values in templates, we recommend that you always sanit
 
 DevExpress controls by default wrap templated contents with a `HttpUtility.HtmlEncode` method call.
 
-### Encoding Callback Data
+### 6.3 Encoding Callback Data
 
 When a client displays data received from the server via a callback, a security breach can take place if this data has not been properly encoded. For example, in the code below, such content is assigned to an element's `innerHTML`:
 
@@ -857,7 +857,7 @@ When a client displays data received from the server via a callback, a security 
 
 ```
 
-### Dangerous Links
+### 6.4 Dangerous Links
 
 It is potentially dangerous to use render a hyperlink's HREF attribute using a value from a database or user input.
 
