@@ -503,7 +503,7 @@ To familiarize yourself with the solution:
 3. Log out.
 4. Try switching report pages.
 
-The following error will be signalled:
+The following error will be signaled:
 
 ![Operation Logger Error](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/authorization-reportopertaionlogger.png?raw=true)
 

@@ -195,7 +195,6 @@
     <Content Include="UploadingFiles\LimitDirectorySize.aspx" />
     <Content Include="ValidateInput\SvgInline.aspx" />
     <Content Include="ValidateInput\General.aspx" />
-    <Content Include="WebForm1.aspx" />
     <None Include="packages.config" />
     <Content Include="App_Data\AdminDashboard.xml" />
     <Content Include="App_Data\JohnDashboard.xml" />
@@ -467,13 +466,6 @@
     <Compile Include="ValidateInput\General.aspx.designer.cs">
       <DependentUpon>General.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebForm1.aspx.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="WebForm1.aspx.designer.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\UploadedData\" />
@@ -490,7 +482,6 @@
     <EmbeddedResource Include="Authorization\Reports\AdminReport.resx">
       <DependentUpon>AdminReport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

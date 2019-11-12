@@ -417,7 +417,7 @@ To familiarize yourself with the solution:
 3. Log out.
 4. Try switching report pages.
 
-The following error will be signalled:
+The following error will be signaled:
 
 ![Operation Logger Error](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/authorization-reportopertaionlogger.png?raw=true)
 
@@ -431,7 +431,7 @@ The [DevExpress Web Dashboard](https://devexpress.github.io/dotnet-eud/dashboard
 
 **1) Callbacks are processed by the ASPx page**
 
-The ASPx page contains the ASPxDashboard control and the [UseDashboardConfigurator](http://help.devexpress.com/#Dashboard/DevExpressDashboardWebASPxDashboard_UseDashboardConfiguratortopic) property is set to false. This is the default mode for the dashbaord, and you can use the standard ASP.NET access restriction mechanisms:
+The ASPx page contains the ASPxDashboard control and the [UseDashboardConfigurator](http://help.devexpress.com/#Dashboard/DevExpressDashboardWebASPxDashboard_UseDashboardConfiguratortopic) property is set to false. This is the default mode for the dashboard, and you can use the standard ASP.NET access restriction mechanisms:
 
 ```aspx
 <location path="Authorization/Dashboards">
@@ -654,7 +654,7 @@ If the validation fails, the MasterPage will generate an error:
 
 The sample project illustrates how to ensure your web application's security in two use-case scenarios:
 
-### Preventing Anauthorized CRUD Operations
+### Preventing Unauthorized CRUD Operations
 
 In this scenario, an attack attempts to perform a CRUD operation on the server side by emulating a request from a data aware control (an [ASPxGridView](http://help.devexpress.com/#AspNet/clsDevExpressWebASPxGridViewtopic) in the example).
 
