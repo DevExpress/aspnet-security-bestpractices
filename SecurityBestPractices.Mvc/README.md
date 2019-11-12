@@ -1010,13 +1010,18 @@ DevExpress controls by default wrap templated contents with a `HttpUtility.HtmlE
 When a client displays data received from the server via a callback, a security breach can take place if this data has not been properly encoded. For example, in the code below, such content is assigned to an element's `innerHTML`:
 
 ```xml
-<dx:ASPxCallback runat="server" ID="CallbackControl" OnCallback="Callback_Callback" ClientInstanceName="callbackControl" >
-    <ClientSideEvents CallbackComplete="function(s, e) {
-        document.getElementById('namePlaceHodler').innerHTML = e.result;
-            if(callbackControl.cpSomeInfo)
-                document.getElementById('someInfo').innerHTML = callbackControl.cpSomeInfo;
-        }" />
-</dx:ASPxCallback>
+<script>
+function sendRequest() {
+    $.ajax({
+        type: "POST",
+        url: '@Url.Action("EncodeAjaxResponseCallback", "HtmlEncoding")',
+        success: function (response) {
+            $("#content").html(response);
+        }
+    });
+}
+</script>
+<a href="javascript:sendRequest()">Send Ajax Request</a>
 
 ```
 
