@@ -80,7 +80,7 @@ Note that it is not enough to specify the allowed file extension on the View sid
 
 This option only affects the client behavior. It prevents input errors but does not strictly prohibit sending a malicious file to the server.
 
-2. Aditionally, you can disable file execution in the upload folder ([relevant StackOverflow question](https://stackoverflow.com/questions/3776847/how-to-restrict-folder-access-in-asp-net)):
+2. Additionally, you can disable file execution in the upload folder ([relevant StackOverflow question](https://stackoverflow.com/questions/3776847/how-to-restrict-folder-access-in-asp-net)):
 
 ```aspx
   <location path="UploadingFiles/Images">
@@ -503,7 +503,7 @@ To familiarize yourself with the solution:
 3. Log out.
 4. Try switching report pages.
 
-The following error will be signalled:
+The following error will be signaled:
 
 ![Operation Logger Error](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/authorization-reportopertaionlogger.png?raw=true)
 
@@ -655,6 +655,7 @@ DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx());
 DefaultQueryBuilderContainer.Register<IDataSourceWizardConnectionStringsProvider, DataSourceWizardConnectionStringsProvider>();
 DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<DataSourceWizardDBSchemaProviderExFactory>();
 ```
+
 ---
 
 ## 4. Preventing Cross-Site Request Forgery (CSRF)
