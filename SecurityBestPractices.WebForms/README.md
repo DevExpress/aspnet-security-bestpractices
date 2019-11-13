@@ -887,7 +887,7 @@ It is strongly recommended that you validate values obtained from an end user be
 
 4. Validate the values in the code that directly uses them.
 
-<span style="color: red">IMAGE<span>
+![Validation Diagram](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/validation-diagram.png)
 
 You can specify value restrictions using a control's properties such as MaxLength, Min/Max Values, Required, etc. Server side validation does not allow to submit an invalid value even if you manage to send an invalid value bypassing the client validation. If the value is invalid, the editor's value is set to the previous value set on the editor's `init`. Note that this value can be invalid if it is obtained from a database where it was saved without validation.
 

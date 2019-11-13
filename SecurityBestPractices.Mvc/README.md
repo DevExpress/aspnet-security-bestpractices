@@ -1060,7 +1060,7 @@ It is strongly recommended that you validate values obtained from an end user be
 
 Note that client validation is for optimization only. To ensure safety, always use client validation in conjunction with server validation.
 
-<span style="color: red">IMAGE<span>
+![Validation Diagram](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/validation-diagram.png)
 
 The ASP.NET MVC framework allows you to assign validation attributes to model properties. On the client, these attributes are taken into account for all model-bound input elements.
 
