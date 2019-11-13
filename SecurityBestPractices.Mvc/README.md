@@ -821,7 +821,7 @@ This section describes security vulnerabilities that can make some sensitive inf
 
 ### 5.1 Information Exposure Through Error Messages
 
-The possible security breach can occur when the server generates an exception. If an application is configured incorrectly, a detailed information on the error is displayed to an end-user. This information can include sensitive parts giving a malefactor an insight on the application's infrastructure, file names and so on.
+The possible security breach can occur when the server generates an exception. If an application is configured incorrectly, detailed information on the error is displayed to an end-user. This information can include sensitive parts giving a malefactor an insight on the application's infrastructure, file names and so on.
 
 This behavior is controlled by the customErrors web.config option. By default, this option is set to RemoteOnly. In this mode, detailed errors are displayed only for connections from the local machine. Setting this option to **Off** forces private messages for all connections. Setting it to On ensures that private messages are never displayed.
 
@@ -941,7 +941,7 @@ Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/d
 | JavaScriptEncode    | Sanitizes an untrusted input used within a script        |
 | UrlEncode           | Sanitizes an untrusted input used to generate a URL      |
 
-In ASP.NET MVC, all content inserted into a Razor view via the `@` operator is sanitized by default:
+In ASP.NET MVC, any content inserted into a Razor view via the `@` operator is sanitized by default:
 
 ```cs
 <p>Entered value: @Model.ProductName</p>
