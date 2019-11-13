@@ -1058,6 +1058,8 @@ It is strongly recommended that you validate values obtained from an end user be
 
 4. Validate the values in the code that directly uses them.
 
+Note that client validation is for optimization only. To ensure safety, always use client validation in conjunction with server validation.
+
 <span style="color: red">IMAGE<span>
 
 The ASP.NET MVC framework allows you to assign validation attributes to model properties. On the client, these attributes are taken into account for all model-bound input elements.
@@ -1094,8 +1096,6 @@ On the client, if a user's input does not meet limitations specified by validati
 <add key="ClientValidationEnabled" value="true" />
 <add key="UnobtrusiveJavaScriptEnabled" value="true" />
 ```
-
-Note that client validation is for optimization only. To ensure safety, always use client validation in conjunction with server validation.
 
 ### 7.2 Model Binding Restrictions
 
