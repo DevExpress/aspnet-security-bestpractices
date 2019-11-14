@@ -4,14 +4,14 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h2>General</h2>
-    <dx:ASPxSpinEdit ID="spinEdit" runat="server" Caption="SpinEdit" MinValue="1" MaxValue="10" OnValidation="spinEdit_CustomValidation">
-        <ValidationSettings RequiredField-IsRequired="true" /> 
+    <dx:ASPxSpinEdit ID="someEdit" runat="server" Caption="SomeEdit" MaxLength="1">
+        <ValidationSettings RequiredField-IsRequired="true" />
     </dx:ASPxSpinEdit>
 
+    <dx:ASPxSpinEdit ID="spinEdit" runat="server" Caption="SpinEdit" MinValue="1" MaxValue="10">
+    </dx:ASPxSpinEdit>
     <br />
-    <dx:ASPxButton ID="UpdateButton" runat="server" Text="Submit" OnClick="UpdateButton_Click" />
-    <br />
-    <asp:Button runat="server" Text="Submit - Standard Button" OnClick="StandardButton_Click" />
+    <asp:Button runat="server" Text="Standard Button" OnClick="StandardButton_Click" />
     <br />
     <dx:ASPxLabel runat="server" ID="UpdateStatusLabel" />
 </asp:Content>

@@ -192,7 +192,9 @@
     <Content Include="DownloadingFiles\DownloadFileFromUrl.aspx" />
     <Content Include="HtmlEncoding\Callback.aspx" />
     <Content Include="HtmlEncoding\DangerousNavigateUrl.aspx" />
+    <Content Include="HtmlEncoding\EncodePageTitle.aspx" />
     <Content Include="UploadingFiles\LimitDirectorySize.aspx" />
+    <Content Include="ValidateInput\ListEditors.aspx" />
     <Content Include="ValidateInput\SvgInline.aspx" />
     <Content Include="ValidateInput\General.aspx" />
     <None Include="packages.config" />
@@ -340,6 +342,13 @@
     <Compile Include="HtmlEncoding\DangerousNavigateUrl.aspx.designer.cs">
       <DependentUpon>DangerousNavigateUrl.aspx</DependentUpon>
     </Compile>
+    <Compile Include="HtmlEncoding\EncodePageTitle.aspx.cs">
+      <DependentUpon>EncodePageTitle.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HtmlEncoding\EncodePageTitle.aspx.designer.cs">
+      <DependentUpon>EncodePageTitle.aspx</DependentUpon>
+    </Compile>
     <Compile Include="HtmlEncoding\General.aspx.cs">
       <DependentUpon>General.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -451,6 +460,13 @@
     </Compile>
     <Compile Include="UsingAntiForgeryToken\MasterPageWithAntiForgeryToken.Master.designer.cs">
       <DependentUpon>MasterPageWithAntiForgeryToken.Master</DependentUpon>
+    </Compile>
+    <Compile Include="ValidateInput\ListEditors.aspx.cs">
+      <DependentUpon>ListEditors.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ValidateInput\ListEditors.aspx.designer.cs">
+      <DependentUpon>ListEditors.aspx</DependentUpon>
     </Compile>
     <Compile Include="ValidateInput\SvgInline.aspx.cs">
       <DependentUpon>SvgInline.aspx</DependentUpon>

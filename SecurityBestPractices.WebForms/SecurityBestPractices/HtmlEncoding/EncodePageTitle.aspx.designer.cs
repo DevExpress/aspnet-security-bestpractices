@@ -7,36 +7,27 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SecurityBestPractices.UsingAntiForgeryToken {
+namespace SecurityBestPractices.HtmlEncoding {
     
     
-    public partial class GeneralEditForm {
+    public partial class EncodePageTitle {
         
         /// <summary>
-        /// someEdit control.
+        /// form1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxSpinEdit someEdit;
+        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// spinEdit control.
+        /// SqlDataSource1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxSpinEdit spinEdit;
-        
-        /// <summary>
-        /// UpdateStatusLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DevExpress.Web.ASPxLabel UpdateStatusLabel;
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource1;
     }
 }

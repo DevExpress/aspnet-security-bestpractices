@@ -10,25 +10,34 @@
 namespace SecurityBestPractices.UsingAntiForgeryToken {
     
     
-    public partial class GeneralEditForm {
+    public partial class ListEditors {
         
         /// <summary>
-        /// someEdit control.
+        /// ComboBoxInStrictMode control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxSpinEdit someEdit;
+        protected global::DevExpress.Web.ASPxComboBox ComboBoxInStrictMode;
         
         /// <summary>
-        /// spinEdit control.
+        /// SqlDataSource1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxSpinEdit spinEdit;
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource1;
+        
+        /// <summary>
+        /// UpdateButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DevExpress.Web.ASPxButton UpdateButton;
         
         /// <summary>
         /// UpdateStatusLabel control.

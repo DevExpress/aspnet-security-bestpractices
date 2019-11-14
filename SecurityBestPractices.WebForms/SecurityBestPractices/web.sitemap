@@ -36,12 +36,14 @@
     <siteMapNode url="" title="6. Preventing  cross-site scripting (XSS) attacks (Encoding)">
       <siteMapNode url="~/HtmlEncoding/General.aspx" title="General" />
       <siteMapNode url="~/HtmlEncoding/EncodeHtml.aspx" title="Html Encoding in Controls" />
+      <siteMapNode url="~/HtmlEncoding/EncodePageTitle.aspx" title="Html Encoding in Page.Title" />
       <siteMapNode url="~/HtmlEncoding/Templates.aspx" title="Html Encoding in Templates" />
       <siteMapNode url="~/HtmlEncoding/Callback.aspx" title="Encoding Callback Results" />
       <siteMapNode url="~/HtmlEncoding/DangerousNavigateUrl.aspx" title="Dangerous Navigate Url" />
     </siteMapNode>
     <siteMapNode url="" title="7. User Input Validation">
       <siteMapNode url="~/ValidateInput/General.aspx" title="General" />
+      <siteMapNode url="~/ValidateInput/ListEditors.aspx" title="List Editors" />
       <siteMapNode url="~/ValidateInput/SvgInline.aspx" title="Inline SVG Images (use only trusted sources)" />
     </siteMapNode>
     <siteMapNode url="" title="8. Unauthorized server operations via Client-Side API">
