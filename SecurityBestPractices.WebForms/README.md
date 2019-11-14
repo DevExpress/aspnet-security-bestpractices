@@ -160,7 +160,7 @@ To avoid a security breach, you will need to ensure that these files are inacces
 To mitigate this vulnerability:
 
 1. Store temporary files in a folder unreachable by URL (for example, _App_Data_).
-2. Use a dedicated file extension for temporary files on the server (for example \*".mytmp").
+2. Use a dedicated file extension for temporary files on the server (for example "\*.mytmp").
 3. Consider assigning random file names using the [GetRandomFileName](<https://msdn.microsoft.com/en-us/library/system.io.path.getrandomfilename(v=vs.110).aspx>) method.
 
 ```cs
