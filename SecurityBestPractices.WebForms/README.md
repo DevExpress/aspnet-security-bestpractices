@@ -857,7 +857,42 @@ When a client displays data received from the server via a callback, a security 
 
 ```
 
-### 6.4 Dangerous Links
+### 6.4 Encoding Page Title
+
+When you assign a value from a database or user input to the page title, you need to make sure that the value is properly encoded to prevent possible script injections.
+
+For example, the code below assigns a value from a database to the page title.
+
+```cs
+protected void Page_Load(object sender, EventArgs e) {
+    var ds = SqlDataSource1.Select(new System.Web.UI.DataSourceSelectArguments()) as DataView;
+    var value = ds[0]["ProductName"]; // value from DB = "</title><script>alert('XSS')</script>";
+
+    //Title = "Product: " + value.ToString(); // Not secure
+    Title = "Product: " + HttpUtility.HtmlEncode(value).ToString(); // Secure
+}
+
+```
+
+If encoding was not used, the resulting markup would contain a malicious script:
+
+```html
+<head><title>
+    Product: </title><script>alert('XSS')</script>
+</title></head>
+```
+
+With encoding the markup is rendered as follows:
+
+```html
+<head>
+  <title>
+    Product: &lt;/title&gt;&lt;script&gt;alert(&#39;XSS&#39;)&lt;/script&gt;
+  </title>
+</head>
+```
+
+### 6.5 Dangerous Links
 
 It is potentially dangerous to use render a hyperlink's HREF attribute using a value from a database or user input.
 
@@ -887,9 +922,13 @@ It is strongly recommended that you validate values obtained from an end user be
 
 4. Validate the values in the code that directly uses them.
 
+Note that client validation is for optimization only. To ensure safety, always use client validation in conjunction with server validation.
+
 ![Validation Diagram](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/validation-diagram.png)
 
-You can specify value restrictions using a control's properties such as MaxLength, Min/Max Values, Required, etc. Server side validation does not allow to submit an invalid value even if you manage to send an invalid value bypassing the client validation. If the value is invalid, the editor's value is set to the previous value set on the editor's `init`. Note that this value can be invalid if it is obtained from a database where it was saved without validation.
+You can specify value restrictions using a control's properties such as MaxLength, Min/Max Values, Required, etc. Server side validation does not allow to submit an invalid value even if you manage to send an invalid value bypassing the client validation. If the value is invalid, the editor's value is set to the previous value set on the editor's `init`.
+
+Note that starting with the version 19.2, the value set on `init` is also validated and cannot be saved if validation fails. In earlier versions, this value would be saved without validations if it was not modified on the client.
 
 ### 7.2 Validation in List Editors
 
