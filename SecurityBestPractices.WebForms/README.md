@@ -928,7 +928,7 @@ Note that client validation is for optimization only. To ensure safety, always u
 
 You can specify value restrictions using a control's properties such as MaxLength, Min/Max Values, Required, etc. Server side validation does not allow to submit an invalid value even if you manage to send an invalid value bypassing the client validation. If the value is invalid, the editor's value is set to the previous value set on the editor's `init`.
 
-Note that starting with the version 19.2, the value set on `init` is also validated and cannot be saved if validation fails. In earlier versions, this value would be saved without validations if it was not modified on the client.
+Note that starting with the version 19.2, the value set on `init` is also validated and cannot be saved if validation fails. In earlier versions, this value would be saved without validation if it was not modified on the client.
 
 ### 7.2 Validation in List Editors
 
