@@ -129,7 +129,7 @@ protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.F
 
 2. Specify the maximum size for uploaded files using the [UploadControlValidationSettings.MaxFileSize](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_MaxFileSizetopic) property.
 
-Note that in the **Advanced** uploading mode, files are loaded in small fragments (200KB by default), thus setting the **httpRuntime**>**maxRequestLength** and **requestLimits**>**maxAllowedContentLength** options in **web.config** is not sufficient to prevent attacks.
+> Note that in the **Advanced** uploading mode, files are loaded in small fragments (200KB by default), thus setting the **httpRuntime**>**maxRequestLength** and **requestLimits**>**maxAllowedContentLength** options in **web.config** is not sufficient to prevent attacks.
 
 See the [Uploading Large Files](https://documentation.devexpress.com/AspNet/9822/ASP-NET-WebForms-Controls/File-Management/File-Upload/Concepts/Uploading-Large-Files) documentation topic for more information.
 
@@ -408,7 +408,7 @@ Register the operation logger in [Global.asax.cs](https://github.com/DevExpress/
 DefaultWebDocumentViewerContainer.Register<WebDocumentViewerOperationLogger, OperationLogger>();
 ```
 
-Note that in order to simplify the example project the logger implementation obtains the required user account data from a static property. This is not a recommended solution: such an implementation could have difficulties running in a cloud environment or on a web farm. Instead, we recommend that you store authentication information in some appropriate data storage.
+> Note that in order to simplify the example project the logger implementation obtains the required user account data from a static property. This is not a recommended solution: such an implementation could have difficulties running in a cloud environment or on a web farm. Instead, we recommend that you store authentication information in some appropriate data storage.
 
 To familiarize yourself with the solution:
 
@@ -854,7 +854,19 @@ When a client displays data received from the server via a callback, a security 
                 document.getElementById('someInfo').innerHTML = callbackControl.cpSomeInfo;
         }" />
 </dx:ASPxCallback>
+```
 
+Server-side code:
+
+```cs
+protected void Callback_Callback(object source, DevExpress.Web.CallbackEventArgs e) {
+    // Not secure
+    // e.Result = "<img src=1 onerror=alert('XSS') /> ";
+    // CallbackControl.JSProperties["cpSomeInfo"] = "<video src=1 onerror=alert(document.cookie)>";
+
+    e.Result = HttpUtility.HtmlEncode("<img src=1 onerror=alert('XSS') /> ");
+    CallbackControl.JSProperties["cpSomeInfo"] = HttpUtility.HtmlEncode("<video src=1 onerror=alert(document.cookie)>");
+}
 ```
 
 ### 6.4 Encoding Page Title
@@ -922,17 +934,19 @@ It is strongly recommended that you validate values obtained from an end user be
 
 4. Validate the values in the code that directly uses them.
 
-Note that client validation is for optimization only. To ensure safety, always use client validation in conjunction with server validation.
+> Note that client validation is for optimization only. To ensure safety, always use client validation in conjunction with server validation.
 
 ![Validation Diagram](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/validation-diagram.png)
 
 You can specify value restrictions using a control's properties such as MaxLength, Min/Max Values, Required, etc. Server side validation does not allow to submit an invalid value even if you manage to send an invalid value bypassing the client validation. If the value is invalid, the editor's value is set to the previous value set on the editor's `init`.
 
-Note that starting with the version 19.2, the value set on `init` is also validated and cannot be saved if validation fails. In earlier versions, this value would be saved without validation if it was not modified on the client.
+> Note that starting with the version 19.2, the value set on `init` is also validated and cannot be saved if validation fails. In earlier versions, this value would be saved without validation if it was not modified on the client.
 
 ### 7.2 Validation in List Editors
 
 List controls in the DevExpress ASP.NET suite provide the `DataSecurity` property that specifies how a control handles input values that do not exist in the list. By default, this property is set to `Default`. With this setting, an editor accepts values that aren't in the list. Set the `DataSecurity` property to `Strict` to prohibit such values.
+
+If you use the Strict DataSecurity mode, ViewState is disabled and you use perform data binding in runtime, you should perform data binding on Page_Init. Binding on Page_load is too late because an editor's validation triggers earlier then its items are populated.
 
 ### 7.3 Disable Inbuilt Request Value Checks
 

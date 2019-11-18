@@ -156,7 +156,7 @@ public class UploadValidationBinder : DevExpressEditorsBinder {
 
 ```
 
-Note that in the **Advanced** uploading mode, files are loaded in small fragments (200KB by default), thus setting the **httpRuntime**>**maxRequestLength** and **requestLimits**>**maxAllowedContentLength** options in **web.config** is not sufficient to prevent attacks.
+> Note that in the **Advanced** uploading mode, files are loaded in small fragments (200KB by default), thus setting the **httpRuntime**>**maxRequestLength** and **requestLimits**>**maxAllowedContentLength** options in **web.config** is not sufficient to prevent attacks.
 
 See the [Uploading Large Files](https://documentation.devexpress.com/AspNet/9822/ASP-NET-WebForms-Controls/File-Management/File-Upload/Concepts/Uploading-Large-Files) documentation topic for more information.
 
@@ -494,7 +494,7 @@ Register the operation logger in [Global.asax.cs](https://github.com/DevExpress/
 DefaultWebDocumentViewerContainer.Register<WebDocumentViewerOperationLogger, OperationLogger>();
 ```
 
-Note that in order to simplify the example project the logger implementation obtains the required user account data from a static property. This is not a recommended solution: such an implementation could have difficulties running in a cloud environment or on a web farm. Instead, we recommend that you store authentication information in some appropriate data storage.
+> Note that in order to simplify the example project, the logger implementation obtains the required user account data from a static property. This is not a recommended solution: such an implementation could have difficulties running in a cloud environment or on a web farm. Instead, we recommend that you store authentication information in some appropriate data storage.
 
 To familiarize yourself with the solution:
 
@@ -1009,7 +1009,9 @@ DevExpress controls by default wrap templated contents with a `HttpUtility.HtmlE
 
 When a client displays data received from the server via a callback, a security breach can take place if this data has not been properly encoded. For example, in the code below, such content is assigned to an element's `innerHTML`:
 
-```xml
+##### View:
+
+```html
 <script>
 function sendRequest() {
     $.ajax({
@@ -1022,8 +1024,17 @@ function sendRequest() {
 }
 </script>
 <a href="javascript:sendRequest()">Send Ajax Request</a>
-
 ```
+
+##### Controller:
+
+```cs
+public ActionResult EncodeAjaxResponseCallback() {
+    // return Content("1</title><script>alert(1);</script><title>");  // Not secure
+    return Content(HttpUtility.HtmlEncode("1</title><script>alert(1);</script><title>")); // Secure
+}
+```
+
 
 ### Dangerous Links
 
@@ -1058,7 +1069,7 @@ It is strongly recommended that you validate values obtained from an end user be
 
 4. Validate the values in the code that directly uses them.
 
-Note that client validation is for optimization only. To ensure safety, always use client validation in conjunction with server validation.
+> Note that client validation is for optimization only. To ensure safety, always use client validation in conjunction with server validation.
 
 ![Validation Diagram](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/validation-diagram.png)
 
