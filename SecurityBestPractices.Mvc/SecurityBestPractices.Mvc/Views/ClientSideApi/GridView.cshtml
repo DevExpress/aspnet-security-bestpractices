@@ -1,0 +1,22 @@
+﻿@model IEnumerable
+
+<h2>GridView - Hidden column access</h2>
+
+@using(Html.BeginForm()) {
+    @Html.Partial("GridViewPartial", Model)
+    <hr />
+    <script>
+        function getRowValues() {
+            gridView.GetRowValues(0, 'SecretKey', function (Value) {
+                alert(Value);
+            });
+        }
+    </script>
+
+    @Html.DevExpress().Button(settings => {
+           settings.Name = "button";
+           settings.Width = 164;
+           settings.Text = "GetRowValues()";
+           settings.ClientSideEvents.Click = "getRowValues";
+        }).GetHtml()
+}

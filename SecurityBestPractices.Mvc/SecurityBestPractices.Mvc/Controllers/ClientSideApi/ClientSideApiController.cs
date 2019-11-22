@@ -9,6 +9,16 @@ using System.Xml.Linq;
 
 namespace SecurityBestPractices.Mvc.Controllers {
     public class ClientSideApiController : Controller {
+        // GridView - Hidden column access
+        public ActionResult GridView() {
+            return View("GridView", EditFormItems.GetList());
+        }
+        [HttpPost]
+        public ActionResult GridViewPartial() {
+            return PartialView("GridViewPartial", EditFormItems.GetList());
+        }
+
+
         // File Operations
         public ActionResult OfficeControlsFileOperations() {
             return View("OfficeControlsFileOperations");

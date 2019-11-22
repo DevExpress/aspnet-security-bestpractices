@@ -1,0 +1,23 @@
+﻿@{
+    var grid = Html.DevExpress().GridView<EditFormItem>(settings => {
+        settings.Name = "gridView";
+        settings.CallbackRouteValues = new { Controller = "ClientSideApi", Action = "GridViewPartial" };
+        settings.SettingsDataSecurity.AllowReadUnexposedColumnsFromClientApi = DefaultBoolean.False;
+
+        settings.KeyFieldName = "Id";
+
+        settings.Columns.Add(c => {
+            c.FieldName = "Id";
+            c.ReadOnly = true;
+        });
+        settings.Columns.Add("ProductName");
+        settings.Columns.Add("Price");
+
+        settings.Columns.Add(c => {
+            c.FieldName = "SecretKey";
+            c.Visible = false;
+        });
+    });
+}
+@grid.Bind(Model).GetHtml()
+

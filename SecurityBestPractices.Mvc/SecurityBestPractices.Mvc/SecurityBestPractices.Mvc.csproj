@@ -278,6 +278,8 @@
     <Content Include="Views\UploadingFiles\LimitDirectorySize.cshtml" />
     <Content Include="Views\DownloadingFiles\DownloadFileFromUrl.cshtml" />
     <Content Include="Views\HtmlEncoding\EncodeAjaxResponse.cshtml" />
+    <Content Include="Views\ClientSideApi\GridView.cshtml" />
+    <Content Include="Views\ClientSideApi\GridViewPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
