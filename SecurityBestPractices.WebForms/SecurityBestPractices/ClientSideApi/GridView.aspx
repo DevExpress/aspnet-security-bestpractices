@@ -39,6 +39,15 @@
                 <asp:Parameter Name="ProductID" Type="Int32" />
             </UpdateParameters>
         </asp:SqlDataSource>
+
+        <hr />
+        <dx:ASPxButton ID="Button" runat="server" Text="GetRowValues()" UseSubmitBehavior="False" AutoPostBack="False">
+            <ClientSideEvents Click="function(){
+                    gridView.GetRowValues(0, 'UnitPrice', function(Value) {
+                        alert(Value);
+                    });
+                }" />
+        </dx:ASPxButton>
     </form>
 </body>
 </html>
