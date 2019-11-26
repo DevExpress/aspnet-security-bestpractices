@@ -615,7 +615,7 @@ For more information on the vulnerability, refer to the [CWE-352 - Cross-Site Re
 
 To mitigate the vulnerability, use the **AntiForgeryToken** pattern. Refer to the [AntiForgery.Validate](<https://msdn.microsoft.com/en-us/library/gg548011(v=vs.111).aspx>) MSDN article to learn more.
 
-The best practice to prevent CSRF is to create a MasterPage that:
+The best practice to prevent CSRF is to create a [MasterPage](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UsingAntiForgeryToken/MasterPageWithAntiForgeryToken.Master#L13) that:
 
 1. Generates an AntiForgery token, and
 2. Checks this token within the Pre_Load event.
@@ -635,7 +635,7 @@ On the client, generate a token and a cookie signed with a machine key:
 />
 ```
 
-On the server, check the cookie and token in the Validate method:
+On the server, check the cookie and token in the [Validate method](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UsingAntiForgeryToken/MasterPageWithAntiForgeryToken.Master.cs#L6-L13):
 
 ```cs
 protected override void OnInit(EventArgs e) {
@@ -660,11 +660,15 @@ In this scenario, an attack attempts to perform a CRUD operation on the server s
 
 ![AntiForgeryGrid](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/anti-forgery-grid.png?raw=true)
 
+See the example project's [UsingAntiForgeryToken/EditForm.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UsingAntiForgeryToken/EditForm.aspx) file to familiarize yourself with the vulnerability. 
+
 ### Preventing Unauthorized Changes to User Account Information
 
 In this scenario, an attack attempts to modify the user account information (the email address in the example).
 
 ![AntiForgeryEmail](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/anti-forgery-email.png?raw=true)
+
+See the example project's [UsingAntiForgeryToken/EditForm.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UsingAntiForgeryToken/EditForm.aspx) file to familiarize yourself with the vulnerability. 
 
 **See Also:** [Stack Overflow - preventing cross-site request forgery (csrf) attacks in asp.net web forms](https://stackoverflow.com/questions/29939566/preventing-cross-site-request-forgery-csrf-attacks-in-asp-net-web-forms)
 
@@ -712,6 +716,9 @@ protected void UpdateButton_Click(object sender, EventArgs e) {
 }
 ```
 
+Refer to the example project's [InformationExposure/ErrorMessage.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/InformationExposure/ErrorMessage.aspx.cs#L8) file to familiarize yourself with the issue.
+
+
 ### 5.2 Availability of Invisible Column Values Through the Client-Side API
 
 #### Prevent Access to Hidden Column Data
@@ -723,6 +730,8 @@ gridView.GetRowValues(0, "UnitPrice", function(Value) {
   alert(Value);
 });
 ```
+
+See the example project's [ClientSideApi/GridView.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/GridView.aspx#L46-L48) page.
 
 Set the **AllowReadUnexposedColumnsFromClientApi** property to false to disable this behavior:
 
@@ -796,6 +805,8 @@ SearchResultLiteral.Text =
   string.Format("Your search - {0} - did not match any documents.", HttpUtility.HtmlEncode(SearchBox.Text));
 ```
 
+See the example project's [HtmlEncoding/General.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/General.aspx.cs) file.
+
 To insert user input into a JavaScript block, you need to prepare the string using the `HttpUtility.JavaScriptStringEncode`:
 
 ```html
@@ -817,13 +828,15 @@ Input text containing unsafe symbols will be converted to a safe form. In this e
 var s = "\"\u003cb\u003e'test'\u003c/b\u003e";
 ```
 
+See the example project's [HtmlEncoding/General.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/General.aspx#L21-L22) file.
+
 ### 6.1 Encoding in DevExpress Controls
 
 By default, DevExpress controls encode displayed values that can be obtained from a data source. Refer to the [HTML-Encoding](https://documentation.devexpress.com/AspNet/117902/Common-Concepts/HTML-Encoding) document for more information.
 
 This behavior is specified by a control's EncodeHtml property. If a control displays a value that can be modified by an untrusted party, we recommend that you never disable this setting or sanitize the displayed content manually.
 
-To get familiar with the vulnerability, open the example project's EncodeHtml.aspx page and uncomment the following line in the code behind:
+To get familiar with the vulnerability, open the example project's EncodeHtml.aspx page and uncomment the following line in the [code behind](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/EncodeHtml.aspx.cs):
 
 ```cs
 ((GridViewDataTextColumn)GridView.Columns["ProductName"]).PropertiesEdit.EncodeHtml = false;
@@ -833,7 +846,7 @@ Launch the project and open the page in the browser. A data field's content will
 
 ### 6.2 Encoding in Templates
 
-If you inject data field values in templates, we recommend that you always sanitize the data field values:
+If you inject data field values in templates, we recommend that you always [sanitize the data field values](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/Templates.aspx#L17):
 
 ```xml
 <asp:Label ID="ProductNameLabel" runat="server"
@@ -844,7 +857,7 @@ DevExpress controls by default wrap templated contents with a `HttpUtility.HtmlE
 
 ### 6.3 Encoding Callback Data
 
-When a client displays data received from the server via a callback, a security breach can take place if this data has not been properly encoded. For example, in the code below, such content is assigned to an element's `innerHTML`:
+When a client displays data received from the server via a callback, a security breach can take place if this data has not been properly encoded. For example, in the [code below](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/Callback.aspx#L14-L19), such content is assigned to an element's `innerHTML`:
 
 ```xml
 <dx:ASPxCallback runat="server" ID="CallbackControl" OnCallback="Callback_Callback" ClientInstanceName="callbackControl" >
@@ -856,7 +869,7 @@ When a client displays data received from the server via a callback, a security 
 </dx:ASPxCallback>
 ```
 
-Server-side code:
+[Server-side code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/Callback.aspx.cs#L14):
 
 ```cs
 protected void Callback_Callback(object source, DevExpress.Web.CallbackEventArgs e) {
@@ -873,7 +886,7 @@ protected void Callback_Callback(object source, DevExpress.Web.CallbackEventArgs
 
 When you assign a value from a database or user input to the page title, you need to make sure that the value is properly encoded to prevent possible script injections.
 
-For example, the code below assigns a value from a database to the page title.
+For example, the [code below](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/EncodePageTitle.aspx.cs#L13) assigns a value from a database to the page title.
 
 ```cs
 protected void Page_Load(object sender, EventArgs e) {
@@ -918,6 +931,8 @@ DevExpress grid based controls remove all potentially dangerous contents (for ex
 
 We recommend that you never set this setting to `false` if the URL value in the database can be modified by untrusted parties.
 
+See the example project's [HtmlEncoding/DangerousNavigateUrl.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/DangerousNavigateUrl.aspx#L20) page.
+
 ---
 
 ## 7. User Input Validation
@@ -948,6 +963,8 @@ List controls in the DevExpress ASP.NET suite provide the `DataSecurity` propert
 
 If you use the Strict DataSecurity mode, ViewState is disabled and you use perform data binding in runtime, you should perform data binding on Page_Init. Binding on Page_load is too late because an editor's validation triggers earlier then its items are populated.
 
+See the example project's [ValidateInput/ListEditors.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ValidateInput/ListEditors.aspx#L8) page.
+
 ### 7.3 Disable Inbuilt Request Value Checks
 
 ASP.NET checks input values for potentially dangerous content. For example, if an end-user types `<b>` into a text input and submits the form, they will be redirected to an error page with the following message:
@@ -962,7 +979,7 @@ In many cases such checks can have undesired side effects:
 
 - On a validation error, ASP.NET raises an exception and responds with the default error page. Because of this, you cannot handle the error and display a user-friendly error message.
 
-Because of these reasons, the inbuilt request value checks are commonly disabled. You can do this using the `validateRequest` setting available in the `/system.web/pages` section of web.config:
+Because of these reasons, the inbuilt request value checks are commonly disabled. You can do this using the `validateRequest` setting available in the `/system.web/pages` section of [web.config](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/Web.config#L23-L24):
 
 ```xml
 <system.web>
@@ -974,9 +991,9 @@ Because of these reasons, the inbuilt request value checks are commonly disabled
 
 ### 7.4 Inlining SVG Images
 
-SVG markup can contain scripts that will be executed if this SVG is inlined into a page. For example, the code below executes a script embedded into SVG markup:
+SVG markup can contain scripts that will be executed if this SVG is inlined into a page. For example, the [code below]() executes a script embedded into SVG markup:
 
-##### APSX file:
+##### [APSX file](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ValidateInput/SvgInline.aspx):
 
 ```aspx
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -986,7 +1003,7 @@ SVG markup can contain scripts that will be executed if this SVG is inlined into
 </asp:Content>
 ```
 
-##### Code-behind:
+##### [Code-behind](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ValidateInput/SvgInline.aspx.cs):
 
 ```cs
 protected void Page_Load(object sender, EventArgs e) {

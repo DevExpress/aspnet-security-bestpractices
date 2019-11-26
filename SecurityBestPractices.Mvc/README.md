@@ -677,7 +677,7 @@ The possible security breach could occur as follows:
 
 To familiarize yourself with the issue:
 
-1. Comment out the `[ValidateAntiForgeryToken]` attribute in the example project's [Controllers/UsingAntiForgeryToken/UsingAntiForgeryTokenController.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UsingAntiForgeryToken/UsingAntiForgeryTokenController.cs#L25) file to disable protection:
+1. Comment out the `[ValidateAntiForgeryToken]` attribute in the example project's [Controllers/UsingAntiForgeryToken/UsingAntiForgeryTokenController.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UsingAntiForgeryToken/UsingAntiForgeryTokenController.cs#L26) file to disable protection:
 
    ```cs
         [Authorize]
@@ -699,7 +699,7 @@ For more information on the vulnerability, refer to the [CWE-352 - Cross-Site Re
 
 To mitigate the vulnerability, use the **AntiForgeryToken** pattern as described below:
 
-1. Generate an anti-forgery token for a form in the view code as shown below:
+1. Generate an anti-forgery token for a form in the [view code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/UsingAntiForgeryToken/EditForm.cshtml#L21) as shown below:
    ```cs
    @using(Html.BeginForm()) {
        @Html.AntiForgeryToken()
@@ -750,7 +750,7 @@ If the validation fails, the server will generate an error:
 
 ### Use Anti-Forgery Tokens With the Dashboard Designer
 
-1. Use the following view code to inject a anti-forgery token into a Dashboard's AJAX request header.
+1. Use the following [view code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/UsingAntiForgeryToken/EditDashboard.cshtml) to inject a anti-forgery token into a Dashboard's AJAX request header.
 
    ```cs
     <script type="text/javascript">
@@ -775,7 +775,7 @@ If the validation fails, the server will generate an error:
     }
    ```
 
-2. Define a custom attribute to validate the anti-forgery token on requests.
+2. Define [a custom attribute](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UsingAntiForgeryToken/UsingAntiForgeryTokenController.cs#L58) to validate the anti-forgery token on requests.
 
    ```cs
     public sealed class DashboardValidateAntiForgeryTokenAttribute : FilterAttribute, IAuthorizationFilter {
@@ -827,7 +827,7 @@ This behavior is controlled by the customErrors web.config option. By default, t
 
 #### Manually Displaying Error Messages
 
-It is recommended that you never display exception messages (Exception.Message) on your application's view because this text can contain sensitive information. For example, the following code sample demonstrates an unsafe approach:
+It is recommended that you never display exception messages (Exception.Message) on your application's view because this text can contain sensitive information. For example, the following [code sample](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/InformationExposure/InformationExposureController.cs#L28) demonstrates an unsafe approach:
 
 ```cs
 public ActionResult FormWithErrorMessage(EditFormItem item) {
@@ -882,6 +882,8 @@ Set the **AllowReadUnexposedColumnsFromClientApi** property to false to disable 
 ```cs
 settings.SettingsDataSecurity.AllowReadUnexposedColumnsFromClientApi = DefaultBoolean.False;
 ```
+
+See the example project's [Views/ClientSideApi/GridView.cshtml](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/ClientSideApi/GridView.cshtml#L9-L12) file to familiarize yourself with the issue.
 
 #### Prevent Access by Field Name
 
@@ -977,7 +979,7 @@ By default, DevExpress controls encode displayed values that can be obtained fro
 
 This behavior is specified by a control's EncodeHtml property. If a control displays a value that can be modified by an untrusted party, we recommend that you never disable this setting or sanitize the displayed content manually.
 
-To get familiar with the vulnerability, open the example project's EncodeHtmlInControlsPartial.cshtm view and uncomment the following line:
+To get familiar with the vulnerability, open the example project's EncodeHtmlInControlsPartial.cshtm view and uncomment the [following line](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeHtmlInControlsPartial.cshtml#L14):
 
 ```cs
 column.PropertiesEdit.EncodeHtml = false;
@@ -987,7 +989,7 @@ Launch the project and open the page in the browser. A data field's content will
 
 ### Encoding in Templates
 
-If you inject data field values in templates, we recommend that you always sanitize the data field values:
+If you inject data field values in templates, we recommend that you always [sanitize](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeHtmlInTemplatesPartial.cshtml#L14) the data field values:
 
 ```cs
 settings.SetItemTemplateContent(
@@ -1007,7 +1009,7 @@ DevExpress controls by default wrap templated contents with a `HttpUtility.HtmlE
 
 ### Encoding Callback Data
 
-When a client displays data received from the server via a callback, a security breach can take place if this data has not been properly encoded. For example, in the code below, such content is assigned to an element's `innerHTML`:
+When a client displays data received from the server via a callback, a security breach can take place if this data has not been properly encoded. For example, in the [code below](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeAjaxResponse.cshtml), such content is assigned to an element's `innerHTML`:
 
 ##### View:
 
@@ -1053,6 +1055,8 @@ settings.Columns.Add(c => {
 
 We recommend that you never set this setting to `false` if the URL value in the database can be modified by untrusted parties.
 
+See the example project's [Views/UsingAntiForgeryToken/EditFormPartial.cshtml](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/UsingAntiForgeryToken/EditFormPartial.cshtml#L35) file.
+
 ---
 
 ## 7. User Input Validation
@@ -1075,7 +1079,7 @@ It is strongly recommended that you validate values obtained from an end user be
 
 The ASP.NET MVC framework allows you to assign validation attributes to model properties. On the client, these attributes are taken into account for all model-bound input elements.
 
-For example, below is a simple model definition:
+For example, below is a [simple model definition](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Models/UserInputValidationModel.cs#L12):
 
 ```cs
 public class UserProfile {
@@ -1083,7 +1087,7 @@ public class UserProfile {
     public string Name { get; set; }
 ```
 
-View code:
+[View code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/UserInputValidation/General.cshtml):
 
 ```cs
 @Html.DevExpress().TextBoxFor(m => m.Name, settings => {
@@ -1091,7 +1095,7 @@ View code:
 }).GetHtml()
 ```
 
-On form submit, the corresponding controller action will receive the model-bound input's value. Here you can check for the user input's validity using the `ModelState.IsValid` property:
+On form submit, the corresponding [controller action](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L20) will receive the model-bound input's value. Here you can check for the user input's validity using the `ModelState.IsValid` property:
 
 ```cs
 public ActionResult AdditionalDataAnnotationAttributes(EmployeeItem employeeItem) {
@@ -1126,7 +1130,7 @@ A malefactor can forge a request that attempts to modify this field (name="Salar
 <a href="#" onclick="test.submit();">Send Postback</a>
 ```
 
-You can prohibit model binding for a specific model property using the Bind attribute's Exclude property as shown below:
+You can prohibit model binding for a specific model property using the Bind attribute's Exclude property as [shown below](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Models/UserInputValidationModel.cs#L10):
 
 ```cs
 [Bind(Exclude = "Salary")]
@@ -1142,7 +1146,7 @@ public class EmployeeItem {
 
 In addition to data annotation attributes supported by ASP.NET MVC, DevExpress ASP.NET MVC extensions provide supplementary attributes that can be used for validation both on the server and client:
 
-#### Mask Check
+#### [Mask Check](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Models/UserInputValidationModel.cs#L20)
 
 The `Mask` attribute allows you to check a value against a mask both on the client and server. This attribute allows you to reject invalid values on server even if a malefactor succeeds to get around the mask check on the client.
 
@@ -1153,7 +1157,7 @@ The `Mask` attribute allows you to check a value against a mask both on the clie
 public string Phone { get; set; }
 ```
 
-#### Date Range Check
+#### [Date Range Check](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Models/UserInputValidationModel.cs#L27)
 
 The `DateRange` attribute ties two DateTime properties together allowing you to check whether a value falls within a specific date range.
 
@@ -1192,6 +1196,8 @@ public ActionResult General(UserProfile userProfile, string UserPassword) {
     return View("General", userProfile);
 }
 ```
+
+See the example project's [Controllers/UserInputValidation/UserInputValidation.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L22) file.
 
 To display an error message to a user, you need to add a custom markup to the view:
 
@@ -1244,6 +1250,8 @@ public ActionResult ListEditors(int productItemId) {
 }
 ```
 
+See the example project's [Controllers/UserInputValidation/UserInputValidation.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L66-L79) file.
+
 ### 7.6 Disable Inbuilt Request Value Checks
 
 ASP.NET checks input values for potentially dangerous content. For example, if an end-user types `<b>` into a text input and submits the form, they will be redirected to an error page with the following message:
@@ -1269,6 +1277,8 @@ public class UserInputValidationController : Controller {
 You can assign this attribute to the controller class or a controller's action method.
 
 > Regardless or whether or not request checks are enabled, you should use encoding to protect your application from XSS attacks. Refer to the [section 6](#6-preventing-cross-site-scripting-xss-attacks-with-encoding) of this document to learn more.
+
+See the example project's [Controllers/UserInputValidation/UserInputValidation.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L8) file.
 
 ### 7.7 Using Non-Action Controller Methods
 
@@ -1300,6 +1310,8 @@ protected void ChangePassword(string newPassword) {
 
 > We strongly recommend not to use non-action methods in controllers. Consider implementing separate classes for such code.
 
+See the example project's [Controllers/UserInputValidation/UserInputValidation.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L81-L84) file.
+
 ### 7.8 Inlining SVG Images
 
 SVG markup can contain scripts that will be executed if this SVG is inlined into a page. For example, the code below executes a script embedded into SVG markup:
@@ -1320,6 +1332,8 @@ SVG markup can contain scripts that will be executed if this SVG is inlined into
 ```
 
 Because of this, you should never inline SVG images obtained from untrusted sources.
+
+See the example project's [Views/UserInputValidation/SvgInline.cshtml](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/UserInputValidation/SvgInline.cshtml) file.
 
 ---
 
