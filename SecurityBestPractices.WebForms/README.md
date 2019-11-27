@@ -994,6 +994,11 @@ You can specify value restrictions using a control's properties such as MaxLengt
 
 > Note that starting with the version 19.2, the value set on `init` is also validated and cannot be saved if validation fails. In earlier versions, this value would be saved without validation if it was not modified on the client.
 
+The image below demonstrates how validation errors are indicated by DevExpress controls:
+
+![Validation Errors](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/webforms-input-validation.png?raw=true)
+
+
 ### 7.2 Validation in List Editors
 
 List controls in the DevExpress ASP.NET suite provide the `DataSecurity` property that specifies how a control handles input values that do not exist in the list. By default, this property is set to `Default`. With this setting, an editor accepts values that aren't in the list. Set the `DataSecurity` property to `Strict` to prohibit such values.

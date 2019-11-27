@@ -825,6 +825,14 @@ The possible security breach can occur when the server generates an exception. I
 
 This behavior is controlled by the customErrors web.config option. By default, this option is set to RemoteOnly. In this mode, detailed errors are displayed only for connections from the local machine. Setting this option to **Off** forces private messages for all connections. Setting it to On ensures that private messages are never displayed.
 
+The following image demonstrates an error message exposing sensitive information:
+
+![Unsafe Error Message](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/error-message-exposed.png)
+
+If the application is configured correctly, the error message will be substituted by a more generic one:
+
+![Safe Error Message](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/error-message-generic.png)
+
 #### Manually Displaying Error Messages
 
 It is recommended that you never display exception messages (Exception.Message) on your application's view because this text can contain sensitive information. For example, the following [code sample](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/InformationExposure/InformationExposureController.cs#L28) demonstrates an unsafe approach:
@@ -877,11 +885,19 @@ gridView.GetRowValues(0, "UnitPrice", function(Value) {
 });
 ```
 
+The image below demonstrates, how a hidden column's value can be accessed using a browser's console:
+
+![Unprotected Column Values](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/access-hidden-columns-no-protection.png)
+
 Set the **AllowReadUnexposedColumnsFromClientApi** property to false to disable this behavior:
 
 ```cs
 settings.SettingsDataSecurity.AllowReadUnexposedColumnsFromClientApi = DefaultBoolean.False;
 ```
+
+Now, if you try to obtain a hidden column's value, an error will occur:
+
+![Protected Column Values](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/access-hidden-columns-use-protection.png)
 
 See the example project's [Views/ClientSideApi/GridView.cshtml](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/ClientSideApi/GridView.cshtml#L9-L12) file to familiarize yourself with the issue.
 
@@ -973,7 +989,7 @@ Input text containing unsafe symbols will be converted to a safe form. In this e
 var s = "\"\u003cb\u003e'test'\u003c/b\u003e";
 ```
 
-### Encoding in DevExpress Controls
+### 6.1 Encoding in DevExpress Controls
 
 By default, DevExpress controls encode displayed values that can be obtained from a data source. Refer to the [HTML-Encoding](https://documentation.devexpress.com/AspNet/117902/Common-Concepts/HTML-Encoding) document for more information.
 
@@ -987,7 +1003,13 @@ column.PropertiesEdit.EncodeHtml = false;
 
 Launch the project and open the page in the browser. A data field's content will be interpreted as a script and you well see an alert popup.
 
-### Encoding in Templates
+![Devexpress Controls - No Encoding](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-columns-no-encoding.png?raw=true)
+
+In the safe configuration, the field's content would be interpreted as a string and correctly displayed:
+
+![Devexpress Controls - Use Encoding](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-columns-use-encoding.png?raw=true)
+
+### 6.2 Encoding in Templates
 
 If you inject data field values in templates, we recommend that you always [sanitize](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeHtmlInTemplatesPartial.cshtml#L14) the data field values:
 
@@ -1005,9 +1027,17 @@ settings.SetItemTemplateContent(
 
 ```
 
-DevExpress controls by default wrap templated contents with a `HttpUtility.HtmlEncode` method call.
+Inserting unsanitized content can open your application for XSS attacks:
 
-### Encoding Callback Data
+![Templates - Unsanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-no-encoding.png?raw=true)
+
+With encoding the content would be interpreted as a string and correctly displayed:
+
+![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-use-encoding.png?raw=true)
+
+By default, DevExpress controls wrap templated contents with a `HttpUtility.HtmlEncode` method call.
+
+### 6.4 Encoding Callback Data
 
 When a client displays data received from the server via a callback, a security breach can take place if this data has not been properly encoded. For example, in the [code below](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeAjaxResponse.cshtml), such content is assigned to an element's `innerHTML`:
 
@@ -1038,11 +1068,15 @@ public ActionResult EncodeAjaxResponseCallback() {
 ```
 
 
-### Dangerous Links
+### 6.5 Dangerous Links
 
 It is potentially dangerous to use render a hyperlink's HREF attribute using a value from a database or user input.
 
-DevExpress grid based controls remove all potentially dangerous contents (for example, "javascript:") from HREF values when rendering hyperlink columns. This behavior is controlled by a column's `RemovePotentiallyDangerousNavigateUrl` option:
+DevExpress grid based controls remove all potentially dangerous contents (for example, "javascript:") from HREF values when rendering hyperlink columns:
+
+![Unsafe Link](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/url-no-encoding.png?raw=true)
+
+This behavior is controlled by a column's `RemovePotentiallyDangerousNavigateUrl` option:
 
 ```cs
 settings.Columns.Add(c => {
@@ -1112,6 +1146,11 @@ On the client, if a user's input does not meet limitations specified by validati
 <add key="UnobtrusiveJavaScriptEnabled" value="true" />
 ```
 
+The image below demonstrates how validation errors are indicated by DevExpress controls:
+
+![Validation Errors](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/mvc-input-validation.png?raw=true)
+
+
 ### 7.2 Model Binding Restrictions
 
 In many cases, your input forms do not provide access to all properties of the model because some properties are not intended to be edited by a user. For example, the model contains a _salary_ field that should never be available for an employee.
@@ -1169,6 +1208,8 @@ public DateTime StartDate { get; set; }
 [DateRange(StartDateEditFieldName = "StartDate", MinDayCount = 1, MaxDayCount = 30)]
 public DateTime EndDate { get; set; }
 ```
+
+![Additional Validation Attributes](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/mvc-validation-attributes.png?raw=true)
 
 ### 7.4 Custom Validation
 
