@@ -684,6 +684,14 @@ The possible security breach can occur when the server generates an exception. I
 
 This behavior is controlled by the customErrors web.config option. By default, this option is set to RemoteOnly. In this mode, detailed errors are displayed only for connections from the local machine. Setting this option to **Off** forces private messages for all connections. Setting it to On ensures that private messages are never displayed.
 
+The following image demonstrates an error message exposing sensitive information:
+
+![Unsafe Error Message](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/error-message-exposed.png)
+
+If the application is configured correctly, the error message will be substituted by a more generic one:
+
+![Safe Error Message](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/error-message-generic.png)
+
 #### Manually Displaying Error Messages
 
 It is recommended that you never show exception messages (Exception.Message) in your application's UI because this text can contain sensitive information. For example, the following code sample demonstrates an unsafe approach:
@@ -733,11 +741,19 @@ gridView.GetRowValues(0, "UnitPrice", function(Value) {
 
 See the example project's [ClientSideApi/GridView.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/GridView.aspx#L46-L48) page.
 
+The image below demonstrates, how a hidden column's value can be accessed using a browser's console:
+
+![Unprotected Column Values](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/access-hidden-columns-no-protection.png)
+
 Set the **AllowReadUnexposedColumnsFromClientApi** property to false to disable this behavior:
 
 ```cs
 AllowReadUnexposedColumnsFromClientApi = "False";
 ```
+
+Now, if you try to obtain a hidden column's value, an error will occur:
+
+![Protected Column Values](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/access-hidden-columns-use-protection.png)
 
 #### Prevent Access by Field Name
 
@@ -844,6 +860,12 @@ To get familiar with the vulnerability, open the example project's EncodeHtml.as
 
 Launch the project and open the page in the browser. A data field's content will be interpreted as a script and you well see an alert popup.
 
+![Devexpress Controls - No Encoding](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-columns-no-encoding.png?raw=true)
+
+In the safe configuration, the field's content would be interpreted as a string and correctly displayed:
+
+![Devexpress Controls - Use Encoding](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-columns-use-encoding.png?raw=true)
+
 ### 6.2 Encoding in Templates
 
 If you inject data field values in templates, we recommend that you always [sanitize the data field values](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/Templates.aspx#L17):
@@ -853,7 +875,9 @@ If you inject data field values in templates, we recommend that you always [sani
    Text='<%# System.Web.HttpUtility.HtmlEncode(Eval("ProductName")) %>' />
 ```
 
-DevExpress controls by default wrap templated contents with a `HttpUtility.HtmlEncode` method call.
+By default, DevExpress controls wrap templated contents with a `HttpUtility.HtmlEncode` method call.
+
+
 
 ### 6.3 Encoding Callback Data
 
