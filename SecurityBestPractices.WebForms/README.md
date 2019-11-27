@@ -875,6 +875,15 @@ If you inject data field values in templates, we recommend that you always [sani
    Text='<%# System.Web.HttpUtility.HtmlEncode(Eval("ProductName")) %>' />
 ```
 
+Inserting unsanitized content can open your application for XSS attacks:
+
+![Templates - Unsanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-no-encoding.png?raw=true)
+
+With encoding the content would be interpreted as a string and correctly displayed:
+
+
+![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-use-encoding.png?raw=true)
+
 By default, DevExpress controls wrap templated contents with a `HttpUtility.HtmlEncode` method call.
 
 
@@ -945,7 +954,11 @@ With encoding the markup is rendered as follows:
 
 It is potentially dangerous to use render a hyperlink's HREF attribute using a value from a database or user input.
 
-DevExpress grid based controls remove all potentially dangerous contents (for example, "javascript:") from HREF values when rendering hyperlink columns. This behavior is controlled by a column's `RemovePotentiallyDangerousNavigateUrl` option:
+DevExpress grid based controls remove all potentially dangerous contents (for example, "javascript:") from HREF values when rendering hyperlink columns:
+
+![Unsafe Link](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/url-no-encoding.png?raw=true)
+
+This behavior is controlled by a column's `RemovePotentiallyDangerousNavigateUrl` option:
 
 ```xml
 <dx:GridViewDataHyperLinkColumn FieldName="Description" VisibleIndex="1">
@@ -953,7 +966,7 @@ DevExpress grid based controls remove all potentially dangerous contents (for ex
 </dx:GridViewDataHyperLinkColumn>
 ```
 
-We recommend that you never set this setting to `false` if the URL value in the database can be modified by untrusted parties.
+We recommend that you never set this option to `false` if the URL value in the database can be modified by untrusted parties.
 
 See the example project's [HtmlEncoding/DangerousNavigateUrl.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/DangerousNavigateUrl.aspx#L20) page.
 
