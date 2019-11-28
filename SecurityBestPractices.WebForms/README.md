@@ -868,7 +868,7 @@ Launch the project and open the page in the browser. A data field's content will
 
 ![Devexpress Controls - No Encoding](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-columns-no-encoding.png?raw=true)
 
-In the safe configuration, the field's content would be interpreted as a string and correctly displayed:
+In the safe configuration, the field's content would be interpreted as text and correctly displayed:
 
 ![Devexpress Controls - Use Encoding](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-columns-use-encoding.png?raw=true)
 
@@ -885,7 +885,7 @@ Inserting unsanitized content can open your application for XSS attacks:
 
 ![Templates - Unsanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-no-encoding.png?raw=true)
 
-With encoding the content would be interpreted as a string and correctly displayed:
+With encoding the content would be interpreted as text and correctly displayed:
 
 
 ![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-use-encoding.png?raw=true)
