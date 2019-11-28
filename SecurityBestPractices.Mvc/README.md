@@ -10,6 +10,9 @@ The security issues are all shown using a simple Visual Studio solution. Fully c
 - [2. Uploading and Displaying Binary Images](#2-uploading-and-displaying-binary-images)
 - [3. Authorization](#3-authorization)
 - [4. Preventing Cross-Site Request Forgery (CSRF)](#4-preventing-cross-site-request-forgery-csrf)
+- [5. Preventing Sensitive Information Exposure](#5-preventing-sensitive-information-exposure)
+- [6. Preventing Cross-Site Scripting (XSS) Attacks with Encoding](#6-preventing-cross-site-scripting-xss-attacks-with-encoding)
+- [7. User Input Validation](#7-user-input-validation)
 
 ## 1. Uploading Files
 
@@ -823,13 +826,17 @@ This section describes security vulnerabilities that can make some sensitive inf
 
 The possible security breach can occur when the server generates an exception. If an application is configured incorrectly, detailed information on the error is displayed to an end-user. This information can include sensitive parts giving a malefactor an insight on the application's infrastructure, file names and so on.
 
-This behavior is controlled by the customErrors web.config option. By default, this option is set to RemoteOnly. In this mode, detailed errors are displayed only for connections from the local machine. Setting this option to **Off** forces private messages for all connections. Setting it to On ensures that private messages are never displayed.
+This behavior is controlled by the [customErrors](https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/h0hfz6fc(v=vs.100)) web.config option. This option accepts the following values:
+
+- `RemoteOnly` (default) - In this mode, detailed errors are displayed only for connections from the local machine.
+- `On` - Forces private messages for all connections.
+- `Off` - Ensures that private messages are never displayed.
 
 The following image demonstrates an error message exposing sensitive information:
 
 ![Unsafe Error Message](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/error-message-exposed.png)
 
-If the application is configured correctly, the error message will be substituted by a more generic one:
+In the secure configuration, the error message will be substituted by a more generic one:
 
 ![Safe Error Message](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/error-message-generic.png)
 
