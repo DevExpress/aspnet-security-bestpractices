@@ -928,10 +928,10 @@ When it comes to protecting a grid control's data source data, a general recomme
 
 The DevExpress default HTTP handler (DXR.axd) serves static files including images, scripts and styles. We assume that these static files are intended for public access and do not expose any sensitive information or server-side code. However there are additional recommendation for writing custom scripts and styles:
 
-- Do not hardcode any credentials in scripts
+- Do not hardcode any credentials in scripts.
 - Consider obfuscating these files in the following cases:
-  - The file contains code that should be protected as an intellectual property;
-  - The file's content can give a malefactor an idea about the backend system's architecture and possible vulnerabilities
+  - The file contains code that should be protected as an intellectual property.
+  - The file's content can give a malefactor an idea about the backend system's architecture and possible vulnerabilities.
 
 For example, consider the following code:
 
