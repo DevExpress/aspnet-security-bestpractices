@@ -892,7 +892,7 @@ gridView.GetRowValues(0, "UnitPrice", function(Value) {
 });
 ```
 
-The image below demonstrates, how a hidden column's value can be accessed using a browser's console:
+The image below demonstrates how a hidden column's value can be accessed using a browser's console:
 
 ![Unprotected Column Values](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/access-hidden-columns-no-protection.png)
 
