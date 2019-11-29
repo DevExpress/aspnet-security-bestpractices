@@ -930,7 +930,7 @@ The DevExpress default HTTP handler (DXR.axd) serves static files including imag
 
 - Do not hardcode any credentials in scripts
 - Consider obfuscating these files in the following cases:
-  - Program code that should be protected as an intellectual property;
+  - The file contains code that should be protected as an intellectual property;
   - The file's content can give a malefactor an idea about the backend system's architecture and possible vulnerabilities
 
 For example, consider the following code:
