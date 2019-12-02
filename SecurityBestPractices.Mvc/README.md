@@ -820,6 +820,8 @@ If the validation fails, the server will generate an error:
 
 ## 5. Preventing Sensitive Information Exposure
 
+**Security Risks**: [CWE-209](https://cwe.mitre.org/data/definitions/209.html)
+
 This section describes security vulnerabilities that can make some sensitive information available to untrusted parties.
 
 ### 5.1 Information Exposure Through Error Messages
@@ -951,7 +953,7 @@ function s1(){...}
 
 ## 6. Preventing Cross-Site Scripting (XSS) Attacks with Encoding
 
-**Security Risks**: [CWE-80](https://cwe.mitre.org/data/definitions/80.html), [CWE-70](https://cwe.mitre.org/data/definitions/70.html), [CWE-20](https://cwe.mitre.org/data/definitions/20.html)
+**Security Risks**: [CWE-80](https://cwe.mitre.org/data/definitions/80.html), [CWE-20](https://cwe.mitre.org/data/definitions/20.html)
 
 The vulnerability occurs when a web page is rendered using a content specified by an end user. If user input is not properly sanitized, a resulting page can be injected with a malicious script.
 
@@ -959,12 +961,12 @@ It is strongly suggested that you always sanitize page contents that can be spec
 
 Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/dotnet/api/system.web.httputility.htmlencode?view=netframework-4.7.2) class that you can use to encode data in various use-case scenarios. It provides the following methods:
 
-| Method              | Usage                                                    |
-| ------------------- | -------------------------------------------------------- |
-| HtmlEncode          | Sanitizes an untrusted input inserted into a HTML output |
-| HtmlAttributeEncode | Sanitizes an untrusted input assigned to a tag attribute |
-| JavaScriptEncode    | Sanitizes an untrusted input used within a script        |
-| UrlEncode           | Sanitizes an untrusted input used to generate a URL      |
+| Method              | Usage                                                     |
+| ------------------- | --------------------------------------------------------- |
+| HtmlEncode          | Sanitizes an untrusted input inserted into an HTML output |
+| HtmlAttributeEncode | Sanitizes an untrusted input assigned to a tag attribute  |
+| JavaScriptEncode    | Sanitizes an untrusted input used within a script         |
+| UrlEncode           | Sanitizes an untrusted input used to generate a URL       |
 
 In ASP.NET MVC, any content inserted into a Razor view via the `@` operator is sanitized by default:
 
@@ -1101,6 +1103,8 @@ See the example project's [Views/UsingAntiForgeryToken/EditFormPartial.cshtml](h
 ---
 
 ## 7. User Input Validation
+
+**Security Risks**: [CWE-20](https://cwe.mitre.org/data/definitions/20.html)
 
 ### 7.1 General Recommendations
 
