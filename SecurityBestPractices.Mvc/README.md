@@ -828,7 +828,7 @@ This section describes security vulnerabilities that can make some sensitive inf
 
 The possible security breach can occur when the server generates an exception. If an application is configured incorrectly, detailed information on the error is displayed to an end-user. This information can include sensitive parts giving a malefactor an insight on the application's infrastructure, file names and so on.
 
-This behavior is controlled by the [customErrors](https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/h0hfz6fc(v=vs.100)) web.config option. This option accepts the following values:
+This behavior is controlled by the [customErrors](<https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/h0hfz6fc(v=vs.100)>) web.config option. This option accepts the following values:
 
 - `RemoteOnly` (default) - In this mode, detailed errors are displayed only for connections from the local machine.
 - `On` - Forces private messages for all connections.
@@ -1054,15 +1054,15 @@ When a client displays data received from the server via a callback, a security 
 
 ```html
 <script>
-function sendRequest() {
+  function sendRequest() {
     $.ajax({
-        type: "POST",
-        url: '@Url.Action("EncodeAjaxResponseCallback", "HtmlEncoding")',
-        success: function (response) {
-            $("#content").html(response);
-        }
+      type: "POST",
+      url: '@Url.Action("EncodeAjaxResponseCallback", "HtmlEncoding")',
+      success: function(response) {
+        $("#content").html(response);
+      }
     });
-}
+  }
 </script>
 <a href="javascript:sendRequest()">Send Ajax Request</a>
 ```
@@ -1075,7 +1075,6 @@ public ActionResult EncodeAjaxResponseCallback() {
     return Content(HttpUtility.HtmlEncode("1</title><script>alert(1);</script><title>")); // Secure
 }
 ```
-
 
 ### 6.5 Dangerous Links
 
@@ -1161,8 +1160,21 @@ The image below demonstrates how validation errors are indicated by DevExpress c
 
 ![Validation Errors](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/mvc-input-validation.png?raw=true)
 
+### 7.2 Built-in Validation in DevExpress Controls
 
-### 7.2 Model Binding Restrictions
+Some settings of DevExpress web controls enable in-built validation mechanisms. Such settings specify restrictions that should be applied to input value. The table below lists controls with in-built validation along with properties that control the validation logic.
+
+| Control   | Validation                                                     |
+| --------- | -------------------------------------------------------------- |
+| Text Box  | MaxLength </br> Mask                                           |
+| Spin Edit | MinValue </br> MaxValue </br> MaxLength </br> Mask             |
+| Calendar  | MinDate </br> MaxDate                                          |
+| Date Edit | DateRangeSettings </br> MinDate </br> MaxDate                  |
+| List Box  | DataSecurityMode (if set to Strict)                            |
+| Combo Box | DataSecurityMode (if set to Strict) </br> MaxLength </br> Mask |
+| Token Box | DataSecurityMode (if set to Strict)                            |
+
+### 7.3 Model Binding Restrictions
 
 In many cases, your input forms do not provide access to all properties of the model because some properties are not intended to be edited by a user. For example, the model contains a _salary_ field that should never be available for an employee.
 
@@ -1192,7 +1204,7 @@ public class EmployeeItem {
 }
 ```
 
-### 7.3 Additional Data Annotation Attributes
+### 7.4 Additional Data Annotation Attributes
 
 In addition to data annotation attributes supported by ASP.NET MVC, DevExpress ASP.NET MVC extensions provide supplementary attributes that can be used for validation both on the server and client:
 
@@ -1222,7 +1234,7 @@ public DateTime EndDate { get; set; }
 
 ![Additional Validation Attributes](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/mvc-validation-attributes.png?raw=true)
 
-### 7.4 Custom Validation
+### 7.5 Custom Validation
 
 In some cases you may need to validate values of inputs that are not bound to a model. For example, you may want to validate a password that a user types as a plain string but that is stored as hash. The password is entered via an editor without model binding:
 
@@ -1265,7 +1277,7 @@ To display an error message to a user, you need to add a custom markup to the vi
 }
 ```
 
-### 7.5 Validation in List Editors
+### 7.6 Validation in List Editors
 
 A special case of custom validation is validation of list items. Consider a use-case scenario when a online shop application allows a user to select a gift option from a list based on the state of their bonus account (see the example project's **UserInputValidation/ListEditors**) page.
 
@@ -1304,7 +1316,7 @@ public ActionResult ListEditors(int productItemId) {
 
 See the example project's [Controllers/UserInputValidation/UserInputValidation.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L66-L79) file.
 
-### 7.6 Disable Inbuilt Request Value Checks
+### 7.7 Disable Inbuilt Request Value Checks
 
 ASP.NET checks input values for potentially dangerous content. For example, if an end-user types `<b>` into a text input and submits the form, they will be redirected to an error page with the following message:
 
@@ -1332,7 +1344,7 @@ You can assign this attribute to the controller class or a controller's action m
 
 See the example project's [Controllers/UserInputValidation/UserInputValidation.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L8) file.
 
-### 7.7 Using Non-Action Controller Methods
+### 7.8 Using Non-Action Controller Methods
 
 You should always keep in mind that any public method of a controller can be triggered by an HTTP request. For example, assume that your controller that has the following public method:
 
@@ -1364,7 +1376,7 @@ protected void ChangePassword(string newPassword) {
 
 See the example project's [Controllers/UserInputValidation/UserInputValidation.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L81-L84) file.
 
-### 7.8 Inlining SVG Images
+### 7.9 Inlining SVG Images
 
 SVG markup can contain scripts that will be executed if this SVG is inlined into a page. For example, the code below executes a script embedded into SVG markup:
 

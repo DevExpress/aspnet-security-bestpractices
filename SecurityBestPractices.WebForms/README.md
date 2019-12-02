@@ -662,7 +662,7 @@ In this scenario, an attack attempts to perform a CRUD operation on the server s
 
 ![AntiForgeryGrid](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/anti-forgery-grid.png?raw=true)
 
-See the example project's [UsingAntiForgeryToken/EditForm.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UsingAntiForgeryToken/EditForm.aspx) file to familiarize yourself with the vulnerability. 
+See the example project's [UsingAntiForgeryToken/EditForm.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UsingAntiForgeryToken/EditForm.aspx) file to familiarize yourself with the vulnerability.
 
 ### Preventing Unauthorized Changes to User Account Information
 
@@ -670,7 +670,7 @@ In this scenario, an attack attempts to modify the user account information (the
 
 ![AntiForgeryEmail](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/anti-forgery-email.png?raw=true)
 
-See the example project's [UsingAntiForgeryToken/EditForm.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UsingAntiForgeryToken/EditForm.aspx) file to familiarize yourself with the vulnerability. 
+See the example project's [UsingAntiForgeryToken/EditForm.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UsingAntiForgeryToken/EditForm.aspx) file to familiarize yourself with the vulnerability.
 
 **See Also:** [Stack Overflow - preventing cross-site request forgery (csrf) attacks in asp.net web forms](https://stackoverflow.com/questions/29939566/preventing-cross-site-request-forgery-csrf-attacks-in-asp-net-web-forms)
 
@@ -686,7 +686,7 @@ This section describes security vulnerabilities that can make some sensitive inf
 
 The possible security breach can occur when the server generates an exception. If an application is configured incorrectly, a detailed information on the error is displayed to an end-user. This information can include sensitive parts giving a malefactor an insight on the application's infrastructure, file names and so on.
 
-This behavior is controlled by the [customErrors](https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/h0hfz6fc(v=vs.100)) web.config option. This option accepts the following values:
+This behavior is controlled by the [customErrors](<https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/h0hfz6fc(v=vs.100)>) web.config option. This option accepts the following values:
 
 - `RemoteOnly` (default) - In this mode, detailed errors are displayed only for connections from the local machine.
 - `On` - Forces private messages for all connections.
@@ -733,7 +733,6 @@ protected void UpdateButton_Click(object sender, EventArgs e) {
 ```
 
 Refer to the example project's [InformationExposure/ErrorMessage.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/InformationExposure/ErrorMessage.aspx.cs#L8) file to familiarize yourself with the issue.
-
 
 ### 5.2 Availability of Invisible Column Values Through the Client-Side API
 
@@ -889,12 +888,9 @@ Inserting unsanitized content can open your application for XSS attacks:
 
 With encoding the content would be interpreted as text and correctly displayed:
 
-
 ![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-use-encoding.png?raw=true)
 
 By default, DevExpress controls wrap templated contents with a `HttpUtility.HtmlEncode` method call.
-
-
 
 ### 6.3 Encoding Callback Data
 
@@ -1008,8 +1004,21 @@ The image below demonstrates how validation errors are indicated by DevExpress c
 
 ![Validation Errors](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/webforms-input-validation.png?raw=true)
 
+### 7.2 Built-in Validation in DevExpress Controls
 
-### 7.2 Validation in List Editors
+Some settings of DevExpress web controls enable in-built validation mechanisms. Such settings specify restrictions that should be applied to input value. The table below lists controls with in-built validation along with properties that control the validation logic.
+
+| Control   | Validation                                                     |
+| --------- | -------------------------------------------------------------- |
+| Text Box  | MaxLength </br> Mask                                           |
+| Spin Edit | MinValue </br> MaxValue </br> MaxLength </br> Mask             |
+| Calendar  | MinDate </br> MaxDate                                          |
+| Date Edit | DateRangeSettings </br> MinDate </br> MaxDate                  |
+| List Box  | DataSecurityMode (if set to Strict)                            |
+| Combo Box | DataSecurityMode (if set to Strict) </br> MaxLength </br> Mask |
+| Token Box | DataSecurityMode (if set to Strict)                            |
+
+### 7.3 Validation in List Editors
 
 List controls in the DevExpress ASP.NET suite provide the `DataSecurity` property that specifies how a control handles input values that do not exist in the list. By default, this property is set to `Default`. With this setting, an editor accepts values that aren't in the list. Set the `DataSecurity` property to `Strict` to prohibit such values.
 
@@ -1017,7 +1026,7 @@ If you use the Strict DataSecurity mode, ViewState is disabled and you use perfo
 
 See the example project's [ValidateInput/ListEditors.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ValidateInput/ListEditors.aspx#L8) page.
 
-### 7.3 Disable Inbuilt Request Value Checks
+### 7.4 Disable Inbuilt Request Value Checks
 
 ASP.NET checks input values for potentially dangerous content. For example, if an end-user types `<b>` into a text input and submits the form, they will be redirected to an error page with the following message:
 
@@ -1041,7 +1050,7 @@ Because of these reasons, the inbuilt request value checks are commonly disabled
 
 > Regardless or whether or not request checks are enabled, you should use encoding to protect your application from XSS attacks. Refer to the [section 6](#6-preventing-cross-site-scripting-xss-attacks-with-encoding) of this document to learn more.
 
-### 7.4 Inlining SVG Images
+### 7.5 Inlining SVG Images
 
 SVG markup can contain scripts that will be executed if this SVG is inlined into a page. For example, the [code below]() executes a script embedded into SVG markup:
 
