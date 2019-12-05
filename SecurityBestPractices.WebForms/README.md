@@ -689,8 +689,8 @@ The possible security breach can occur when the server generates an exception. I
 This behavior is controlled by the [customErrors](<https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/h0hfz6fc(v=vs.100)>) web.config option. This option accepts the following values:
 
 - `RemoteOnly` (default) - In this mode, detailed errors are displayed only for connections from the local machine.
-- `On` - Forces private messages for all connections.
-- `Off` - Ensures that private messages are never displayed.
+- `On` - Ensures that private messages are never displayed.
+- `Off` - Forces private messages for all connections.
 
 The following image demonstrates an error message exposing sensitive information:
 
@@ -810,7 +810,7 @@ function s1(){...}
 The vulnerability occurs when a web page is rendered using a content specified by an end user. If user input is not properly sanitized, a resulting page can be injected with a malicious script.
 
 It is strongly suggested that you always sanitize page contents that can be specified by a user. You should be aware of what kind of sanitization you use so it is both compatible with the displayed content and provides the intended level of safety.
-For example, you can remove HTML tags throughout the content but it can corrupt text that is intended to contain code samples. The more generic approach would be to substitute all '<' and '>' symbols with <code>&amp;lt;</code> and <code>&amp;gt;</code> character codes.
+For example, you can remove HTML tags throughout the content but it can corrupt text that is intended to contain code samples. A more generic approach would be to substitute all '<', '>' and '&' symbols with `&lt;`, `&gt;` and `&amp;` character codes.
 
 Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/dotnet/api/system.web.httputility.htmlencode?view=netframework-4.7.2) class that you can use to encode data in various use-case scenarios. It provides the following methods:
 
@@ -886,7 +886,7 @@ Inserting unsanitized content can open your application for XSS attacks:
 
 ![Templates - Unsanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-no-encoding.png?raw=true)
 
-With encoding the content would be interpreted as text and correctly displayed:
+With encoding, the content would be interpreted as text and correctly displayed:
 
 ![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-use-encoding.png?raw=true)
 
@@ -944,7 +944,7 @@ If encoding was not used, the resulting markup would contain a malicious script:
 </title></head>
 ```
 
-With encoding the markup is rendered as follows:
+With encoding, the markup is rendered as follows:
 
 ```html
 <head>
@@ -962,7 +962,7 @@ DevExpress grid based controls remove all potentially dangerous contents (for ex
 
 ![Unsafe Link](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/url-no-encoding.png?raw=true)
 
-This behavior is controlled by a column's `RemovePotentiallyDangerousNavigateUrl` option:
+This behavior is controlled by a column's `RemovePotentiallyDangerousNavigateUrl` option (true by default):
 
 ```xml
 <dx:GridViewDataHyperLinkColumn FieldName="Description" VisibleIndex="1">
@@ -982,7 +982,7 @@ See the example project's [HtmlEncoding/DangerousNavigateUrl.aspx](https://githu
 
 ### 7.1 General Recommendations
 
-It is strongly recommended that you validate values obtained from an end user before you save them to a data base or use in any other way. The values should be validated on several levels:
+It is strongly recommended that you validate values obtained from an end user before you save them to a database or use in any other way. The values should be validated on several levels:
 
 1. Specify the required restrictions for inputs on the client.
 
@@ -1004,13 +1004,15 @@ The image below demonstrates how validation errors are indicated by DevExpress c
 
 ![Validation Errors](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/webforms-input-validation.png?raw=true)
 
+See the example project's [ValidateInput/General.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ValidateInput/General.aspx) file.
+
 ### 7.2 Built-in Validation in DevExpress Controls
 
 Some DevExpress web controls provide in-built validation mechanisms that apply restrictions to input values when certain settings are specified. The table below lists controls that have in-built validation along with properties that control the validation logic.
 
 | Control                                                                                                     | Validation-Related Properties                                                                                                                                                                                                                                                                                                                                                   |
 | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [ASPxTextBox](https://docs.devexpress.com/AspNet/11586/aspnet-webforms-controls/data-editors/aspxtextbox)   | [MaxLength](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxTextBoxBase.MaxLength) </br> [MaskSettings.Mask](MaskSettings.Mask)                                                                                                                                                                                                                                           |
+| [ASPxTextBox](https://docs.devexpress.com/AspNet/11586/aspnet-webforms-controls/data-editors/aspxtextbox)   | [MaxLength](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxTextBoxBase.MaxLength) </br> [MaskSettings.Mask](https://docs.devexpress.com/AspNet/DevExpress.Web.MaskSettings.Mask)                                                                                                                                                                                         |
 | [ASPxSpinEdit](https://docs.devexpress.com/AspNet/11664/aspnet-webforms-controls/data-editors/aspxspinedit) | [MinValue](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxSpinEdit.MinValue) </br> [MaxValue](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxSpinEdit.MaxValue) </br> [MaxLength](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxTextBoxBase.MaxLength) </br> [MaskSettings.Mask](https://docs.devexpress.com/AspNet/DevExpress.Web.MaskSettings._members) |
 | [ASPxCalendar](https://docs.devexpress.com/AspNet/11649/aspnet-webforms-controls/data-editors/aspxcalendar) | [MinDate](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxCalendar.MinDate) </br> [MaxDate](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxCalendar.MaxDate)                                                                                                                                                                                                       |
 | [ASPxDateEdit](https://docs.devexpress.com/AspNet/11654/aspnet-webforms-controls/data-editors/aspxdateedit) | [DateRangeSettings](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxDateEdit.DateRangeSettings) </br> [MinDate](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxDateEdit.MinDate) </br> [MaxDate](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxDateEdit.MaxDate)                                                                                           |
@@ -1052,7 +1054,7 @@ Because of these reasons, the inbuilt request value checks are commonly disabled
 
 ### 7.5 Inlining SVG Images
 
-SVG markup can contain scripts that will be executed if this SVG is inlined into a page. For example, the [code below]() executes a script embedded into SVG markup:
+SVG markup can contain scripts that will be executed if this SVG is inlined into a page. For example, the code below executes a script embedded into SVG markup:
 
 ##### [APSX file](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ValidateInput/SvgInline.aspx):
 

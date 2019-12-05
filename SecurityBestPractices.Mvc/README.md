@@ -831,8 +831,8 @@ The possible security breach can occur when the server generates an exception. I
 This behavior is controlled by the [customErrors](<https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/h0hfz6fc(v=vs.100)>) web.config option. This option accepts the following values:
 
 - `RemoteOnly` (default) - In this mode, detailed errors are displayed only for connections from the local machine.
-- `On` - Forces private messages for all connections.
-- `Off` - Ensures that private messages are never displayed.
+- `On` - Ensures that private messages are never displayed.
+- `Off` - Forces private messages for all connections.
 
 The following image demonstrates an error message exposing sensitive information:
 
@@ -957,7 +957,7 @@ function s1(){...}
 
 The vulnerability occurs when a web page is rendered using a content specified by an end user. If user input is not properly sanitized, a resulting page can be injected with a malicious script.
 
-It is strongly suggested that you always sanitize page contents that can be specified by a user. You should be aware of what kind of sanitization you use so it is both compatible with the displayed content and provides the intended level of safety. For example, you can remove HTML tags throughout the content but it can corrupt text that is intended to contain code samples. The more generic approach would be to substitute all '<' and '>' symbols with <code>&amp;lt;</code> and <code>&amp;gt;</code> character codes.
+It is strongly suggested that you always sanitize page contents that can be specified by a user. You should be aware of what kind of sanitization you use so it is both compatible with the displayed content and provides the intended level of safety. For example, you can remove HTML tags throughout the content but it can corrupt text that is intended to contain code samples. A more generic approach would be to substitute all '<', '>' and '&' symbols with `&lt;`, `&gt;` and `&amp;` character codes.
 
 Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/dotnet/api/system.web.httputility.htmlencode?view=netframework-4.7.2) class that you can use to encode data in various use-case scenarios. It provides the following methods:
 
@@ -1040,7 +1040,7 @@ Inserting unsanitized content can open your application for XSS attacks:
 
 ![Templates - Unsanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-no-encoding.png?raw=true)
 
-With encoding the content would be interpreted as text and correctly displayed:
+With encoding, the content would be interpreted as text and correctly displayed:
 
 ![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-use-encoding.png?raw=true)
 
@@ -1084,7 +1084,7 @@ DevExpress grid based controls remove all potentially dangerous contents (for ex
 
 ![Unsafe Link](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/url-no-encoding.png?raw=true)
 
-This behavior is controlled by a column's `RemovePotentiallyDangerousNavigateUrl` option:
+This behavior is controlled by a column's `RemovePotentiallyDangerousNavigateUrl` option (true by default):
 
 ```cs
 settings.Columns.Add(c => {
@@ -1107,7 +1107,7 @@ See the example project's [Views/UsingAntiForgeryToken/EditFormPartial.cshtml](h
 
 ### 7.1 General Recommendations
 
-It is strongly recommended that you validate values obtained from an end user before you save them to a data base or use in any other way. The values should be validated on several levels:
+It is strongly recommended that you validate values obtained from an end user before you save them to a database or use in any other way. The values should be validated on several levels:
 
 1. Specify the required restrictions for inputs on the client.
 
@@ -1160,23 +1160,9 @@ The image below demonstrates how validation errors are indicated by DevExpress c
 
 ![Validation Errors](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/mvc-input-validation.png?raw=true)
 
-### 7.2 Built-in Validation in DevExpress Controls
+### 7.2 Model Binding Restrictions
 
-Some DevExpress web controls provide in-built validation mechanisms that apply restrictions to input values when certain settings are specified. The table below lists controls that have in-built validation along with properties that control the validation logic.
-
-| Control                                                                                                      | Validation-Related Properties                                                                                                                                                                                                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Text Box](https://docs.devexpress.com/AspNet/8996/aspnet-mvc-extensions/data-editors-extensions/textbox)    | [MaxLength](https://docs.devexpress.com/AspNet/DevExpress.Web.TextBoxPropertiesBase.MaxLength) </br> [Mask](https://docs.devexpress.com/AspNet/DevExpress.Web.MaskSettings.Mask)                                                                                                                                                                                                 |
-| [Spin Edit](https://docs.devexpress.com/AspNet/8995/aspnet-mvc-extensions/data-editors-extensions/spinedit)  | [MinValue](https://docs.devexpress.com/AspNet/DevExpress.Web.SpinEditProperties.MinValue) </br> [MaxValue](https://docs.devexpress.com/AspNet/DevExpress.Web.SpinEditProperties.MaxValue) </br> [MaxLength](https://docs.devexpress.com/AspNet/DevExpress.Web.TextBoxPropertiesBase.MaxLength) </br> [Mask](https://docs.devexpress.com/AspNet/DevExpress.Web.MaskSettings.Mask) |
-| [Calendar](https://docs.devexpress.com/AspNet/8981/aspnet-mvc-extensions/data-editors-extensions/calendar)   | [MinDate](https://docs.devexpress.com/AspNet/DevExpress.Web.CalendarProperties.MinDate) </br> [MaxDate](https://docs.devexpress.com/AspNet/DevExpress.Web.CalendarProperties.MaxDate)                                                                                                                                                                                            |
-| [Date Edit](https://docs.devexpress.com/AspNet/8985/aspnet-mvc-extensions/data-editors-extensions/dateedit)  | [DateRangeSettings](https://docs.devexpress.com/AspNet/DevExpress.Web.Mvc.MVCxDateEditProperties.DateRangeSettings) </br> [MinDate](https://docs.devexpress.com/AspNet/DevExpress.Web.DateEditProperties.MinDate) </br> [MaxDate](https://docs.devexpress.com/AspNet/DevExpress.Web.DateEditProperties.MaxDate)                                                                  |
-| [List Box](https://docs.devexpress.com/AspNet/8990/aspnet-mvc-extensions/data-editors-extensions/listbox)    | [DataSecurityMode](https://docs.devexpress.com/AspNet/DevExpress.Web.AutoCompleteBoxPropertiesBase.DataSecurityMode) (if set to **Strict**)                                                                                                                                                                                                                                      |
-| [Combo Box](https://docs.devexpress.com/AspNet/8984/aspnet-mvc-extensions/data-editors-extensions/combobox)  | [DataSecurityMode](https://docs.devexpress.com/AspNet/DevExpress.Web.AutoCompleteBoxPropertiesBase.DataSecurityMode) (if set to **Strict**) </br> [MaxLength](https://docs.devexpress.com/AspNet/DevExpress.Web.TextBoxPropertiesBase.MaxLength) </br> [Mask](https://docs.devexpress.com/AspNet/DevExpress.Web.MaskSettings.Mask)                                               |
-| [Token Box](https://docs.devexpress.com/AspNet/16412/aspnet-mvc-extensions/data-editors-extensions/tokenbox) | [DataSecurityMode](https://docs.devexpress.com/AspNet/DevExpress.Web.AutoCompleteBoxPropertiesBase.DataSecurityMode) (if set to **Strict**)                                                                                                                                                                                                                                      |
-
-### 7.3 Model Binding Restrictions
-
-In many cases, your input forms do not provide access to all properties of the model because some properties are not intended to be edited by a user. For example, the model contains a _salary_ field that should never be available for an employee.
+In many cases, your input forms do not provide access to all properties of the model because some properties are not intended to be edited by a user. For example, the model contains a _salary_ field that should never be modifiable by an end-user.
 
 A malefactor can forge a request that attempts to modify this field (name="Salary" value="100000"):
 
@@ -1204,7 +1190,7 @@ public class EmployeeItem {
 }
 ```
 
-### 7.4 Additional Data Annotation Attributes
+### 7.3 Additional Data Annotation Attributes
 
 In addition to data annotation attributes supported by ASP.NET MVC, DevExpress ASP.NET MVC extensions provide supplementary attributes that can be used for validation both on the server and client:
 
@@ -1234,9 +1220,9 @@ public DateTime EndDate { get; set; }
 
 ![Additional Validation Attributes](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/mvc-validation-attributes.png?raw=true)
 
-### 7.5 Custom Validation
+### 7.4 Custom Validation
 
-In some cases you may need to validate values of inputs that are not bound to a model. For example, you may want to validate a password that a user types as a plain string but that is stored as hash. The password is entered via an editor without model binding:
+In some cases, you may need to validate values of inputs that are not bound to a model. For example, you may want to validate a password that a user types as a plain string but that is stored as hash. The password is entered via an editor without model binding:
 
 ```cs
 @Html.DevExpress().TextBox(settings => {
@@ -1245,6 +1231,8 @@ In some cases you may need to validate values of inputs that are not bound to a 
     settings.Properties.Caption = "Password";
 }).GetHtml()
 ```
+
+See the [view code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/UserInputValidation/General.cshtml#L15-L19).
 
 On server you can access this editor's value through a controller action's parameter with the same name as the input. You can validate this value using any custom logic. If validation did not pass, you can register a validation error using the `ModelState.AddModelError` method. Calling this method automatically sets the `IsValid` property to false.
 
@@ -1277,7 +1265,7 @@ To display an error message to a user, you need to add a custom markup to the vi
 }
 ```
 
-### 7.6 Validation in List Editors
+### 7.5 Validation in List Editors
 
 A special case of custom validation is validation of list items. Consider a use-case scenario when a online shop application allows a user to select a gift option from a list based on the state of their bonus account (see the example project's **UserInputValidation/ListEditors**) page.
 
@@ -1316,7 +1304,7 @@ public ActionResult ListEditors(int productItemId) {
 
 See the example project's [Controllers/UserInputValidation/UserInputValidation.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L66-L79) file.
 
-### 7.7 Disable Inbuilt Request Value Checks
+### 7.6 Disable Inbuilt Request Value Checks
 
 ASP.NET checks input values for potentially dangerous content. For example, if an end-user types `<b>` into a text input and submits the form, they will be redirected to an error page with the following message:
 
@@ -1344,7 +1332,7 @@ You can assign this attribute to the controller class or a controller's action m
 
 See the example project's [Controllers/UserInputValidation/UserInputValidation.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L8) file.
 
-### 7.8 Using Non-Action Controller Methods
+### 7.7 Using Non-Action Controller Methods
 
 You should always keep in mind that any public method of a controller can be triggered by an HTTP request. For example, assume that your controller that has the following public method:
 
@@ -1376,7 +1364,7 @@ protected void ChangePassword(string newPassword) {
 
 See the example project's [Controllers/UserInputValidation/UserInputValidation.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L81-L84) file.
 
-### 7.9 Inlining SVG Images
+### 7.8 Inlining SVG Images
 
 SVG markup can contain scripts that will be executed if this SVG is inlined into a page. For example, the code below executes a script embedded into SVG markup:
 
