@@ -904,10 +904,6 @@ Set the **AllowReadUnexposedColumnsFromClientApi** property to false to disable 
 settings.SettingsDataSecurity.AllowReadUnexposedColumnsFromClientApi = DefaultBoolean.False;
 ```
 
-Now, if you try to obtain a hidden column's value, an error will occur:
-
-![Protected Column Values](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/access-hidden-columns-use-protection.png)
-
 See the example project's [Views/ClientSideApi/GridView.cshtml](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/ClientSideApi/GridView.cshtml#L9-L12) file to familiarize yourself with the issue.
 
 #### Prevent Access by Field Name
@@ -920,7 +916,9 @@ gridView.GetRowValues(0, "GuidField", function(Value) {
 });
 ```
 
-The capability to do so is controlled by the **AllowReadUnlistedFieldsFromClientApi** property and is disabled by default (safe configuration).
+The capability to do so is controlled by the **AllowReadUnlistedFieldsFromClientApi** property and is disabled by default (safe configuration):
+
+![Protected Column Values](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/access-hidden-columns-use-protection.png)
 
 When it comes to protecting a grid control's data source data, a general recommendation to perform separate queries for data sources whose data is displayed in UI. These queries should never request data that should be kept in secret.
 
