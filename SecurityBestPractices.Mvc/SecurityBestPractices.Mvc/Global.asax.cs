@@ -53,6 +53,10 @@ namespace SecurityBestPractices.Mvc {
             ModelBinders.Binders.DefaultBinder = new DevExpress.Web.Mvc.DevExpressEditorsBinder();
 
             DevExpress.Web.ASPxWebControl.CallbackError += Application_Error;
+
+            // Export to CSV (Preventing CSV Injections)
+            DevExpress.Export.ExportSettings.EncodeCsvExecutableContent = DevExpress.Utils.DefaultBoolean.True; // More Secure, but may affect content
+
         }
 
         protected void Application_Error(object sender, EventArgs e) {

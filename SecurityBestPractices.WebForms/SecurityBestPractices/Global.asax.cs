@@ -45,7 +45,10 @@ namespace SecurityBestPractices
 
             DashboardConfigurator.Default.SetConnectionStringsProvider(new DataSourceWizardConnectionStringsProvider()); // Provide connections to Dashboard Designer
             DashboardConfigurator.Default.SetDBSchemaProvider(new DBSchemaProviderEx()); // Provide only nessesary dbtables
-            #endregion            
+            #endregion
+
+            // Export to CSV (Preventing CSV Injections)
+            DevExpress.Export.ExportSettings.EncodeCsvExecutableContent = DevExpress.Utils.DefaultBoolean.True; // More Secure, but may affect content
         }
     }
 }

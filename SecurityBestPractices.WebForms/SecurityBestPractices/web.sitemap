@@ -54,5 +54,8 @@
     <siteMapNode url="" title="9. Downloading Files">
       <siteMapNode url="~/DownloadingFiles/DownloadFileFromUrl.aspx" title="Download File From Url" />
     </siteMapNode>
+    <siteMapNode url="" title="10. Export">
+      <siteMapNode url="~/Export/ExportToCsv.aspx" title="Export to CSV (Preventing CSV Injections)" />
+    </siteMapNode>
   </siteMapNode>
 </siteMap>

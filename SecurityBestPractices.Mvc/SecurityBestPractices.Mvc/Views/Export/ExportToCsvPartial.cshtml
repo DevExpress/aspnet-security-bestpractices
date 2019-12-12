@@ -1,0 +1,39 @@
+﻿@{
+    var grid = Html.DevExpress().GridView<EditFormItem>(settings => {
+        settings.Name = "grid";
+        settings.CallbackRouteValues = new { Controller = "Export", Action = "ExportToCsvPartial" };
+
+        settings.KeyFieldName = "Id";
+
+        settings.Columns.Add(c => {
+            c.FieldName = "Id";
+            c.ReadOnly = true;
+        });
+        settings.Columns.Add(column => {
+            column.FieldName = "ProductName";
+        });
+        settings.Columns.Add(column => {
+            column.FieldName = "StatusNumericType";
+            column.Caption = "Status (Numeric)";
+        });
+        settings.Columns.Add(column => {
+            column.FieldName = "StatusTextType";
+            column.Caption = "Status (Text)";
+        });
+
+
+        settings.Toolbars.Add(tb => {
+            tb.Enabled = true;
+            //tb.Position = GridToolbarPosition.Top;
+            //tb.SettingsAdaptivity.Enabled = true;
+            //tb.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
+
+            tb.Items.Add(GridViewToolbarCommand.ExportToCsv);
+        });
+
+        settings.SettingsExport.EnableClientSideExportAPI = true;
+        settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
+    });
+}
+@grid.Bind(Model).GetHtml()
+
