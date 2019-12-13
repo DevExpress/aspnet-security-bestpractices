@@ -3,6 +3,12 @@
         settings.Name = "grid";
         settings.CallbackRouteValues = new { Controller = "Export", Action = "ExportToCsvPartial" };
 
+        settings.SettingsExport.EnableClientSideExportAPI = true;
+        settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
+        settings.SettingsExport.BeforeExport = (s, e) => {
+            (e.ExportOptions as DevExpress.XtraPrinting.CsvExportOptionsEx).EncodeExecutableContent = DefaultBoolean.True;
+        };
+
         settings.KeyFieldName = "Id";
 
         settings.Columns.Add(c => {
@@ -24,16 +30,9 @@
 
         settings.Toolbars.Add(tb => {
             tb.Enabled = true;
-            //tb.Position = GridToolbarPosition.Top;
-            //tb.SettingsAdaptivity.Enabled = true;
-            //tb.SettingsAdaptivity.EnableCollapseRootItemsToIcons = true;
-
             tb.Items.Add(GridViewToolbarCommand.ExportToCsv);
         });
 
-        settings.SettingsExport.EnableClientSideExportAPI = true;
-        settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
     });
 }
 @grid.Bind(Model).GetHtml()
-

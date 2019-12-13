@@ -1,11 +1,14 @@
-﻿using SecurityBestPractices.Mvc.Models;
+﻿using DevExpress.Utils;
+using DevExpress.XtraPrinting;
+using SecurityBestPractices.Mvc.Models;
 using System.Web;
 using System.Web.Mvc;
 
 namespace SecurityBestPractices.Mvc.Controllers {
     [ValidateInput(false)]
     public class ExportController : Controller {
-        // GET: /Expor/ExportToCsv/
+        // GET: /Export/ExportToCsv/
+        [HttpGet]
         public ActionResult ExportToCsv() {
             return View("ExportToCsv", EditFormItems.GetList());
         }
