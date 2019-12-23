@@ -1076,7 +1076,7 @@ protected void Page_Load(object sender, EventArgs e) {
 
 ---
 
-## 7. Export to CSV
+## 8. Export to CSV
 
 **Security Risks**: [CWE-74](https://cwe.mitre.org/data/definitions/74.html)
 

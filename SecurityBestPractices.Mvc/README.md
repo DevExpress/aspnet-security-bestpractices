@@ -1387,4 +1387,55 @@ See the example project's [Views/UserInputValidation/SvgInline.cshtml](https://g
 
 ---
 
+## 8. Export to CSV
+
+**Security Risks**: [CWE-74](https://cwe.mitre.org/data/definitions/74.html)
+
+Control data exported to CSV can include content that spreadsheet software such as Microsoft Excel interprets as formula. Such formulas can potentially execute shell commands. For example the following formula runs the Windows Calculator when evaluated:
+
+```
+=cmd|' /C calc'!'!A1'
+```
+
+This may cause a security issue if an end-user opens the exported file in a spreadsheet program and allows the program to run executable content. Microsoft Excel displays a message explicitly asking a user whether or not to run executable content.
+
+To prevent possible security issues, set the `EncodeCsvExecutableContent` property to true. In this mode, the exported content is encoded so it cannot be interpreted as executable.
+
+This behavior is controlled by the following properties:
+
+- At the control level - `DevExpress.XtraPrinting.CsvExportOptions.EncodeExecutableContent`:
+
+  ```cs
+  var grid = Html.DevExpress().GridView<EditFormItem>(settings => {
+      settings.Name = "grid";
+      settings.CallbackRouteValues = new { Controller = "Export", Action = "ExportToCsvPartial" };
+
+      settings.SettingsExport.EnableClientSideExportAPI = true;
+      settings.SettingsExport.ExcelExportMode = DevExpress.Export.ExportType.DataAware;
+      settings.SettingsExport.BeforeExport = (s, e) => {
+          (e.ExportOptions as DevExpress.XtraPrinting.CsvExportOptionsEx).EncodeExecutableContent = DefaultBoolean.True;
+      };
+  }
+  ```
+
+- At the application level (a Global.asax setting) - `DevExpress.Export.ExportSettings.EncodeCsvExecutableContent`:
+
+  ```cs
+  DevExpress.Export.ExportSettings.EncodeCsvExecutableContent = DevExpress.Utils.DefaultBoolean.True;
+  ```
+
+This setting is not enabled by default because escaped content (everything that starts with "=", "-", "+", "@", "") in CSV can be unacceptable in many use-case scenarios. For example, escaping will brake text values that happed to start with "=" or negative numbers. For example:
+
+```
+Product Name,Quantity Per Unit,Unit Price,Units In Stock, Status
+"""=Chai""",10 boxes x 20 bags,$18.00,39,$702.00, """-10%"""
+Chang,24 - 12 oz bottles,$19.00,17,$323.00, 5%
+```
+
+Because Excel requires a user's permission to run executable content, we do not enable this setting by default and allow a user to enable this settings if it suites the use case.
+
+See the following article to learn more about CSV injections: [https://www.owasp.org/index.php/CSV_Injection](https://www.owasp.org/index.php/CSV_Injection)
+
+---
+
 ![Analytics](https://ga-beacon.appspot.com/UA-129603086-1/aspnet-security-bestpractices-mvc-page?pixel)
