@@ -1,5 +1,6 @@
 ﻿using DevExpress.Web;
 using System;
+using System.Web;
 
 namespace SecurityBestPractices.HtmlEncoding {
     public partial class EncodeHtml : System.Web.UI.Page {
@@ -14,7 +15,7 @@ namespace SecurityBestPractices.HtmlEncoding {
                 // Adding custom values from unsafe data source
 
                 // Safe approach - Display Text is encoded
-                e.AddValue(Server.HtmlEncode("<b>T</b>est <img src=1 onerror=alert('XSS') />"), "1");
+                e.AddValue(HttpUtility.HtmlEncode("<b>T</b>est <img src=1 onerror=alert('XSS') />"), "1");
 
                 // Unsafe approach - Display Text is not encoded
                 //e.AddValue("<b>T</b>est <img src=1 onerror=alert('XSS') />", "1");
