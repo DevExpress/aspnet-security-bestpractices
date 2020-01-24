@@ -46,16 +46,16 @@
       <siteMapNode url="~/ValidateInput/ListEditors.aspx" title="List Editors" />
       <siteMapNode url="~/ValidateInput/SvgInline.aspx" title="Inline SVG Images (use only trusted sources)" />
     </siteMapNode>
-    <siteMapNode url="" title="8. Unauthorized server operations via Client-Side API">
-      <siteMapNode url="~/ClientSideApi/GridView.aspx" title="CRUD Operations (GridView, CardView, VerticalGrid, TreeList)" />
-      <siteMapNode url="~/ClientSideApi/OfficeControlsFileOperations.aspx" title="Office Controls File Operations (RichEdit, Spreadsheet)" />
-      <siteMapNode url="~/ClientSideApi/SpreadsheetReadingModeOnly.aspx" title="Spreadsheet Reading Mode Only" />
-    </siteMapNode>
-    <siteMapNode url="" title="9. Downloading Files">
-      <siteMapNode url="~/DownloadingFiles/DownloadFileFromUrl.aspx" title="Download File From Url" />
-    </siteMapNode>
-    <siteMapNode url="" title="10. Export">
+    <siteMapNode url="" title="8. Export">
       <siteMapNode url="~/Export/ExportToCsv.aspx" title="Export to CSV (Preventing CSV Injections)" />
+    </siteMapNode>
+    <siteMapNode url="" title="9. Unauthorized server operations via Client-Side API">
+      <siteMapNode url="~/ClientSideApi/GridView.aspx" title="CRUD Operations (GridView, CardView, VerticalGrid, TreeList) and Hidden column access" />
+      <siteMapNode url="~/ClientSideApi/SpreadsheetReadingModeOnly.aspx" title="Spreadsheet Reading Mode Only" />
+      <siteMapNode url="~/ClientSideApi/OfficeControlsFileOperations.aspx" title="Office Controls File Operations (RichEdit, Spreadsheet)" />
+    </siteMapNode>
+    <siteMapNode url="" title="10. Downloading Files">
+      <siteMapNode url="~/DownloadingFiles/DownloadFileFromUrl.aspx" title="Download File From Url" />
     </siteMapNode>
   </siteMapNode>
 </siteMap>

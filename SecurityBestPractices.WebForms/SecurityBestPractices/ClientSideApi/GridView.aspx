@@ -1,5 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="GridView.aspx.cs" Inherits="SecurityBestPractices.ClientSideApi.GridView" %>
 
+<%@ Register Assembly="DevExpress.Web.ASPxTreeList.v19.2, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web.ASPxTreeList" TagPrefix="dx" %>
+
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -46,6 +48,13 @@
                     gridView.GetRowValues(0, 'UnitPrice', function(Value) {
                         alert(Value);
                     });
+                }" />
+        </dx:ASPxButton>
+
+        <br /><br />
+        <dx:ASPxButton ID="CrudButton" runat="server" Text="gridView.DeleteRow(0)" UseSubmitBehavior="False" AutoPostBack="False">
+            <ClientSideEvents Click="function(){ 
+                gridView.DeleteRow(0) 
                 }" />
         </dx:ASPxButton>
     </form>

@@ -16,5 +16,12 @@
         // Reading Mode Only
         settings.SettingsView.Mode = DevExpress.Web.ASPxSpreadsheet.SpreadsheetViewMode.Reading;
         settings.Settings.Behavior.SwitchViewModes = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+        settings.ReadOnly = true;
+
+        // Disable File Operations
+        settings.Settings.Behavior.CreateNew = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+        settings.Settings.Behavior.Open = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+        settings.Settings.Behavior.Save = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+        settings.Settings.Behavior.SaveAs = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
     }
-).GetHtml()
+).Open(Server.MapPath(@"~\app_data\WorkDirectory\test.xlsx")).GetHtml()

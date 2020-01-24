@@ -110,6 +110,7 @@
     <Reference Include="DevExpress.Web.ASPxSpreadsheet.v19.2, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Web.ASPxThemes.v19.2">
     </Reference>
+    <Reference Include="DevExpress.Web.ASPxTreeList.v19.2, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Web.Resources.v19.2">
     </Reference>
     <Reference Include="DevExpress.Web.v19.2">
@@ -144,6 +145,7 @@
     </Reference>
     <Reference Include="DevExpress.XtraReports.v19.2.Web.WebForms, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
     </Reference>
+    <Reference Include="DevExpress.XtraTreeList.v19.2, Version=19.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -199,6 +201,7 @@
     <Content Include="ValidateInput\ListEditors.aspx" />
     <Content Include="ValidateInput\SvgInline.aspx" />
     <Content Include="ValidateInput\General.aspx" />
+    <Content Include="App_Data\WorkDirectory\test.xlsx" />
     <None Include="packages.config" />
     <Content Include="App_Data\AdminDashboard.xml" />
     <Content Include="App_Data\JohnDashboard.xml" />

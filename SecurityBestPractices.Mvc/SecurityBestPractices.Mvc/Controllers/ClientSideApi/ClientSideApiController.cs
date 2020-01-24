@@ -17,7 +17,13 @@ namespace SecurityBestPractices.Mvc.Controllers {
         public ActionResult GridViewPartial() {
             return PartialView("GridViewPartial", EditFormItems.GetList());
         }
+        //[HttpPost]
+        //public ActionResult GridViewDeletePartial(int id = -1) {
+        //    if(id >= 0)
+        //        EditFormItems.Delete(id);
 
+        //    return GridViewPartial();
+        //}
 
         // File Operations
         public ActionResult OfficeControlsFileOperations() {

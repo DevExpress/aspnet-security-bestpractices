@@ -11,6 +11,20 @@
                 alert(Value);
             });
         }
+
+        function deleteRow() {
+            gridView.DeleteRow(0)
+        }
+
+        function sendDeleteRowRequest() {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GridViewDeletePartial", "ClientSideApi")',
+                data: {
+                    id: 3
+                }
+            });
+        }
     </script>
 
     @Html.DevExpress().Button(settings => {
@@ -19,4 +33,20 @@
            settings.Text = "GetRowValues()";
            settings.ClientSideEvents.Click = "getRowValues";
         }).GetHtml()
+
+    <br /><br />
+    @Html.DevExpress().Button(settings => {
+           settings.Name = "crudButton";
+           settings.Width = 164;
+           settings.Text = "gridView.DeleteRow(0)";
+           settings.ClientSideEvents.Click = "deleteRow";
+        }).GetHtml()
+    <br /><br />
+    @Html.DevExpress().Button(settings => {
+           settings.Name = "sendButton";
+           settings.Width = 164;
+           settings.Text = "sendDeleteRowRequest";
+           settings.ClientSideEvents.Click = "sendDeleteRowRequest";
+        }).GetHtml()
+    
 }

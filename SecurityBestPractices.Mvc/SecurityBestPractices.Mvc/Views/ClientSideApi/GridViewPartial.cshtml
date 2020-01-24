@@ -2,6 +2,10 @@
     var grid = Html.DevExpress().GridView<EditFormItem>(settings => {
         settings.Name = "gridView";
         settings.CallbackRouteValues = new { Controller = "ClientSideApi", Action = "GridViewPartial" };
+
+        //settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ClientSideApi", Action = "GridViewDeletePartial" };
+
+
         settings.SettingsDataSecurity.AllowReadUnexposedColumnsFromClientApi = DefaultBoolean.False;
 
         settings.KeyFieldName = "Id";

@@ -14,6 +14,7 @@
             <SettingsView Mode="Reading" />
             <Settings>
                 <Behavior SwitchViewModes="Hidden" />
+                <Behavior CreateNew="Hidden" Open="Hidden" Save="Hidden" SaveAs="Hidden" />
             </Settings>
         </dx:ASPxSpreadsheet>
     </form>
