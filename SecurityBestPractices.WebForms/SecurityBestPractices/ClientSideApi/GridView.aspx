@@ -52,7 +52,7 @@
         </dx:ASPxButton>
 
         <br /><br />
-        <dx:ASPxButton ID="CrudButton" runat="server" Text="gridView.DeleteRow(0)" UseSubmitBehavior="False" AutoPostBack="False">
+        <dx:ASPxButton ID="CrudButton" runat="server" Text="DeleteRow(0)" UseSubmitBehavior="False" AutoPostBack="False">
             <ClientSideEvents Click="function(){ 
                 gridView.DeleteRow(0) 
                 }" />
