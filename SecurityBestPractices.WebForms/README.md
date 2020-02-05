@@ -105,6 +105,8 @@ The default file extensions allowed by various controls that allow for file uplo
 
 ### 1.2. Prevent Uncontrolled Resource Consumption
 
+#### 1.2.1 Prevent Uncontrolled Memory Consumption
+
 Visit the **[UploadingFiles/UploadControlMemory.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/UploadControlMemory.aspx.cs)** page for a full code sample.
 
 Consider the situation where the web application allows files of any size to be uploaded.
@@ -151,6 +153,32 @@ The File Manager control automatically allows files to be uploaded, and does not
 
 Other operations on files organized by the File Manager (copy, delete, download, etc.) are configured using the [SettingsEditing](http://help.devexpress.com/#AspNet/DevExpressWebASPxFileManager_SettingsEditingtopic) property. All such operations are disabled by default.
 
+#### 1.2.2 Prevent Uncontrolled Disk Space Consumption
+
+**Security Risks**: [CWE-400](https://cwe.mitre.org/data/definitions/400.html)
+
+You should always monitor the total size of files uploaded by end-users, otherwise a malefactor can perform a DoS attack by uploading too many files and using up the available disk space. The best practice is to set a limitation on the total size of uploaded files.
+
+For example, check the upload directory's size in the [Upload Control](https://docs.devexpress.com/AspNet/8298/aspnet-webforms-controls/file-management/file-upload)'s [FilesUploadComplete](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxUploadControl.FilesUploadComplete) event handler:
+
+```cs 
+protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
+    if(uploadControl.UploadedFiles != null && uploadControl.UploadedFiles.Length > 0) {
+        for(int i = 0; i < uploadControl.UploadedFiles.Length; i++) {
+            UploadedFile file = uploadControl.UploadedFiles[i];
+            if(file.IsValid && file.FileName != "") {
+                // Check the upload folder's size taking into account the new files.
+                const long DirectoryFileSizesLimit = 10000000; // bytes
+                long totalFilesSize = GetDirectoryFileSizes(MapPath("~/UploadingFiles/Images/"));
+                if(file.ContentLength + totalFilesSize > DirectoryFileSizesLimit) {
+                    file.IsValid = false;
+                    e.ErrorText = "Total files size exceeded!";
+                } else {
+    ...
+
+```
+See the example project's [UploadingFiles/LimitDirectorySize.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/LimitDirectorySize.aspx.cs) file.
+
 ### 1.3. Protect Temporary Files
 
 Visit the **[UploadingFiles/UploadControlTempFileName.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/UploadControlTempFileName.aspx.cs)** page for a full code sample.
@@ -176,6 +204,10 @@ protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.F
                 file.SaveAs(fileName, true);
                 // DoFileProcessing(fileName);
                 ...
+            }
+        }
+    }
+}
 
 ```
 
@@ -870,6 +902,31 @@ Launch the project and open the page in the browser. A data field's content will
 In the safe configuration, the field's content would be interpreted as text and correctly displayed:
 
 ![Devexpress Controls - Use Encoding](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-columns-use-encoding.png?raw=true)
+
+#### 6.1.1 Encoding Header Filter Items
+
+**Related Controls**: [ASPxGridView](https://docs.devexpress.com/AspNet/5823/aspnet-webforms-controls/grid-view), [ASPxCardView](https://docs.devexpress.com/AspNet/114048/aspnet-webforms-controls/card-view), [ASPxVerticalGrid](https://docs.devexpress.com/AspNet/116045/aspnet-webforms-controls/vertical-grid), [ASPxTreeList](https://docs.devexpress.com/AspNet/7928/aspnet-webforms-controls/tree-list)
+
+You should always encode (wrap with the HttpUtility.HtmlEncode method call) filter items that are obtained from an unsafe data source or specified by an end user.
+
+```cs
+ASPxGridViewHeaderFilterEventArgs e) {
+    if(e.Column.FieldName == "ProductName") {
+        e.Values.Clear();
+        // Adding custom values from unsafe data source
+
+        // Safe approach - Display Text is encoded
+        e.AddValue(HttpUtility.HtmlEncode("<b>T</b>est <img src=1 onerror=alert('XSS') />"), "1");
+
+        // Unsafe approach - Display Text is not encoded
+        //e.AddValue("<b>T</b>est <img src=1 onerror=alert('XSS') />", "1");
+    }
+}
+```
+
+If filter items are not encoded, an XSS can be performed when a user opens a header filter dropdown:
+
+<span style="color: red">[IMAGE]</span>
 
 ### 6.2 Encoding in Templates
 
