@@ -1216,7 +1216,7 @@ To familiarize yourself with the issue:
    
    This will delete a data row with the index 0. This is possible because the Grid View's data source still exposes a Delete command and the grid's `SettingsDataSecurity.AllowDelete` property is set to the default `True` value.
 
-The best practices to mitigate thisA vulnerability are:
+The best practices to mitigate this vulnerability are:
 
 - If you intend to use a grid-based control in view-only mode, make sure that its data source does not allow data editing (for example a SqlDataSource does not have DeleteCommand, InsertCommand and UpdateCommand). 
 
