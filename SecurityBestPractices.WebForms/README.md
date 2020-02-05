@@ -913,7 +913,7 @@ You should always encode (wrap with the HttpUtility.HtmlEncode method call) filt
 ASPxGridViewHeaderFilterEventArgs e) {
     if(e.Column.FieldName == "ProductName") {
         e.Values.Clear();
-        // Adding custom values from unsafe data source
+        // Adding custom values from an unsafe data source
 
         // Safe approach - Display Text is encoded
         e.AddValue(HttpUtility.HtmlEncode("<b>T</b>est <img src=1 onerror=alert('XSS') />"), "1");
@@ -924,9 +924,11 @@ ASPxGridViewHeaderFilterEventArgs e) {
 }
 ```
 
+See the example project's [HtmlEncoding/EncodeHtml.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/EncodeHtml.aspx.cs#L18) file.
+
 If filter items are not encoded, an XSS can be performed when a user opens a header filter dropdown:
 
-<span style="color: red">[IMAGE]</span>
+![Templates - Unsanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/header-filter-item-encoding.png?raw=true)
 
 ### 6.2 Encoding in Templates
 
@@ -1182,6 +1184,46 @@ Chang,24 - 12 oz bottles,$19.00,17,$323.00, 5%
 Because Excel requires a user's permission to run executable content, we do not enable this setting by default and allow a user to enable this settings if it suites the use case.
 
 See the following article to learn more about CSV injections: [https://www.owasp.org/index.php/CSV_Injection](https://www.owasp.org/index.php/CSV_Injection)
+
+---
+
+## 9. Unauthorized Server Operation via Client-Sided API
+
+**Security Risks**: [CWE-284](https://cwe.mitre.org/data/definitions/284.html), [CWE-285](https://cwe.mitre.org/data/definitions/285.html)
+
+### 9.1. Unauthorized CRUD Operations in the View Mode
+
+See the example project's [ClientSideApi/GridView.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/GridView.aspx) page. 
+
+Grid-based controls (ASPxGridView, ASPxCardView, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call call the [ASPxClientGridView.DeleteRow](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
+
+To familiarize yourself with the issue:
+
+1. Comment out the following line in the example project's [ClientSideApi/GridView.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/GridView.aspx) file:
+
+   ```aspx
+   <SettingsDataSecurity AllowEdit="False" AllowInsert="False" AllowDelete="False" AllowReadUnexposedColumnsFromClientApi="False" />
+   ```
+
+2. Open this page in the browser and click the **DeleteRow(0)** button or type the following code in the browser's console:
+
+   ```js
+   >gridView.DeleteRow(0)
+   ```
+
+   <span style="color: red">[IMAGE]</span>
+   
+   This will delete a data row with the index 0. This is possible because the Grid View's data source still exposes a Delete command and the grid's `SettingsDataSecurity.AllowDelete` property is set to the default `True` value.
+
+The best practices to mitigate thisA vulnerability are:
+
+- If you intend to use a grid-based control in view-only mode, make sure that its data source does not allow data editing (for example a SqlDataSource does not have DeleteCommand, InsertCommand and UpdateCommand). 
+
+- Disable CRUD operations on the control level using the control's [SettingsDataSecurity](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridView.SettingsDataSecurity) property:
+
+  ```aspx
+  <SettingsDataSecurity AllowEdit="False" AllowInsert="False" AllowDelete="False" />
+  ```
 
 ---
 
