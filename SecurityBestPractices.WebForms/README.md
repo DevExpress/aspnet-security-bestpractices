@@ -1212,7 +1212,7 @@ To familiarize yourself with the issue:
    >gridView.DeleteRow(0)
    ```
 
-   <span style="color: red">[IMAGE]</span>
+   ![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/unauthorized-client-crud.png?raw=true)
    
    This will delete a data row with the index 0. This is possible because the Grid View's data source still exposes a Delete command and the grid's `SettingsDataSecurity.AllowDelete` property is set to the default `True` value.
 
