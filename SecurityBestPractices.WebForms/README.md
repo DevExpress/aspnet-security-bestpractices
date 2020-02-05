@@ -13,6 +13,7 @@ The security issues are all shown using a simple Visual Studio solution. Fully c
 - [5. Preventing Sensitive Information Exposure](#5-preventing-sensitive-information-exposure)
 - [6. Preventing Cross-Site Scripting (XSS) Attacks with Encoding](#6-preventing-cross-site-scripting-xss-attacks-with-encoding)
 - [7. User Input Validation](#7-user-input-validation)
+- [8. Export to CSV](#8-export-to-csv)
 
 ## 1. Uploading Files
 
