@@ -1284,6 +1284,8 @@ To familiarize yourself with the vulnerability, open the example project's [Clie
 
 Run the application and open the page. Now, if you press Ctrl+O, the Open dialog will be invoked despite the fact that the File tab is hidden.
 
+![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/spreadsheet-file-selector.png?raw=true)
+
 ---
 
 ![Analytics](https://ga-beacon.appspot.com/UA-129603086-1/aspnet-security-bestpractices-webforms-page?pixel)
