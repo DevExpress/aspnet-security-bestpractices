@@ -1226,6 +1226,64 @@ The best practices to mitigate this vulnerability are:
   <SettingsDataSecurity AllowEdit="False" AllowInsert="False" AllowDelete="False" />
   ```
 
+### 9.2. Using Spreadsheet in Read-Only Mode
+
+If you intend the Spreadsheet control to work in read-only mode (the `SettingsView.Mode` option is set to "Reading"), make sure that the ability to switch to edit mode is disabled:
+
+```aspx
+<Settings>
+    <Behavior SwitchViewModes="Hidden" />
+</Settings>
+```
+
+It is also recommended that you set the `ReadOnly` property to true:
+
+```cs
+spreadsheet.ReadOnly="true"
+```
+
+See the example projects [ClientSideApi/SpreadsheetReadingModeOnly.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/SpreadsheetReadingModeOnly.aspx) page.
+
+
+### 9.3 File Selector Commands in the ReachEdit and Spreadsheet 
+
+Related Controls: **ASPxReachEdit**, **ASPxSpreadsheet**
+
+In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (New, Open, Save, etc.) In this case, a document is opened and saved programmatically. 
+
+Not that it is not enough to just hide the File tab because the commands from this tab can still be executed using JavaScript or keyboard shortcuts (for example, the Ctrl+O shortcut can invoke the Open dialog).
+
+When you want to disable file-related commands, the best practice is to also disable file operations by disabling the corresponding Behavior options (CreateNew, Open, Save, SaveAs, SwitchViewModes).
+
+##### ASPxSpreadsheet:
+
+```aspx
+<dx:ASPxSpreadsheet ID="spreadsheet" runat="server" WorkDirectory="~/App_Data/WorkDirectory">
+    <Settings>
+        <Behavior CreateNew="Hidden" Open="Hidden" Save="Hidden" SaveAs="Hidden" SwitchViewModes="Hidden"/>
+    </Settings>
+</dx:ASPxSpreadsheet>
+
+```
+
+##### ASPxRichEdit:
+
+```aspx
+<dx:ASPxRichEdit ID="ASPxRichEdit1" runat="server" WorkDirectory="~\App_Data\WorkDirectory">
+    <Settings>
+        <Behavior CreateNew="Hidden" Open="Hidden" Save="Hidden" SaveAs="Hidden" ></Behavior>
+    </Settings>
+</dx:ASPxRichEdit>
+```
+
+To familiarize yourself with the vulnerability, open the example project's [ClientSideApi/FileSelector.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/OfficeControlsFileOperations.aspx) file and comment out the following line:
+
+```aspx
+<Behavior CreateNew="Hidden" Open="Hidden" Save="Hidden" SaveAs="Hidden" SwitchViewModes="Hidden"/>
+```
+
+Run the application and open the page. Now, if you press Ctrl+O, the Open dialog will be invoked despite the fact that the File tab is hidden.
+
 ---
 
 ![Analytics](https://ga-beacon.appspot.com/UA-129603086-1/aspnet-security-bestpractices-webforms-page?pixel)
