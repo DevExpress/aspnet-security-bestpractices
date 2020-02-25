@@ -1288,4 +1288,33 @@ Run the application and open the page. Now, if you press Ctrl+O, the Open dialog
 
 ---
 
+## 10. Downloading Files From External URLs
+
+Consider a use-case scenario when an web application receives a URL from an end-user, downloads an image file from this URL and saves the file in a database. This file is then displayed on the application's page using the ASPxBinaryImage control.
+
+It is often suggested to use the WebClient class to download a file in this scenario:
+
+```cs
+using(var webClient = new WebClient())
+    BinaryImage.ContentBytes = webClient.DownloadData(url);
+```
+
+However, this is unsafe because the WebClient can accept a path to a local resource on the server (for example, “c:\...\App_Data\СonfidentialImages\...”), which allows a malefactor to gain access to confidential files (such as web.config).
+
+To mitigate this vulnerability, use HttpWebRequest:
+
+```cs
+HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+using(HttpWebResponse response = (HttpWebResponse)request.GetResponse()) { 
+    ...
+}
+```
+
+In this case, trying to download a local file will generate an exception.
+
+See the example project's [DownloadingFiles/DownloadFileFromUrl.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/DownloadingFiles/DownloadFileFromUrl.aspx.cs) file.
+
+
+---
+
 ![Analytics](https://ga-beacon.appspot.com/UA-129603086-1/aspnet-security-bestpractices-webforms-page?pixel)
