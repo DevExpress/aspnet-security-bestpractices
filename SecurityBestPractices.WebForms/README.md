@@ -1310,7 +1310,7 @@ using(HttpWebResponse response = (HttpWebResponse)request.GetResponse()) {
 }
 ```
 
-In this case, trying to download a local file will generate an exception.
+In this case, an attempt to download a local file will generate an exception.
 
 See the example project's [DownloadingFiles/DownloadFileFromUrl.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/DownloadingFiles/DownloadFileFromUrl.aspx.cs) file.
 
