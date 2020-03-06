@@ -1251,7 +1251,7 @@ Related Controls: **ASPxReachEdit**, **ASPxSpreadsheet**
 
 In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (New, Open, Save, etc.) In this case, a document is opened and saved programmatically. 
 
-Not that it is not enough to just hide the File tab because the commands from this tab can still be executed using JavaScript or keyboard shortcuts (for example, the Ctrl+O shortcut can invoke the Open dialog).
+Note that it is not enough to just hide the File tab because the commands from this tab can still be executed using JavaScript or keyboard shortcuts (for example, the Ctrl+O shortcut can invoke the Open dialog).
 
 When you want to disable file-related commands, the best practice is to also disable file operations by disabling the corresponding Behavior options (CreateNew, Open, Save, SaveAs, SwitchViewModes).
 
@@ -1299,7 +1299,7 @@ using(var webClient = new WebClient())
     BinaryImage.ContentBytes = webClient.DownloadData(url);
 ```
 
-However, this is unsafe because the WebClient can accept a path to a local resource on the server (for example, “c:\...\App_Data\СonfidentialImages\...”), which allows a malefactor to gain access to confidential files (such as web.config).
+However, this is unsafe because the WebClient can accept a path to a local resource on the server (for example, “c:\...\App_Data\СonfidentialImages\...”), which allows a malefactor to gain access to confidential files (such as web.config, he App_Data folder or other files and folders with nonpublic content).
 
 To mitigate this vulnerability, use HttpWebRequest:
 

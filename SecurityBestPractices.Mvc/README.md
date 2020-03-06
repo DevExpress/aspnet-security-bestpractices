@@ -115,6 +115,8 @@ The default file extensions allowed by various controls that allow for file uplo
 
 ### 1.2. Prevent Uncontrolled Resource Consumption
 
+#### 1.2.1 Prevent Uncontrolled Memory Consumption
+
 See the [controller code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/72492709fd0c53fef25414fc77df9a37fc4dc5a7/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UploadingFiles/UploadingFiles.cs#L59-L99) in the **Controllers\UploadingFiles\UploadingFiles.cs** file for a full code sample.
 
 Consider the situation where the web application allows files of any size to be uploaded.
@@ -181,6 +183,36 @@ The File Manager automatically allows files to be uploaded, and does not impose 
 ```
 
 Other operations on files organized by the File Manager (copy, delete, download, etc.) are configured using the [SettingsEditing](http://help.devexpress.com/#AspNet/DevExpressWebMvcFileManagerSettings_SettingsEditingtopic) property. All such operations are disabled by default.
+
+#### 1.2.2 Prevent Uncontrolled Disk Space Consumption
+
+**Security Risks**: [CWE-400](https://cwe.mitre.org/data/definitions/400.html)
+
+You should always monitor the total size of files uploaded by end-users, otherwise a malefactor can perform a DoS attack by uploading too many files and using up the available disk space. The best practice is to set a limitation on the total size of uploaded files.
+
+Check the upload directory size before saving the uploaded files:
+
+```cs
+private void uploadControl_FilesUploadComplete(object sender, FilesUploadCompleteEventArgs e) {
+    var uploadedFiles = ((MVCxUploadControl)sender).UploadedFiles;
+    if(uploadedFiles != null && uploadedFiles.Length > 0) {
+        for(int i = 0; i < uploadedFiles.Length; i++) {
+            UploadedFile file = uploadedFiles[i];
+            if(file.IsValid && file.FileName != "") {
+                using(var stream = file.FileContent) {
+                    // Check limit for total size for uploaded files in upload folder and its sub folders
+                    const long DirectoryFileSizesLimit = 10000000; // bytes
+                    long totalFilesSize = GetDirectoryFileSizes(HostingEnvironment.MapPath("~/UploadingFiles/Images/"));
+                    if(file.ContentLength + totalFilesSize > DirectoryFileSizesLimit) {
+                        file.IsValid = false;
+                         e.ErrorText = "Total files size exceeded!";
+                    } else {
+                        // In case additional checks are needed perform them here before saving the file
+                        if(!IsValidImage(stream)) {
+                        ...
+```
+
+See the example project's [Controllers/UploadingFiles/UploadingFiles.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UploadingFiles/UploadingFiles.cs#L149) file.
 
 ### 1.3. Protect Temporary Files
 
@@ -1017,6 +1049,7 @@ In the safe configuration, the field's content would be interpreted as text and 
 
 ![Devexpress Controls - Use Encoding](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-columns-use-encoding.png?raw=true)
 
+
 ### 6.2 Encoding in Templates
 
 If you inject data field values in templates, we recommend that you always [sanitize](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeHtmlInTemplatesPartial.cshtml#L14) the data field values:
@@ -1436,6 +1469,87 @@ Chang,24 - 12 oz bottles,$19.00,17,$323.00, 5%
 Because Excel requires a user's permission to run executable content, we do not enable this setting by default and allow a user to enable this settings if it suites the use case.
 
 See the following article to learn more about CSV injections: [https://www.owasp.org/index.php/CSV_Injection](https://www.owasp.org/index.php/CSV_Injection)
+
+---
+
+## 8. Unauthorized Server Operation via Client-Sided API
+
+**Security Risks**: [CWE-284](https://cwe.mitre.org/data/definitions/284.html), [CWE-285](https://cwe.mitre.org/data/definitions/285.html)
+
+### 9.1. Unauthorized CRUD Operations in the View Mode
+
+**Related Extension**: Grid View, Card View, Vertical Grid, Tree List
+
+Grid-based controls (Grid View, Card View, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call call the [ASPxClientGridView.DeleteRow](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
+
+The best practices to mitigate this vulnerability are:
+
+- If you intend to use a grid-based control in view-only mode, make sure that the it does not have the DeleteRowRouteValues setting specified.
+
+  ```cs
+  //settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ClientSideApi", Action = "GridViewDeletePartial" };
+  ```
+
+- The controller does not have CRUD method as the one shown below:
+
+  ```cs
+  //[HttpPost]
+  //public ActionResult GridViewDeletePartial(int id = -1) {
+  //    if(id >= 0)
+  //        EditFormItems.Delete(id);
+  //    return GridViewPartial();
+  //}
+  ```
+
+> Note that an attacker can call controller methods without a View by making a POST request, as demonstrated in the example application:
+
+<span style="color: red">IMAGE</span>
+
+### 9.2. Using Spreadsheet in Read-Only Mode
+
+
+If you intend the Spreadsheet control to work in read-only mode (the `SettingsView.Mode` option is set to "Reading"), make sure that the ability to switch to edit mode is disabled:
+
+```cs
+settings.Settings.Behavior.SwitchViewModes = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+```
+
+It is also recommended that you set the `ReadOnly` property to true:
+
+```cs
+settings.ReadOnly = true;
+```
+
+See the example projects [Views/ClientSideApi/SpreadsheetReadingModeOnlyPartial.cshtml](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/ClientSideApi/SpreadsheetReadingModeOnlyPartial.cshtml#L16-L18) file.
+
+
+### 9.3 File Selector Commands in the ReachEdit and Spreadsheet
+
+In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (New, Open, Save, etc.) In this case, a document is opened and saved programmatically. 
+
+Note that it is not enough to just hide the File tab because the commands from this tab can still be executed using JavaScript or keyboard shortcuts (for example, the Ctrl+O shortcut can invoke the Open dialog).
+
+When you want to disable file-related commands, the best practice is to also disable file operations by disabling the corresponding Behavior options (CreateNew, Open, Save, SaveAs, SwitchViewModes).
+
+##### Spreadsheet 
+
+```cs
+// Disable File Selector operations
+settings.Settings.Behavior.CreateNew = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+settings.Settings.Behavior.Open = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+settings.Settings.Behavior.Save = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+settings.Settings.Behavior.SaveAs = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+```
+
+##### Rich Edit
+
+```cs
+// Disable File Selector operations
+settings.Settings.Behavior.CreateNew = DevExpress.XtraRichEdit.DocumentCapability.Hidden;
+settings.Settings.Behavior.Open = DevExpress.XtraRichEdit.DocumentCapability.Hidden;
+settings.Settings.Behavior.Save = DevExpress.XtraRichEdit.DocumentCapability.Hidden;
+settings.Settings.Behavior.SaveAs = DevExpress.XtraRichEdit.DocumentCapability.Hidden;
+```
 
 ---
 
