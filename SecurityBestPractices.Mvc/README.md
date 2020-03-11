@@ -14,6 +14,9 @@ The security issues are all shown using a simple Visual Studio solution. Fully c
 - [6. Preventing Cross-Site Scripting (XSS) Attacks with Encoding](#6-preventing-cross-site-scripting-xss-attacks-with-encoding)
 - [7. User Input Validation](#7-user-input-validation)
 - [8. Export to CSV](#8-export-to-csv)
+- [9. Unauthorized Server Operation via Client-Sided API](#9-unauthorized-server-operation-via-client-sided-api)
+- [10. Downloading Files From External URLs](#10-downloading-files-from-external-urls)
+
 
 ## 1. Uploading Files
 
@@ -1472,7 +1475,7 @@ See the following article to learn more about CSV injections: [https://www.owasp
 
 ---
 
-## 8. Unauthorized Server Operation via Client-Sided API
+## 9. Unauthorized Server Operation via Client-Sided API
 
 **Security Risks**: [CWE-284](https://cwe.mitre.org/data/definitions/284.html), [CWE-285](https://cwe.mitre.org/data/definitions/285.html)
 
@@ -1503,10 +1506,7 @@ The best practices to mitigate this vulnerability are:
 
 > Note that an attacker can call controller methods without a View by making a POST request, as demonstrated in the example application:
 
-<span style="color: red">IMAGE</span>
-
 ### 9.2. Using Spreadsheet in Read-Only Mode
-
 
 If you intend the Spreadsheet control to work in read-only mode (the `SettingsView.Mode` option is set to "Reading"), make sure that the ability to switch to edit mode is disabled:
 
@@ -1550,6 +1550,34 @@ settings.Settings.Behavior.Open = DevExpress.XtraRichEdit.DocumentCapability.Hid
 settings.Settings.Behavior.Save = DevExpress.XtraRichEdit.DocumentCapability.Hidden;
 settings.Settings.Behavior.SaveAs = DevExpress.XtraRichEdit.DocumentCapability.Hidden;
 ```
+---
+
+## 10. Downloading Files From External URLs
+
+Consider a use-case scenario when an web application receives a URL from an end-user, downloads an image file from this URL and saves the file in a database. This file is then displayed on the application's page using the Binary Image extension.
+
+It is often suggested to use the WebClient class to download a file in this scenario:
+
+```cs
+using(var webClient = new WebClient())
+    BinaryImage.ContentBytes = webClient.DownloadData(url);
+```
+
+However, this is unsafe because the WebClient can accept a path to a local resource on the server (for example, “c:\...\App_Data\СonfidentialImages\...”), which allows a malefactor to gain access to confidential files (such as web.config, he App_Data folder or other files and folders with nonpublic content).
+
+To mitigate this vulnerability, use HttpWebRequest:
+
+```cs
+HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+using(HttpWebResponse response = (HttpWebResponse)request.GetResponse()) { 
+    ...
+}
+```
+
+In this case, an attempt to download a local file will generate an exception.
+
+See the example project's [Controllers/DownloadingFiles/DownloadFileFromUrl.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/DownloadingFiles/DownloadFileFromUrl.cs) file.
+
 
 ---
 

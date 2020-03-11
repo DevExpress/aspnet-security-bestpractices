@@ -14,6 +14,8 @@ The security issues are all shown using a simple Visual Studio solution. Fully c
 - [6. Preventing Cross-Site Scripting (XSS) Attacks with Encoding](#6-preventing-cross-site-scripting-xss-attacks-with-encoding)
 - [7. User Input Validation](#7-user-input-validation)
 - [8. Export to CSV](#8-export-to-csv)
+- [9. Unauthorized Server Operation via Client-Sided API](#9-unauthorized-server-operation-via-client-sided-api)
+- [10. Downloading Files From External URLs](#10-downloading-files-from-external-urls)
 
 ## 1. Uploading Files
 
