@@ -1249,7 +1249,7 @@ See the example projects [ClientSideApi/SpreadsheetReadingModeOnly.aspx](https:/
 
 ### 9.3 File Selector Commands in the ReachEdit and Spreadsheet 
 
-Related Controls: **ASPxReachEdit**, **ASPxSpreadsheet**
+Related Controls: [ASPxReachEdit](https://docs.devexpress.com/AspNet/17721/aspnet-webforms-controls/rich-text-editor), [ASPxSpreadsheet](https://docs.devexpress.com/AspNet/16157/aspnet-webforms-controls/spreadsheet)
 
 In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (New, Open, Save, etc.) In this case, a document is opened and saved programmatically. 
 

@@ -1481,13 +1481,13 @@ See the following article to learn more about CSV injections: [https://www.owasp
 
 ### 9.1. Unauthorized CRUD Operations in the View Mode
 
-**Related Extension**: Grid View, Card View, Vertical Grid, Tree List
+**Related Extension**: [Grid View](https://docs.devexpress.com/AspNet/8966/aspnet-mvc-extensions/grid-view), [Card View](https://docs.devexpress.com/AspNet/114559/aspnet-mvc-extensions/card-view/overview), [Vertical Grid](https://docs.devexpress.com/AspNet/116314/aspnet-mvc-extensions/vertical-grid), [Tree List](https://docs.devexpress.com/AspNet/13765/aspnet-mvc-extensions/tree-list)
 
 Grid-based controls (Grid View, Card View, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call call the [ASPxClientGridView.DeleteRow](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
 
 The best practices to mitigate this vulnerability are:
 
-- If you intend to use a grid-based control in view-only mode, make sure that the it does not have the DeleteRowRouteValues setting specified.
+- If you intend to use a grid-based control in view-only mode, make sure that it does not have the DeleteRowRouteValues setting specified.
 
   ```cs
   //settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ClientSideApi", Action = "GridViewDeletePartial" };
