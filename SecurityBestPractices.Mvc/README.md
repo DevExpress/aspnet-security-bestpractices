@@ -1506,6 +1506,10 @@ The best practices to mitigate this vulnerability are:
 
 > Note that an attacker can call controller methods without a View by making a POST request, as demonstrated in the example application:
 
+![Hidden Column Access](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-hidden-column-access.png?raw=true)
+
+
+
 ### 9.2. Using Spreadsheet in Read-Only Mode
 
 If you intend the Spreadsheet control to work in read-only mode (the `SettingsView.Mode` option is set to "Reading"), make sure that the ability to switch to edit mode is disabled:
