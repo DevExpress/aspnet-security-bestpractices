@@ -301,6 +301,7 @@ protected void ASPxButton1_Click(object sender, EventArgs e) {
 ```
 
 Another strong recommendation is to _always_ specify the exact content type when you add binary data to the response:
+
 **Correct:** `Response.ContentType = "image/jpeg"`;
 
 **Potential security breach:** `Response.ContentType = "image"`.
