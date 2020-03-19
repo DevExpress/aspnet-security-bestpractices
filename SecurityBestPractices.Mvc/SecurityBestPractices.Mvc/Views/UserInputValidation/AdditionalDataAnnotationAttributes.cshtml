@@ -28,8 +28,12 @@
         }).GetHtml()
 
     <hr />
-    <p>ModelState.IsValid: @ViewContext.ViewData.ModelState.IsValid</p>
-    <p>Phone: @Model.Phone</p>
-    <p>StartDate: @Model.StartDate</p>
-    <p>EndDate: @Model.EndDate</p>
+}
+@{
+    if(IsPost) {
+        <p>ModelState.IsValid: @ViewContext.ViewData.ModelState.IsValid</p>
+        <p>Phone: @Model.Phone</p>
+        <p>StartDate: @Model.StartDate</p>
+        <p>EndDate: @Model.EndDate</p>
+    }
 }
