@@ -937,7 +937,7 @@ If filter items are not encoded, an XSS can be performed when a user opens a hea
 
 ### 6.2 Encoding in Templates
 
-If you inject data field values in templates, we recommend that you always [sanitize the data field values](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/Templates.aspx#L17):
+If you inject data field values in templates, we recommend that you always [encode the data field values](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/Templates.aspx#L17):
 
 ```xml
 <asp:Label ID="ProductNameLabel" runat="server"
@@ -968,7 +968,7 @@ When a client displays data received from the server via a callback, a security 
 </dx:ASPxCallback>
 ```
 
-[Server-side code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/Callback.aspx.cs#L14):
+The safe approach is to use `HtmlEncode` in the [server-side code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/Callback.aspx.cs#L14):
 
 ```cs
 protected void Callback_Callback(object source, DevExpress.Web.CallbackEventArgs e) {
@@ -1090,7 +1090,7 @@ If you use the Strict DataSecurity mode, ViewState is disabled and you use perfo
 
 See the example project's [ValidateInput/ListEditors.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ValidateInput/ListEditors.aspx#L8) page.
 
-### 7.4 Disable Inbuilt Request Value Checks
+### 7.4 Disable ASP.NET Inbuilt Request Validation
 
 ASP.NET checks input values for potentially dangerous content. For example, if an end-user types `<b>` into a text input and submits the form, they will be redirected to an error page with the following message:
 
@@ -1218,7 +1218,7 @@ To familiarize yourself with the issue:
 
    ![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/unauthorized-client-crud.png?raw=true)
    
-   This will delete a data row with the index 0. This is possible because the Grid View's data source still exposes a Delete command and the grid's `SettingsDataSecurity.AllowDelete` property is set to the default `True` value.
+   This will delete a data row with the index 0. This is possible because the Grid View's data source still provides access to the Delete statement and the grid's `SettingsDataSecurity.AllowDelete` property is set to the default `True` value.
 
 The best practices to mitigate this vulnerability are:
 

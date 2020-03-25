@@ -1002,7 +1002,7 @@ Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/d
 | JavaScriptEncode    | Sanitizes an untrusted input used within a script         |
 | UrlEncode           | Sanitizes an untrusted input used to generate a URL       |
 
-In ASP.NET MVC, any content inserted into a Razor view via the `@` operator is sanitized by default:
+In ASP.NET MVC, any content inserted into a Razor view via the `@` operator is encoded by default:
 
 ```cs
 <p>Entered value: @Model.ProductName</p>
@@ -1055,7 +1055,7 @@ In the safe configuration, the field's content would be interpreted as text and 
 
 ### 6.2 Encoding in Templates
 
-If you inject data field values in templates, we recommend that you always [sanitize](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeHtmlInTemplatesPartial.cshtml#L14) the data field values:
+If you inject data field values in templates, we recommend that you always [encode](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeHtmlInTemplatesPartial.cshtml#L14) the data field values:
 
 ```cs
 settings.SetItemTemplateContent(
@@ -1071,17 +1071,17 @@ settings.SetItemTemplateContent(
 
 ```
 
-Inserting unsanitized content can open your application for XSS attacks:
+Inserting unencoded content can open your application for XSS attacks:
 
-![Templates - Unsanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-no-encoding.png?raw=true)
+![Templates - Unencoded Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-no-encoding.png?raw=true)
 
 With encoding, the content would be interpreted as text and correctly displayed:
 
-![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-use-encoding.png?raw=true)
+![Templates - Encoded Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-use-encoding.png?raw=true)
 
 By default, DevExpress controls wrap templated contents with a `HttpUtility.HtmlEncode` method call.
 
-### 6.4 Encoding Callback Data
+### 6.3 Encoding Callback Data
 
 When a client displays data received from the server via a callback, a security breach can take place if this data has not been properly encoded. For example, in the [code below](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeAjaxResponse.cshtml), such content is assigned to an element's `innerHTML`:
 
@@ -1102,6 +1102,8 @@ When a client displays data received from the server via a callback, a security 
 <a href="javascript:sendRequest()">Send Ajax Request</a>
 ```
 
+The safe approach is to use `HtmlEncode` in the server-side code.
+
 ##### Controller:
 
 ```cs
@@ -1111,7 +1113,7 @@ public ActionResult EncodeAjaxResponseCallback() {
 }
 ```
 
-### 6.5 Dangerous Links
+### 6.4 Dangerous Links
 
 It is potentially dangerous to use render a hyperlink's HREF attribute using a value from a database or user input.
 
@@ -1317,7 +1319,7 @@ To familiarize yourself with the possible vulnerability:
    }
    ```
 
-2. Run the project and open the **Static/ComboBoxForgeryTest.html** page.
+2. Run the project and open the [Static/ComboBoxForgeryTest.html](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Static/ComboBoxForgeryTest.html) page.
 
 3. Using this page, submit a forged request with the Id=3, which should not be available to an end user.
 
