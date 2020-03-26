@@ -1054,7 +1054,7 @@ It is strongly recommended that you validate values obtained from an end user be
 
 4. Validate the values in the code that directly uses them.
 
-> Note that client validation is for optimization only. To ensure safety, always use client validation in conjunction with server validation.
+> Note that client validation is only server load optimization. To ensure safety, always use client validation in conjunction with server validation.
 
 ![Validation Diagram](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/validation-diagram.png)
 
