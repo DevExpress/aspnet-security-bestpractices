@@ -14,6 +14,9 @@ The security issues are all shown using a simple Visual Studio solution. Fully c
 - [6. Preventing Cross-Site Scripting (XSS) Attacks with Encoding](#6-preventing-cross-site-scripting-xss-attacks-with-encoding)
 - [7. User Input Validation](#7-user-input-validation)
 - [8. Export to CSV](#8-export-to-csv)
+- [9. Unauthorized Server Operation via Client-Sided API](#9-unauthorized-server-operation-via-client-sided-api)
+- [10. Downloading Files From External URLs](#10-downloading-files-from-external-urls)
+
 
 ## 1. Uploading Files
 
@@ -115,6 +118,8 @@ The default file extensions allowed by various controls that allow for file uplo
 
 ### 1.2. Prevent Uncontrolled Resource Consumption
 
+#### 1.2.1 Prevent Uncontrolled Memory Consumption
+
 See the [controller code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/72492709fd0c53fef25414fc77df9a37fc4dc5a7/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UploadingFiles/UploadingFiles.cs#L59-L99) in the **Controllers\UploadingFiles\UploadingFiles.cs** file for a full code sample.
 
 Consider the situation where the web application allows files of any size to be uploaded.
@@ -181,6 +186,36 @@ The File Manager automatically allows files to be uploaded, and does not impose 
 ```
 
 Other operations on files organized by the File Manager (copy, delete, download, etc.) are configured using the [SettingsEditing](http://help.devexpress.com/#AspNet/DevExpressWebMvcFileManagerSettings_SettingsEditingtopic) property. All such operations are disabled by default.
+
+#### 1.2.2 Prevent Uncontrolled Disk Space Consumption
+
+**Security Risks**: [CWE-400](https://cwe.mitre.org/data/definitions/400.html)
+
+You should always monitor the total size of files uploaded by end-users, otherwise a malefactor can perform a DoS attack by uploading too many files and using up the available disk space. The best practice is to set a limitation on the total size of uploaded files.
+
+Check the upload directory size before saving the uploaded files:
+
+```cs
+private void uploadControl_FilesUploadComplete(object sender, FilesUploadCompleteEventArgs e) {
+    var uploadedFiles = ((MVCxUploadControl)sender).UploadedFiles;
+    if(uploadedFiles != null && uploadedFiles.Length > 0) {
+        for(int i = 0; i < uploadedFiles.Length; i++) {
+            UploadedFile file = uploadedFiles[i];
+            if(file.IsValid && file.FileName != "") {
+                using(var stream = file.FileContent) {
+                    // Check limit for total size for uploaded files in upload folder and its sub folders
+                    const long DirectoryFileSizesLimit = 10000000; // bytes
+                    long totalFilesSize = GetDirectoryFileSizes(HostingEnvironment.MapPath("~/UploadingFiles/Images/"));
+                    if(file.ContentLength + totalFilesSize > DirectoryFileSizesLimit) {
+                        file.IsValid = false;
+                         e.ErrorText = "Total files size exceeded!";
+                    } else {
+                        // In case additional checks are needed perform them here before saving the file
+                        if(!IsValidImage(stream)) {
+                        ...
+```
+
+See the example project's [Controllers/UploadingFiles/UploadingFiles.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UploadingFiles/UploadingFiles.cs#L149) file.
 
 ### 1.3. Protect Temporary Files
 
@@ -967,7 +1002,7 @@ Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/d
 | JavaScriptEncode    | Sanitizes an untrusted input used within a script         |
 | UrlEncode           | Sanitizes an untrusted input used to generate a URL       |
 
-In ASP.NET MVC, any content inserted into a Razor view via the `@` operator is sanitized by default:
+In ASP.NET MVC, any content inserted into a Razor view via the `@` operator is encoded by default:
 
 ```cs
 <p>Entered value: @Model.ProductName</p>
@@ -1017,9 +1052,10 @@ In the safe configuration, the field's content would be interpreted as text and 
 
 ![Devexpress Controls - Use Encoding](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-columns-use-encoding.png?raw=true)
 
+
 ### 6.2 Encoding in Templates
 
-If you inject data field values in templates, we recommend that you always [sanitize](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeHtmlInTemplatesPartial.cshtml#L14) the data field values:
+If you inject data field values in templates, we recommend that you always [encode](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeHtmlInTemplatesPartial.cshtml#L14) the data field values:
 
 ```cs
 settings.SetItemTemplateContent(
@@ -1035,17 +1071,17 @@ settings.SetItemTemplateContent(
 
 ```
 
-Inserting unsanitized content can open your application for XSS attacks:
+Inserting unencoded content can open your application for XSS attacks:
 
-![Templates - Unsanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-no-encoding.png?raw=true)
+![Templates - Unencoded Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-no-encoding.png?raw=true)
 
 With encoding, the content would be interpreted as text and correctly displayed:
 
-![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-use-encoding.png?raw=true)
+![Templates - Encoded Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/templates-use-encoding.png?raw=true)
 
 By default, DevExpress controls wrap templated contents with a `HttpUtility.HtmlEncode` method call.
 
-### 6.4 Encoding Callback Data
+### 6.3 Encoding Callback Data
 
 When a client displays data received from the server via a callback, a security breach can take place if this data has not been properly encoded. For example, in the [code below](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeAjaxResponse.cshtml), such content is assigned to an element's `innerHTML`:
 
@@ -1066,6 +1102,8 @@ When a client displays data received from the server via a callback, a security 
 <a href="javascript:sendRequest()">Send Ajax Request</a>
 ```
 
+The safe approach is to use `HtmlEncode` in the server-side code.
+
 ##### Controller:
 
 ```cs
@@ -1075,7 +1113,7 @@ public ActionResult EncodeAjaxResponseCallback() {
 }
 ```
 
-### 6.5 Dangerous Links
+### 6.4 Dangerous Links
 
 It is potentially dangerous to use render a hyperlink's HREF attribute using a value from a database or user input.
 
@@ -1116,7 +1154,7 @@ It is strongly recommended that you validate values obtained from an end user be
 
 4. Validate the values in the code that directly uses them.
 
-> Note that client validation is for optimization only. To ensure safety, always use client validation in conjunction with server validation.
+> Note that client validation is only for server load optimization. To ensure safety, always use client validation in conjunction with server validation.
 
 ![Validation Diagram](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/validation-diagram.png)
 
@@ -1281,7 +1319,7 @@ To familiarize yourself with the possible vulnerability:
    }
    ```
 
-2. Run the project and open the **Static/ComboBoxForgeryTest.html** page.
+2. Run the project and open the [Static/ComboBoxForgeryTest.html](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Static/ComboBoxForgeryTest.html) page.
 
 3. Using this page, submit a forged request with the Id=3, which should not be available to an end user.
 
@@ -1436,6 +1474,116 @@ Chang,24 - 12 oz bottles,$19.00,17,$323.00, 5%
 Because Excel requires a user's permission to run executable content, we do not enable this setting by default and allow a user to enable this settings if it suites the use case.
 
 See the following article to learn more about CSV injections: [https://www.owasp.org/index.php/CSV_Injection](https://www.owasp.org/index.php/CSV_Injection)
+
+---
+
+## 9. Unauthorized Server Operation via Client-Sided API
+
+**Security Risks**: [CWE-284](https://cwe.mitre.org/data/definitions/284.html), [CWE-285](https://cwe.mitre.org/data/definitions/285.html)
+
+### 9.1. Unauthorized CRUD Operations in the View Mode
+
+**Related Extension**: [Grid View](https://docs.devexpress.com/AspNet/8966/aspnet-mvc-extensions/grid-view), [Card View](https://docs.devexpress.com/AspNet/114559/aspnet-mvc-extensions/card-view/overview), [Vertical Grid](https://docs.devexpress.com/AspNet/116314/aspnet-mvc-extensions/vertical-grid), [Tree List](https://docs.devexpress.com/AspNet/13765/aspnet-mvc-extensions/tree-list)
+
+Grid-based controls (Grid View, Card View, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call the [ASPxClientGridView.DeleteRow](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
+
+The best practices to mitigate this vulnerability are:
+
+- If you intend to use a grid-based control in view-only mode, make sure that it does not have the DeleteRowRouteValues setting specified.
+
+  ```cs
+  //settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "ClientSideApi", Action = "GridViewDeletePartial" };
+  ```
+
+- The controller does not have CRUD method as the one shown below:
+
+  ```cs
+  //[HttpPost]
+  //public ActionResult GridViewDeletePartial(int id = -1) {
+  //    if(id >= 0)
+  //        EditFormItems.Delete(id);
+  //    return GridViewPartial();
+  //}
+  ```
+
+> Note that an attacker can call controller methods without a View by making a POST request, as demonstrated in the example application:
+
+![Hidden Column Access](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-hidden-column-access.png?raw=true)
+
+
+
+### 9.2. Using Spreadsheet in Read-Only Mode
+
+If you intend the Spreadsheet control to work in read-only mode (the `SettingsView.Mode` option is set to "Reading"), make sure that the ability to switch to edit mode is disabled:
+
+```cs
+settings.Settings.Behavior.SwitchViewModes = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+```
+
+It is also recommended that you set the `ReadOnly` property to true:
+
+```cs
+settings.ReadOnly = true;
+```
+
+See the example projects [Views/ClientSideApi/SpreadsheetReadingModeOnlyPartial.cshtml](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/ClientSideApi/SpreadsheetReadingModeOnlyPartial.cshtml#L16-L18) file.
+
+
+### 9.3 File Selector Commands in the ReachEdit and Spreadsheet
+
+In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (New, Open, Save, etc.) In this case, a document is opened and saved programmatically. 
+
+Note that it is not enough to just hide the File tab because the commands from this tab can still be executed using JavaScript or keyboard shortcuts (for example, the Ctrl+O shortcut can invoke the Open dialog).
+
+When you want to disable file-related commands, the best practice is to also disable file operations by disabling the corresponding Behavior options (CreateNew, Open, Save, SaveAs, SwitchViewModes).
+
+##### Spreadsheet 
+
+```cs
+// Disable File Selector operations
+settings.Settings.Behavior.CreateNew = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+settings.Settings.Behavior.Open = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+settings.Settings.Behavior.Save = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+settings.Settings.Behavior.SaveAs = DevExpress.XtraSpreadsheet.DocumentCapability.Hidden;
+```
+
+##### Rich Edit
+
+```cs
+// Disable File Selector operations
+settings.Settings.Behavior.CreateNew = DevExpress.XtraRichEdit.DocumentCapability.Hidden;
+settings.Settings.Behavior.Open = DevExpress.XtraRichEdit.DocumentCapability.Hidden;
+settings.Settings.Behavior.Save = DevExpress.XtraRichEdit.DocumentCapability.Hidden;
+settings.Settings.Behavior.SaveAs = DevExpress.XtraRichEdit.DocumentCapability.Hidden;
+```
+---
+
+## 10. Downloading Files From External URLs
+
+Consider a use-case scenario when an web application receives a URL from an end-user, downloads an image file from this URL and saves the file in a database. This file is then displayed on the application's page using the Binary Image extension.
+
+It is often suggested to use the WebClient class to download a file in this scenario:
+
+```cs
+using(var webClient = new WebClient())
+    BinaryImage.ContentBytes = webClient.DownloadData(url);
+```
+
+However, this is unsafe because the WebClient can accept a path to a local resource on the server (for example, “c:\...\App_Data\ConfidentialImages\...”), which allows a malefactor to gain access to confidential files (such as web.config, the App_Data folder or other files and folders with nonpublic content).
+
+To mitigate this vulnerability, use HttpWebRequest:
+
+```cs
+HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+using(HttpWebResponse response = (HttpWebResponse)request.GetResponse()) { 
+    ...
+}
+```
+
+In this case, an attempt to download a local file will generate an exception.
+
+See the example project's [Controllers/DownloadingFiles/DownloadFileFromUrl.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/DownloadingFiles/DownloadFileFromUrl.cs) file.
+
 
 ---
 

@@ -14,6 +14,8 @@ The security issues are all shown using a simple Visual Studio solution. Fully c
 - [6. Preventing Cross-Site Scripting (XSS) Attacks with Encoding](#6-preventing-cross-site-scripting-xss-attacks-with-encoding)
 - [7. User Input Validation](#7-user-input-validation)
 - [8. Export to CSV](#8-export-to-csv)
+- [9. Unauthorized Server Operation via Client-Sided API](#9-unauthorized-server-operation-via-client-sided-api)
+- [10. Downloading Files From External URLs](#10-downloading-files-from-external-urls)
 
 ## 1. Uploading Files
 
@@ -106,6 +108,8 @@ The default file extensions allowed by various controls that allow for file uplo
 
 ### 1.2. Prevent Uncontrolled Resource Consumption
 
+#### 1.2.1 Prevent Uncontrolled Memory Consumption
+
 Visit the **[UploadingFiles/UploadControlMemory.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/UploadControlMemory.aspx.cs)** page for a full code sample.
 
 Consider the situation where the web application allows files of any size to be uploaded.
@@ -152,6 +156,32 @@ The File Manager control automatically allows files to be uploaded, and does not
 
 Other operations on files organized by the File Manager (copy, delete, download, etc.) are configured using the [SettingsEditing](http://help.devexpress.com/#AspNet/DevExpressWebASPxFileManager_SettingsEditingtopic) property. All such operations are disabled by default.
 
+#### 1.2.2 Prevent Uncontrolled Disk Space Consumption
+
+**Security Risks**: [CWE-400](https://cwe.mitre.org/data/definitions/400.html)
+
+You should always monitor the total size of files uploaded by end-users, otherwise a malefactor can perform a DoS attack by uploading too many files and using up the available disk space. The best practice is to set a limitation on the total size of uploaded files.
+
+For example, check the upload directory's size in the [Upload Control](https://docs.devexpress.com/AspNet/8298/aspnet-webforms-controls/file-management/file-upload)'s [FilesUploadComplete](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxUploadControl.FilesUploadComplete) event handler:
+
+```cs 
+protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
+    if(uploadControl.UploadedFiles != null && uploadControl.UploadedFiles.Length > 0) {
+        for(int i = 0; i < uploadControl.UploadedFiles.Length; i++) {
+            UploadedFile file = uploadControl.UploadedFiles[i];
+            if(file.IsValid && file.FileName != "") {
+                // Check the upload folder's size taking into account the new files.
+                const long DirectoryFileSizesLimit = 10000000; // bytes
+                long totalFilesSize = GetDirectoryFileSizes(MapPath("~/UploadingFiles/Images/"));
+                if(file.ContentLength + totalFilesSize > DirectoryFileSizesLimit) {
+                    file.IsValid = false;
+                    e.ErrorText = "Total files size exceeded!";
+                } else {
+    ...
+
+```
+See the example project's [UploadingFiles/LimitDirectorySize.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/LimitDirectorySize.aspx.cs) file.
+
 ### 1.3. Protect Temporary Files
 
 Visit the **[UploadingFiles/UploadControlTempFileName.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/UploadControlTempFileName.aspx.cs)** page for a full code sample.
@@ -177,6 +207,10 @@ protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.F
                 file.SaveAs(fileName, true);
                 // DoFileProcessing(fileName);
                 ...
+            }
+        }
+    }
+}
 
 ```
 
@@ -267,7 +301,9 @@ protected void ASPxButton1_Click(object sender, EventArgs e) {
 ```
 
 Another strong recommendation is to _always_ specify the exact content type when you add binary data to the response:
+
 **Correct:** `Response.ContentType = "image/jpeg"`;
+
 **Potential security breach:** `Response.ContentType = "image"`.
 
 Additionally, it is a good practice to add the `X-CONTENT-TYPE-OPTIONS="nosniff"` response header:
@@ -872,9 +908,36 @@ In the safe configuration, the field's content would be interpreted as text and 
 
 ![Devexpress Controls - Use Encoding](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-columns-use-encoding.png?raw=true)
 
+#### 6.1.1 Encoding Header Filter Items
+
+**Related Controls**: [ASPxGridView](https://docs.devexpress.com/AspNet/5823/aspnet-webforms-controls/grid-view), [ASPxCardView](https://docs.devexpress.com/AspNet/114048/aspnet-webforms-controls/card-view), [ASPxVerticalGrid](https://docs.devexpress.com/AspNet/116045/aspnet-webforms-controls/vertical-grid), [ASPxTreeList](https://docs.devexpress.com/AspNet/7928/aspnet-webforms-controls/tree-list)
+
+You should always encode (wrap with the HttpUtility.HtmlEncode method call) filter items that are obtained from an unsafe data source or specified by an end user.
+
+```cs
+ASPxGridViewHeaderFilterEventArgs e) {
+    if(e.Column.FieldName == "ProductName") {
+        e.Values.Clear();
+        // Adding custom values from an unsafe data source
+
+        // Safe approach - Display Text is encoded
+        e.AddValue(HttpUtility.HtmlEncode("<b>T</b>est <img src=1 onerror=alert('XSS') />"), "1");
+
+        // Unsafe approach - Display Text is not encoded
+        //e.AddValue("<b>T</b>est <img src=1 onerror=alert('XSS') />", "1");
+    }
+}
+```
+
+See the example project's [HtmlEncoding/EncodeHtml.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/EncodeHtml.aspx.cs#L18) file.
+
+If filter items are not encoded, an XSS can be performed when a user opens a header filter dropdown:
+
+![Templates - Unsanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/header-filter-item-encoding.png?raw=true)
+
 ### 6.2 Encoding in Templates
 
-If you inject data field values in templates, we recommend that you always [sanitize the data field values](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/Templates.aspx#L17):
+If you inject data field values in templates, we recommend that you always [encode the data field values](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/Templates.aspx#L17):
 
 ```xml
 <asp:Label ID="ProductNameLabel" runat="server"
@@ -905,7 +968,7 @@ When a client displays data received from the server via a callback, a security 
 </dx:ASPxCallback>
 ```
 
-[Server-side code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/Callback.aspx.cs#L14):
+The safe approach is to use `HtmlEncode` in the [server-side code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/Callback.aspx.cs#L14):
 
 ```cs
 protected void Callback_Callback(object source, DevExpress.Web.CallbackEventArgs e) {
@@ -991,7 +1054,7 @@ It is strongly recommended that you validate values obtained from an end user be
 
 4. Validate the values in the code that directly uses them.
 
-> Note that client validation is for optimization only. To ensure safety, always use client validation in conjunction with server validation.
+> Note that client validation is only server load optimization. To ensure safety, always use client validation in conjunction with server validation.
 
 ![Validation Diagram](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/validation-diagram.png)
 
@@ -1027,7 +1090,7 @@ If you use the Strict DataSecurity mode, ViewState is disabled and you use perfo
 
 See the example project's [ValidateInput/ListEditors.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ValidateInput/ListEditors.aspx#L8) page.
 
-### 7.4 Disable Inbuilt Request Value Checks
+### 7.4 Disable ASP.NET Inbuilt Request Validation
 
 ASP.NET checks input values for potentially dangerous content. For example, if an end-user types `<b>` into a text input and submits the form, they will be redirected to an error page with the following message:
 
@@ -1126,6 +1189,135 @@ Chang,24 - 12 oz bottles,$19.00,17,$323.00, 5%
 Because Excel requires a user's permission to run executable content, we do not enable this setting by default and allow a user to enable this settings if it suites the use case.
 
 See the following article to learn more about CSV injections: [https://www.owasp.org/index.php/CSV_Injection](https://www.owasp.org/index.php/CSV_Injection)
+
+---
+
+## 9. Unauthorized Server Operation via Client-Sided API
+
+**Security Risks**: [CWE-284](https://cwe.mitre.org/data/definitions/284.html), [CWE-285](https://cwe.mitre.org/data/definitions/285.html)
+
+### 9.1. Unauthorized CRUD Operations in the View Mode
+
+See the example project's [ClientSideApi/GridView.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/GridView.aspx) page. 
+
+Grid-based controls (ASPxGridView, ASPxCardView, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call the [ASPxClientGridView.DeleteRow](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
+
+To familiarize yourself with the issue:
+
+1. Comment out the following line in the example project's [ClientSideApi/GridView.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/GridView.aspx) file:
+
+   ```aspx
+   <SettingsDataSecurity AllowEdit="False" AllowInsert="False" AllowDelete="False" AllowReadUnexposedColumnsFromClientApi="False" />
+   ```
+
+2. Open this page in the browser and click the **DeleteRow(0)** button or type the following code in the browser's console:
+
+   ```js
+   >gridView.DeleteRow(0)
+   ```
+
+   ![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/unauthorized-client-crud.png?raw=true)
+   
+   This will delete a data row with the index 0. This is possible because the Grid View's data source still provides access to the Delete statement and the grid's `SettingsDataSecurity.AllowDelete` property is set to the default `True` value.
+
+The best practices to mitigate this vulnerability are:
+
+- If you intend to use a grid-based control in view-only mode, make sure that its data source does not allow data editing (for example a SqlDataSource does not have DeleteCommand, InsertCommand and UpdateCommand). 
+
+- Disable CRUD operations on the control level using the control's [SettingsDataSecurity](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridView.SettingsDataSecurity) property:
+
+  ```aspx
+  <SettingsDataSecurity AllowEdit="False" AllowInsert="False" AllowDelete="False" />
+  ```
+
+### 9.2. Using Spreadsheet in Read-Only Mode
+
+If you intend the Spreadsheet control to work in read-only mode (the `SettingsView.Mode` option is set to "Reading"), make sure that the ability to switch to edit mode is disabled:
+
+```aspx
+<Settings>
+    <Behavior SwitchViewModes="Hidden" />
+</Settings>
+```
+
+It is also recommended that you set the `ReadOnly` property to true:
+
+```cs
+spreadsheet.ReadOnly="true"
+```
+
+See the example projects [ClientSideApi/SpreadsheetReadingModeOnly.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/SpreadsheetReadingModeOnly.aspx) page.
+
+
+### 9.3 File Selector Commands in the ReachEdit and Spreadsheet 
+
+Related Controls: [ASPxReachEdit](https://docs.devexpress.com/AspNet/17721/aspnet-webforms-controls/rich-text-editor), [ASPxSpreadsheet](https://docs.devexpress.com/AspNet/16157/aspnet-webforms-controls/spreadsheet)
+
+In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (New, Open, Save, etc.) In this case, a document is opened and saved programmatically. 
+
+Note that it is not enough to just hide the File tab because the commands from this tab can still be executed using JavaScript or keyboard shortcuts (for example, the Ctrl+O shortcut can invoke the Open dialog).
+
+When you want to disable file-related commands, the best practice is to also disable file operations by disabling the corresponding Behavior options (CreateNew, Open, Save, SaveAs, SwitchViewModes).
+
+##### ASPxSpreadsheet:
+
+```aspx
+<dx:ASPxSpreadsheet ID="spreadsheet" runat="server" WorkDirectory="~/App_Data/WorkDirectory">
+    <Settings>
+        <Behavior CreateNew="Hidden" Open="Hidden" Save="Hidden" SaveAs="Hidden" SwitchViewModes="Hidden"/>
+    </Settings>
+</dx:ASPxSpreadsheet>
+
+```
+
+##### ASPxRichEdit:
+
+```aspx
+<dx:ASPxRichEdit ID="ASPxRichEdit1" runat="server" WorkDirectory="~\App_Data\WorkDirectory">
+    <Settings>
+        <Behavior CreateNew="Hidden" Open="Hidden" Save="Hidden" SaveAs="Hidden" ></Behavior>
+    </Settings>
+</dx:ASPxRichEdit>
+```
+
+To familiarize yourself with the vulnerability, open the example project's [ClientSideApi/FileSelector.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/OfficeControlsFileOperations.aspx) file and comment out the following line:
+
+```aspx
+<Behavior CreateNew="Hidden" Open="Hidden" Save="Hidden" SaveAs="Hidden" SwitchViewModes="Hidden"/>
+```
+
+Run the application and open the page. Now, if you press Ctrl+O, the Open dialog will be invoked despite the fact that the File tab is hidden.
+
+![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/spreadsheet-file-selector.png?raw=true)
+
+---
+
+## 10. Downloading Files From External URLs
+
+Consider a use-case scenario when an web application receives a URL from an end-user, downloads an image file from this URL and saves the file in a database. This file is then displayed on the application's page using the ASPxBinaryImage control.
+
+It is often suggested to use the WebClient class to download a file in this scenario:
+
+```cs
+using(var webClient = new WebClient())
+    BinaryImage.ContentBytes = webClient.DownloadData(url);
+```
+
+However, this is unsafe because the WebClient can accept a path to a local resource on the server (for example, “c:\...\App_Data\ConfidentialImages\...”), which allows a malefactor to gain access to confidential files (such as web.config, the App_Data folder or other files and folders with nonpublic content).
+
+To mitigate this vulnerability, use HttpWebRequest:
+
+```cs
+HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+using(HttpWebResponse response = (HttpWebResponse)request.GetResponse()) { 
+    ...
+}
+```
+
+In this case, an attempt to download a local file will generate an exception.
+
+See the example project's [DownloadingFiles/DownloadFileFromUrl.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/DownloadingFiles/DownloadFileFromUrl.aspx.cs) file.
+
 
 ---
 
