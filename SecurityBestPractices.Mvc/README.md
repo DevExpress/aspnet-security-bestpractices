@@ -1485,7 +1485,7 @@ See the following article to learn more about CSV injections: [https://www.owasp
 
 **Related Extension**: [Grid View](https://docs.devexpress.com/AspNet/8966/aspnet-mvc-extensions/grid-view), [Card View](https://docs.devexpress.com/AspNet/114559/aspnet-mvc-extensions/card-view/overview), [Vertical Grid](https://docs.devexpress.com/AspNet/116314/aspnet-mvc-extensions/vertical-grid), [Tree List](https://docs.devexpress.com/AspNet/13765/aspnet-mvc-extensions/tree-list)
 
-Grid-based controls (Grid View, Card View, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call call the [ASPxClientGridView.DeleteRow](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
+Grid-based controls (Grid View, Card View, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call the [ASPxClientGridView.DeleteRow](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
 
 The best practices to mitigate this vulnerability are:
 
@@ -1569,7 +1569,7 @@ using(var webClient = new WebClient())
     BinaryImage.ContentBytes = webClient.DownloadData(url);
 ```
 
-However, this is unsafe because the WebClient can accept a path to a local resource on the server (for example, “c:\...\App_Data\СonfidentialImages\...”), which allows a malefactor to gain access to confidential files (such as web.config, he App_Data folder or other files and folders with nonpublic content).
+However, this is unsafe because the WebClient can accept a path to a local resource on the server (for example, “c:\...\App_Data\ConfidentialImages\...”), which allows a malefactor to gain access to confidential files (such as web.config, the App_Data folder or other files and folders with nonpublic content).
 
 To mitigate this vulnerability, use HttpWebRequest:
 

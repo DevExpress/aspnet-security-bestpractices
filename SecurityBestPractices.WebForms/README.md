@@ -1200,7 +1200,7 @@ See the following article to learn more about CSV injections: [https://www.owasp
 
 See the example project's [ClientSideApi/GridView.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/GridView.aspx) page. 
 
-Grid-based controls (ASPxGridView, ASPxCardView, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call call the [ASPxClientGridView.DeleteRow](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
+Grid-based controls (ASPxGridView, ASPxCardView, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call the [ASPxClientGridView.DeleteRow](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
 
 To familiarize yourself with the issue:
 
@@ -1303,7 +1303,7 @@ using(var webClient = new WebClient())
     BinaryImage.ContentBytes = webClient.DownloadData(url);
 ```
 
-However, this is unsafe because the WebClient can accept a path to a local resource on the server (for example, “c:\...\App_Data\СonfidentialImages\...”), which allows a malefactor to gain access to confidential files (such as web.config, he App_Data folder or other files and folders with nonpublic content).
+However, this is unsafe because the WebClient can accept a path to a local resource on the server (for example, “c:\...\App_Data\ConfidentialImages\...”), which allows a malefactor to gain access to confidential files (such as web.config, the App_Data folder or other files and folders with nonpublic content).
 
 To mitigate this vulnerability, use HttpWebRequest:
 
