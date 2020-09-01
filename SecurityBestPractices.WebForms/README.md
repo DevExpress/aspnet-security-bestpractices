@@ -164,7 +164,7 @@ You should always monitor the total size of files uploaded by end-users, otherwi
 
 For example, check the upload directory's size in the [Upload Control](https://docs.devexpress.com/AspNet/8298/aspnet-webforms-controls/file-management/file-upload)'s [FilesUploadComplete](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxUploadControl.FilesUploadComplete) event handler:
 
-```cs 
+```cs
 protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
     if(uploadControl.UploadedFiles != null && uploadControl.UploadedFiles.Length > 0) {
         for(int i = 0; i < uploadControl.UploadedFiles.Length; i++) {
@@ -180,6 +180,7 @@ protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.F
     ...
 
 ```
+
 See the example project's [UploadingFiles/LimitDirectorySize.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/LimitDirectorySize.aspx.cs) file.
 
 ### 1.3. Protect Temporary Files
@@ -642,7 +643,7 @@ DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<D
 
 **Security Risks**: [CWE-352](https://cwe.mitre.org/data/definitions/352.html)
 
-This section provides information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects those controls that support data editing through AJAX. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References (for example: _example.com/app/SecureReport.aspx?id=1_), they do not protect you from CSRF attacks.
+This section provides information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects applications performing data editing POST requests including those using DevExpress AJAX-enabled controls such as the Grid View. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References (for example: _example.com/app/SecureReport.aspx?id=1_), they do not protect you from CSRF attacks.
 
 The possible security breach could occur as follows:
 
@@ -778,7 +779,7 @@ Refer to the example project's [InformationExposure/ErrorMessage.aspx.cs](https:
 This vulnerability is associated with grid-based controls. Consider a situation, in which a control has a hidden column bound to some sensitive data that is not displayed to an end-user and is only used on the server. A malefactor can still request a value of such column using the control's client API:
 
 ```js
-gridView.GetRowValues(0, "UnitPrice", function(Value) {
+gridView.GetRowValues(0, "UnitPrice", function (Value) {
   alert(Value);
 });
 ```
@@ -800,7 +801,7 @@ AllowReadUnexposedColumnsFromClientApi = "False";
 Another vulnerability can occur when a malefactor tries to get a row value for a data field for which there is no column in the control:
 
 ```js
-gridView.GetRowValues(0, "GuidField", function(Value) {
+gridView.GetRowValues(0, "GuidField", function (Value) {
   alert(Value);
 });
 ```
@@ -1198,9 +1199,9 @@ See the following article to learn more about CSV injections: [https://www.owasp
 
 ### 9.1. Unauthorized CRUD Operations in the View Mode
 
-See the example project's [ClientSideApi/GridView.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/GridView.aspx) page. 
+See the example project's [ClientSideApi/GridView.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/GridView.aspx) page.
 
-Grid-based controls (ASPxGridView, ASPxCardView, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call the [ASPxClientGridView.DeleteRow](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
+Grid-based controls (ASPxGridView, ASPxCardView, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call the [ASPxClientGridView.DeleteRow](<https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)>) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
 
 To familiarize yourself with the issue:
 
@@ -1217,12 +1218,12 @@ To familiarize yourself with the issue:
    ```
 
    ![Templates - Sanitized Content](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/unauthorized-client-crud.png?raw=true)
-   
+
    This will delete a data row with the index 0. This is possible because the Grid View's data source still provides access to the Delete statement and the grid's `SettingsDataSecurity.AllowDelete` property is set to the default `True` value.
 
 The best practices to mitigate this vulnerability are:
 
-- If you intend to use a grid-based control in view-only mode, make sure that its data source does not allow data editing (for example a SqlDataSource does not have DeleteCommand, InsertCommand and UpdateCommand). 
+- If you intend to use a grid-based control in view-only mode, make sure that its data source does not allow data editing (for example a SqlDataSource does not have DeleteCommand, InsertCommand and UpdateCommand).
 
 - Disable CRUD operations on the control level using the control's [SettingsDataSecurity](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridView.SettingsDataSecurity) property:
 
@@ -1248,12 +1249,11 @@ spreadsheet.ReadOnly="true"
 
 See the example projects [ClientSideApi/SpreadsheetReadingModeOnly.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/SpreadsheetReadingModeOnly.aspx) page.
 
-
-### 9.3 File Selector Commands in the ReachEdit and Spreadsheet 
+### 9.3 File Selector Commands in the ReachEdit and Spreadsheet
 
 Related Controls: [ASPxReachEdit](https://docs.devexpress.com/AspNet/17721/aspnet-webforms-controls/rich-text-editor), [ASPxSpreadsheet](https://docs.devexpress.com/AspNet/16157/aspnet-webforms-controls/spreadsheet)
 
-In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (New, Open, Save, etc.) In this case, a document is opened and saved programmatically. 
+In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (New, Open, Save, etc.) In this case, a document is opened and saved programmatically.
 
 Note that it is not enough to just hide the File tab because the commands from this tab can still be executed using JavaScript or keyboard shortcuts (for example, the Ctrl+O shortcut can invoke the Open dialog).
 
@@ -1309,7 +1309,7 @@ To mitigate this vulnerability, use HttpWebRequest:
 
 ```cs
 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-using(HttpWebResponse response = (HttpWebResponse)request.GetResponse()) { 
+using(HttpWebResponse response = (HttpWebResponse)request.GetResponse()) {
     ...
 }
 ```
@@ -1317,7 +1317,6 @@ using(HttpWebResponse response = (HttpWebResponse)request.GetResponse()) {
 In this case, an attempt to download a local file will generate an exception.
 
 See the example project's [DownloadingFiles/DownloadFileFromUrl.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/DownloadingFiles/DownloadFileFromUrl.aspx.cs) file.
-
 
 ---
 
