@@ -703,7 +703,7 @@ DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<D
 
 **Security Risks**: [CWE-352](https://cwe.mitre.org/data/definitions/352.html)
 
-This section provides information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects applications performing data editing POST requests including those using DevExpress AJAX-enabled controls such as the Grid View. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References (for example: _example.com/app/SecureReport.aspx?id=1_), they do not protect you from CSRF attacks.
+This section provides information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects applications performing POST requests including those using DevExpress AJAX-enabled controls such as the Grid View. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References (for example: _example.com/app/SecureReport.aspx?id=1_), they do not protect you from CSRF attacks.
 
 The possible security breach could occur as follows:
 
