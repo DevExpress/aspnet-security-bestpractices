@@ -17,7 +17,6 @@ The security issues are all shown using a simple Visual Studio solution. Fully c
 - [9. Unauthorized Server Operation via Client-Sided API](#9-unauthorized-server-operation-via-client-sided-api)
 - [10. Downloading Files From External URLs](#10-downloading-files-from-external-urls)
 
-
 ## 1. Uploading Files
 
 **Related extensions**: [Binary Image](https://documentation.devexpress.com/AspNet/9010/ASP-NET-MVC-Extensions/Data-Editors-Extensions/BinaryImage/Overview/Overview-BinaryImage), [Upload Control](https://documentation.devexpress.com/AspNet/9002/ASP-NET-MVC-Extensions/File-Management/File-Upload/Overview/Overview-UploadControl), [File Manager](https://documentation.devexpress.com/AspNet/15115/ASP-NET-MVC-Extensions/File-Management/File-Manager/Overview/Overview-FileManager), [Html Editor](https://documentation.devexpress.com/AspNet/8999/ASP-NET-MVC-Extensions/HTML-Editor/Overview/Overview-HtmlEditor), [Rich Edit](https://documentation.devexpress.com/AspNet/114046/ASP-NET-MVC-Extensions/Rich-Text-Editor/Overview/Overview-Rich-Text-Editor), [Spreadsheet](https://documentation.devexpress.com/AspNet/17114/ASP-NET-MVC-Extensions/Spreadsheet/Overview/Overview-Spreadsheet)
@@ -704,7 +703,7 @@ DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<D
 
 **Security Risks**: [CWE-352](https://cwe.mitre.org/data/definitions/352.html)
 
-This section provides information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects applications performing data editing requests including those using DevExpress AJAX-enabled controls such as the Grid View. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References (for example: _example.com/app/SecureReport.aspx?id=1_), they do not protect you from CSRF attacks.
+This section provides information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects applications performing POST requests including those using DevExpress AJAX-enabled controls such as the Grid View. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References (for example: _example.com/app/SecureReport.aspx?id=1_), they do not protect you from CSRF attacks.
 
 The possible security breach could occur as follows:
 
@@ -925,7 +924,7 @@ public ActionResult FormWithErrorMessage(EditFormItem item) {
 This vulnerability is associated with grid-based controls. Consider a situation, in which a control has a hidden column bound to some sensitive data that is not displayed to an end-user and is only used on the server. A malefactor can still request a value of such column using the control's client API:
 
 ```js
-gridView.GetRowValues(0, "UnitPrice", function(Value) {
+gridView.GetRowValues(0, "UnitPrice", function (Value) {
   alert(Value);
 });
 ```
@@ -947,7 +946,7 @@ See the example project's [Views/ClientSideApi/GridView.cshtml](https://github.c
 Another vulnerability can occur when a malefactor tries to get a row value for a data field for which there is no column in the control:
 
 ```js
-gridView.GetRowValues(0, "GuidField", function(Value) {
+gridView.GetRowValues(0, "GuidField", function (Value) {
   alert(Value);
 });
 ```
@@ -1052,7 +1051,6 @@ In the safe configuration, the field's content would be interpreted as text and 
 
 ![Devexpress Controls - Use Encoding](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-columns-use-encoding.png?raw=true)
 
-
 ### 6.2 Encoding in Templates
 
 If you inject data field values in templates, we recommend that you always [encode](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/HtmlEncoding/EncodeHtmlInTemplatesPartial.cshtml#L14) the data field values:
@@ -1093,9 +1091,9 @@ When a client displays data received from the server via a callback, a security 
     $.ajax({
       type: "POST",
       url: '@Url.Action("EncodeAjaxResponseCallback", "HtmlEncoding")',
-      success: function(response) {
+      success: function (response) {
         $("#content").html(response);
-      }
+      },
     });
   }
 </script>
@@ -1414,9 +1412,7 @@ SVG markup can contain scripts that will be executed if this SVG is inlined into
   </script></svg
 >;
 
-<div style="width:100px;">
-  @Html.Raw(svgImageWithJavaScriptCode)
-</div>
+<div style="width:100px;">@Html.Raw(svgImageWithJavaScriptCode)</div>
 }
 ```
 
@@ -1485,7 +1481,7 @@ See the following article to learn more about CSV injections: [https://www.owasp
 
 **Related Extension**: [Grid View](https://docs.devexpress.com/AspNet/8966/aspnet-mvc-extensions/grid-view), [Card View](https://docs.devexpress.com/AspNet/114559/aspnet-mvc-extensions/card-view/overview), [Vertical Grid](https://docs.devexpress.com/AspNet/116314/aspnet-mvc-extensions/vertical-grid), [Tree List](https://docs.devexpress.com/AspNet/13765/aspnet-mvc-extensions/tree-list)
 
-Grid-based controls (Grid View, Card View, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call the [ASPxClientGridView.DeleteRow](https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
+Grid-based controls (Grid View, Card View, etc.) expose client methods that trigger CRUD operations on the server. For example, you can call the [ASPxClientGridView.DeleteRow](<https://docs.devexpress.com/AspNet/js-ASPxClientGridView.DeleteRow(visibleIndex)>) method on the client to delete a grid row. If a control is configured incorrectly, these methods can be used to alter data even if the control is intended to display data in view-only mode (the data editting UI is hidden).
 
 The best practices to mitigate this vulnerability are:
 
@@ -1510,8 +1506,6 @@ The best practices to mitigate this vulnerability are:
 
 ![Hidden Column Access](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-hidden-column-access.png?raw=true)
 
-
-
 ### 9.2. Using Spreadsheet in Read-Only Mode
 
 If you intend the Spreadsheet control to work in read-only mode (the `SettingsView.Mode` option is set to "Reading"), make sure that the ability to switch to edit mode is disabled:
@@ -1528,16 +1522,15 @@ settings.ReadOnly = true;
 
 See the example projects [Views/ClientSideApi/SpreadsheetReadingModeOnlyPartial.cshtml](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/ClientSideApi/SpreadsheetReadingModeOnlyPartial.cshtml#L16-L18) file.
 
-
 ### 9.3 File Selector Commands in the ReachEdit and Spreadsheet
 
-In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (New, Open, Save, etc.) In this case, a document is opened and saved programmatically. 
+In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (New, Open, Save, etc.) In this case, a document is opened and saved programmatically.
 
 Note that it is not enough to just hide the File tab because the commands from this tab can still be executed using JavaScript or keyboard shortcuts (for example, the Ctrl+O shortcut can invoke the Open dialog).
 
 When you want to disable file-related commands, the best practice is to also disable file operations by disabling the corresponding Behavior options (CreateNew, Open, Save, SaveAs, SwitchViewModes).
 
-##### Spreadsheet 
+##### Spreadsheet
 
 ```cs
 // Disable File Selector operations
@@ -1556,6 +1549,7 @@ settings.Settings.Behavior.Open = DevExpress.XtraRichEdit.DocumentCapability.Hid
 settings.Settings.Behavior.Save = DevExpress.XtraRichEdit.DocumentCapability.Hidden;
 settings.Settings.Behavior.SaveAs = DevExpress.XtraRichEdit.DocumentCapability.Hidden;
 ```
+
 ---
 
 ## 10. Downloading Files From External URLs
@@ -1575,7 +1569,7 @@ To mitigate this vulnerability, use HttpWebRequest:
 
 ```cs
 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-using(HttpWebResponse response = (HttpWebResponse)request.GetResponse()) { 
+using(HttpWebResponse response = (HttpWebResponse)request.GetResponse()) {
     ...
 }
 ```
@@ -1583,7 +1577,6 @@ using(HttpWebResponse response = (HttpWebResponse)request.GetResponse()) {
 In this case, an attempt to download a local file will generate an exception.
 
 See the example project's [Controllers/DownloadingFiles/DownloadFileFromUrl.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/DownloadingFiles/DownloadFileFromUrl.cs) file.
-
 
 ---
 
