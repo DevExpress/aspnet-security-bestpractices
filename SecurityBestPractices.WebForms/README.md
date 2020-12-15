@@ -814,7 +814,7 @@ When it comes to protecting a grid control's data source data, a general recomme
 
 ### 5.3 Information Exposure Through Source Code
 
-**Security Risks**: [CWE-540](https://cwe.mitre.org/data/definitions/540.html)
+**Security Risks**: [CWE-540](https://cwe.mitre.org/data/definitions/540.html), [CWE-615](https://cwe.mitre.org/data/definitions/615.html)
 
 The DevExpress default HTTP handler (DXR.axd) serves static files including images, scripts and styles. We assume that these static files are intended for public access and do not expose any sensitive information or server-side code. However there are additional recommendation for writing custom scripts and styles:
 
