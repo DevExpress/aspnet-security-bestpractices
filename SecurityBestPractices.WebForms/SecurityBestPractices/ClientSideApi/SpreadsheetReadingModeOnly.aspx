@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SpreadsheetReadingModeOnly.aspx.cs" Inherits="SecurityBestPractices.ClientSideApi.SpreadsheetReadingModeOnly" %>
 
-<%@ Register assembly="DevExpress.Web.ASPxSpreadsheet.v19.2, Version=19.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.Web.ASPxSpreadsheet" tagprefix="dx" %>
+<%@ Register assembly="DevExpress.Web.ASPxSpreadsheet.v19.2, Version=19.2.14.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.Web.ASPxSpreadsheet" tagprefix="dx" %>
 
 <!DOCTYPE html>
 
