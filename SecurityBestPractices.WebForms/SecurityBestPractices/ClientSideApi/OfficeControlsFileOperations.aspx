@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="OfficeControlsFileOperations.aspx.cs" Inherits="SecurityBestPractices.ClientSideApi.OfficeControlsFileOperations" %>
 
-<%@ Register assembly="DevExpress.Web.ASPxRichEdit.v19.2, Version=19.2.14.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.Web.ASPxRichEdit" tagprefix="dx" %>
-<%@ Register assembly="DevExpress.Web.ASPxSpreadsheet.v19.2, Version=19.2.14.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.Web.ASPxSpreadsheet" tagprefix="dx" %>
+<%@ Register assembly="DevExpress.Web.ASPxRichEdit.v22.1, Version=22.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.Web.ASPxRichEdit" tagprefix="dx" %>
+<%@ Register assembly="DevExpress.Web.ASPxSpreadsheet.v22.1, Version=22.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.Web.ASPxSpreadsheet" tagprefix="dx" %>
 
 <!DOCTYPE html>
 

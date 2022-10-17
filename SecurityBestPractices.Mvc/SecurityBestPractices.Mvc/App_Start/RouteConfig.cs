@@ -5,8 +5,8 @@ using DevExpress.DashboardWeb.Mvc;
 namespace SecurityBestPractices.Mvc {
     public class RouteConfig {
         public static void RegisterRoutes(RouteCollection routes) {
-            routes.MapDashboardRoute(); // dashboards nessesary initialization
             routes.MapDashboardRoute("dashboard", "PublicDashboard", new[] { "SecurityBestPractices.Mvc.Controllers" });
+            routes.MapDashboardRoute("dashboardAuth", "DefaultDashboard", new[] { "SecurityBestPractices.Mvc.Controllers" });
             routes.MapDashboardRoute("dashboardAFT", "DashboardWithAntiForgeryToken", new[] { "SecurityBestPractices.Mvc.Controllers" });
 
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");

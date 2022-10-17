@@ -4,6 +4,9 @@ using System.Web.Mvc;
 using System.Xml.Linq;
 
 namespace SecurityBestPractices.Mvc.Controllers {
+    public class DefaultDashboardController : DevExpress.DashboardWeb.Mvc.DashboardController {
+
+    }
     public class PublicDashboardController : DevExpress.DashboardWeb.Mvc.DashboardController {
         static readonly DashboardConfigurator dashboardConfigurator;
         static PublicDashboardController() {
