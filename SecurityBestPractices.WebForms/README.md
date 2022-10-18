@@ -22,7 +22,7 @@ The security issues are all shown using a simple Visual Studio solution. Fully c
 **Related Controls**: [ASPxBinaryImage](https://documentation.devexpress.com/AspNet/11624/ASP-NET-WebForms-Controls/Data-Editors/Editor-Types/ASPxBinaryImage/Overview/ASPxBinaryImage-Overview), [ASPxUploadControl](https://documentation.devexpress.com/AspNet/4040/ASP-NET-WebForms-Controls/File-Management/File-Upload/Overview/ASPxUploadControl-Overview), [ASPxFileManager](https://documentation.devexpress.com/AspNet/9030/ASP-NET-WebForms-Controls/File-Management/File-Manager/Overview/ASPxFileManager-Overview), [ASPxHtmlEditor](https://documentation.devexpress.com/AspNet/4024/ASP-NET-WebForms-Controls/HTML-Editor), [ASPxRichEdit](https://documentation.devexpress.com/AspNet/17721/ASP-NET-WebForms-Controls/Rich-Text-Editor), [ASPxSpreadsheet](https://documentation.devexpress.com/AspNet/16157/ASP-NET-WebForms-Controls/Spreadsheet)
 
 **Security Risks**: [CWE-400](https://cwe.mitre.org/data/definitions/400.html), [CWE-434](https://cwe.mitre.org/data/definitions/434.html)
-This section provides information on how to provide file upload capabilities within your web application. There are several separate scenarios to cover:
+This section describes how to handle file uploads securely. There are several separate scenarios to cover:
 
 - [1.1. Stop Malicious Files Being Uploaded](#11-prevent-uploading-malicious-files)
 - [1.2. Avoid Uncontrolled Resource Consumption](#12-prevent-uncontrolled-resource-consumption)
@@ -30,9 +30,9 @@ This section provides information on how to provide file upload capabilities wit
 
 ### 1.1. Stop Malicious Files Being Uploaded
 
-Visit the **[UploadingFiles\UploadControl.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/UploadControl.aspx.cs)** page for a full code sample.
+> Visit the **[UploadingFiles\UploadControl.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/UploadControl.aspx.cs)** page for a full code sample.
 
-Consider the situation where your web application allows for files to be uploaded. These files are then accessed using a specific URL (for example: _example.com/uploaded/uploaded-filename_).
+Consider the situation where your web application allows for files to be uploaded. These files are then accessed using a specific URL (for example: `_example.com/uploaded/uploaded-filename_`).
 
 The possible security breach here occurs when a malicious file is uploaded that can then be executed on the server side. For example, a malefactor could upload an ASPX file containing malicious code and guess at its URL. If the malefactor is correct and requests this URL, the file would be executed on the server as if it were part of the application.
 
@@ -52,7 +52,7 @@ To familiarize yourself with the issue:
 
    ```cs
    using (var stream = file.FileContent) {
-   // In case additional checks are needed perform them here before saving the file
+   // In case additional checks are needed, perform them here before saving the file
    //if (!IsValidImage(stream)) {
    //    file.IsValid = false;
    //    e.ErrorText = "Validation failed!";
@@ -70,7 +70,7 @@ To familiarize yourself with the issue:
 
 To mitigate this vulnerability, do the following:
 
-1. Initialize the [AllowedFileExtensions](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_AllowedFileExtensionstopic) setting with a list of allowed file extensions. The server will then validate the type of the uploaded file:
+1. Initialize the [`AllowedFileExtensions`](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_AllowedFileExtensionstopic) setting with a list of allowed file extensions. The server will then validate the type of the uploaded file:
 
 ```aspx
 <ValidationSettings AllowedFileExtensions=".jpg, .png">
@@ -95,7 +95,7 @@ To mitigate this vulnerability, do the following:
   </location>
 ```
 
-The default file extensions allowed by various controls that allow for file uploads:
+The table below lists the default file extensions allowed by various controls that support file uploads:
 
 | Control               | Allowed Extensions                                                    |
 | --------------------- | --------------------------------------------------------------------- |
@@ -110,7 +110,7 @@ The default file extensions allowed by various controls that allow for file uplo
 
 #### 1.2.1 Prevent Uncontrolled Memory Consumption
 
-Visit the **[UploadingFiles/UploadControlMemory.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/UploadControlMemory.aspx.cs)** page for a full code sample.
+> Visit the **[UploadingFiles/UploadControlMemory.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/UploadControlMemory.aspx.cs)** page for a full code sample.
 
 Consider the situation where the web application allows files of any size to be uploaded.
 
@@ -118,7 +118,7 @@ The possible security breach here occurs when a malefactor performs a denial of 
 
 To mitigate this vulnerability:
 
-1. Access file contents using the [FileContent](http://help.devexpress.com/#AspNet/DevExpressWebUploadedFile_FileContenttopic) property (a Stream) rather than the [FileBytes](http://help.devexpress.com/#AspNet/DevExpressWebUploadedFile_FileBytestopic) property (a byte array). This will avoid memory overflow and other issues when processing large uploaded files.
+1. Access file contents using the [`FileContent`](http://help.devexpress.com/#AspNet/DevExpressWebUploadedFile_FileContenttopic) property (a Stream) rather than the [`FileBytes`](http://help.devexpress.com/#AspNet/DevExpressWebUploadedFile_FileBytestopic) property (a byte array). This will avoid memory overflow and other issues when processing large uploaded files.
 
 ```cs
 protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
@@ -134,9 +134,9 @@ protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.F
 
 ```
 
-2. Specify the maximum size for uploaded files using the [UploadControlValidationSettings.MaxFileSize](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_MaxFileSizetopic) property.
+2. Specify the maximum size for uploaded files using the [`UploadControlValidationSettings.MaxFileSize`](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_MaxFileSizetopic) property.
 
-> Note that in the **Advanced** uploading mode, files are loaded in small fragments (200KB by default), thus setting the **httpRuntime**>**maxRequestLength** and **requestLimits**>**maxAllowedContentLength** options in **web.config** is not sufficient to prevent attacks.
+> Note that in the Advanced uploading mode, files are loaded in small fragments (200KB by default), thus setting the `httpRuntime`>`maxRequestLength` and `requestLimits`>`maxAllowedContentLength` options in *web.config* is not sufficient to prevent attacks.
 
 See the [Uploading Large Files](https://documentation.devexpress.com/AspNet/9822/ASP-NET-WebForms-Controls/File-Management/File-Upload/Concepts/Uploading-Large-Files) documentation topic for more information.
 
@@ -154,7 +154,7 @@ The File Manager control automatically allows files to be uploaded, and does not
 </ASPxFileManager>
 ```
 
-Other operations on files organized by the File Manager (copy, delete, download, etc.) are configured using the [SettingsEditing](http://help.devexpress.com/#AspNet/DevExpressWebASPxFileManager_SettingsEditingtopic) property. All such operations are disabled by default.
+Other operations on files organized by the File Manager (copy, delete, download, etc.) are configured using the [`SettingsEditing`](http://help.devexpress.com/#AspNet/DevExpressWebASPxFileManager_SettingsEditingtopic) property. All such operations are disabled by default.
 
 #### 1.2.2 Prevent Uncontrolled Disk Space Consumption
 
@@ -185,7 +185,7 @@ See the example project's [UploadingFiles/LimitDirectorySize.aspx.cs](https://gi
 
 ### 1.3. Protect Temporary Files
 
-Visit the **[UploadingFiles/UploadControlTempFileName.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/UploadControlTempFileName.aspx.cs)** page for a full code sample.
+> Visit the **[UploadingFiles/UploadControlTempFileName.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingFiles/UploadControlTempFileName.aspx.cs)** page for a full code sample.
 
 Consider the situation where you store temporary files on the server, prior to processing them on the server (for example, to extract the data within to write to a database).
 
@@ -194,8 +194,8 @@ To avoid a security breach, you will need to ensure that these files are inacces
 To mitigate this vulnerability:
 
 1. Store temporary files in a folder unreachable by URL (for example, _App_Data_).
-2. Use a dedicated file extension for temporary files on the server (for example "\*.mytmp").
-3. Consider assigning random file names using the [GetRandomFileName](<https://msdn.microsoft.com/en-us/library/system.io.path.getrandomfilename(v=vs.110).aspx>) method.
+2. Use a dedicated file extension for temporary files on the server (for example, `"\*.mytmp"`).
+3. Consider assigning random file names using the [`GetRandomFileName`](<https://msdn.microsoft.com/en-us/library/system.io.path.getrandomfilename(v=vs.110).aspx>) method.
 
 ```cs
 protected void uploadControl_FilesUploadComplete(object sender, DevExpress.Web.FilesUploadCompleteEventArgs e) {
@@ -233,7 +233,7 @@ To familiarize yourself with the issue:
 
 > Note that newer versions of Google Chrome have embedded mechanisms to counteract the described security breach. Currently, you can reproduce the issue on the Mozilla Firefox browser.
 
-1. Comment out the call of the IsValidImage method in the example project's [UploadingBinaryImage/UploadControl.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingBinaryImages/UploadControl.aspx.cs) to disable protection:
+1. Comment out the call of the `IsValidImage` method in the example project's [UploadingBinaryImage/UploadControl.aspx.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/UploadingBinaryImages/UploadControl.aspx.cs) to disable protection:
    ```cs
    // if(!IsValidImage(stream)) return;
    ```
@@ -247,7 +247,7 @@ To familiarize yourself with the issue:
 
 To mitigate this vulnerability:
 
-1. Programmatically check whether the uploaded file is really an image before saving it to any server-side storage (see the [IsValidImage](https://github.com/DevExpress/aspnet-security-bestpractices/blob/fd40850d01330a3d16f1a5a8c3cfd80cbe831c60/SecurityBestPractices/UploadingBinaryImages/UploadControl.aspx.cs#L22-L31) method implementation).
+1. Programmatically check whether the uploaded file is really an image before you save it to any server-side storage (see the [`IsValidImage`](https://github.com/DevExpress/aspnet-security-bestpractices/blob/fd40850d01330a3d16f1a5a8c3cfd80cbe831c60/SecurityBestPractices/UploadingBinaryImages/UploadControl.aspx.cs#L22-L31) method implementation).
 
 ```cs
 protected void ASPxUploadControl1_FileUploadComplete(object sender,
@@ -324,7 +324,7 @@ protected void ASPxButton1_Click(object sender, EventArgs e) {
 
 ## 3. Authorization
 
-This section provides information on using DevExpress controls in web applications that implement authorization and access control. The following features are considered:
+This section provides information on how to use DevExpress controls in web applications that implement authorization and access control. The following features are considered:
 
 - [3.1. Reporting](#31-reporting)
 - [3.2. Dashboard](#32-dashboard)
@@ -336,7 +336,7 @@ To implement authorization logic for the Document Viewer, provide a custom repor
 
 #### A. Viewing Reports
 
-In the sample project, the [GetViewableReportDisplayNamesForCurrentUser](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs#L25-L38) method returns a list of reports that can be viewed by the currently logged-in user:
+In the sample project, the [`GetViewableReportDisplayNamesForCurrentUser`](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs#L25-L38) method returns a list of reports that can be viewed by the currently logged-in user:
 
 ```cs
 // Logic for getting reports available for viewing
@@ -354,7 +354,7 @@ public static IEnumerable<string> GetViewableReportDisplayNamesForCurrentUser() 
 }
 ```
 
-This method is then called from the overridden [GetData](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs#L60-L70) method and other methods that need to interact with the report storage:
+This method is then called from the overridden [`GetData`](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs#L60-L70) method and other methods that need to interact with the report storage:
 
 ```cs
 public override byte[] GetData(string url) {
@@ -372,7 +372,7 @@ public override byte[] GetData(string url) {
 
 #### B. Editing Reports
 
-In the sample project, the [GetEditableReportNamesForCurrentUser](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs#L41-L53) method returns a list of reports that can be edited by the currently logged-in user:
+In the sample project, the [`GetEditableReportNamesForCurrentUser`](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs#L41-L53) method returns a list of reports that can be edited by the currently logged-in user:
 
 ```cs
 // Logic for getting reports available for editing
@@ -389,7 +389,7 @@ public static IEnumerable<string> GetEditableReportNamesForCurrentUser() {
 }
 ```
 
-This method is then called from the overridden [IsValidUrl](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs#L80-L83) method and other methods that need to write report data.
+This method is then called from the overridden [`IsValidUrl`](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs#L80-L83) method and other methods that need to write report data.
 
 ```cs
 public override bool IsValidUrl(string url) {
@@ -398,7 +398,7 @@ public override bool IsValidUrl(string url) {
 }
 ```
 
-To prevent errors in the browser when handling unauthorized access attempts, check the access rights on the page's [PageLoad](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportDesignerPage.aspx.cs#L6-L13) event. If the user is not authorized to open the report, redirect them to a public page.
+To prevent errors in the browser when you handle unauthorized access attempts, check the access rights on the page's [`PageLoad`](https://github.com/DevExpress/aspnet-security-bestpractices/blob/408c2328fc8d567281994b2bba52d0705850c0b5/SecurityBestPractices/Authorization/Reports/ReportDesignerPage.aspx.cs#L6-L13) event. If the user is not authorized to open the report, redirect them to a public page.
 
 ```cs
 protected void Page_Load(object sender, EventArgs e) {
@@ -413,7 +413,7 @@ protected void Page_Load(object sender, EventArgs e) {
 
 #### Register the Custom Report Storage
 
-After implementing your custom report storage with the required access rules, you must register it in the [Global.asax.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/Global.asax.cs) file:
+After you implement your custom report storage with the required access rules, you must register it in the [Global.asax.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/Global.asax.cs) file:
 
 ```cs
 DevExpress.XtraReports.Web.Extensions.ReportStorageWebExtension.RegisterExtensionGlobal(new ReportStorageWithAccessRules());
@@ -421,7 +421,7 @@ DevExpress.XtraReports.Web.Extensions.ReportStorageWebExtension.RegisterExtensio
 
 #### Make Sure that Authentication Rules are Applied
 
-In the example project, you can check whether the customization has had any effect by using the following steps:
+In the example project, use the following steps to check whether the customization has had any effect:
 
 - Open the [PublicReportPage.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/Authorization/PublicPages/PublicReportPage.aspx) page without logging in. This page contains a Report Viewer.
 - Try to open a report using the client API in the browser console. The example report has restricted access:
@@ -471,7 +471,7 @@ The [DevExpress Web Dashboard](https://devexpress.github.io/dotnet-eud/dashboard
 
 **1) Callbacks are processed by the ASPx page**
 
-The ASPx page contains the ASPxDashboard control and the [UseDashboardConfigurator](http://help.devexpress.com/#Dashboard/DevExpressDashboardWebASPxDashboard_UseDashboardConfiguratortopic) property is set to false. This is the default mode for the dashboard, and you can use the standard ASP.NET access restriction mechanisms:
+The ASPx page contains the ASPxDashboard control and the [UseDashboardConfigurator](http://help.devexpress.com/#Dashboard/DevExpressDashboardWebASPxDashboard_UseDashboardConfiguratortopic) property is set to `false`. This is the default mode for the dashboard, and you can use the standard ASP.NET access restriction mechanisms:
 
 ```aspx
 <location path="Authorization/Dashboards">
@@ -485,7 +485,7 @@ The ASPx page contains the ASPxDashboard control and the [UseDashboardConfigurat
 
 **2) Callbacks are processed by the Dashboard Configurator**
 
-Here the callbacks are processed by the DevExpress HTTP handler, and the [UseDashboardConfigurator](http://help.devexpress.com/#Dashboard/DevExpressDashboardWebASPxDashboard_UseDashboardConfiguratortopic) property is set to true.
+Here the callbacks are processed by the DevExpress HTTP handler, and the [UseDashboardConfigurator](http://help.devexpress.com/#Dashboard/DevExpressDashboardWebASPxDashboard_UseDashboardConfiguratortopic) property is set to `true`.
 
 This is the recommended mode as it is considerably faster and much more flexible. In this mode though, any access restriction rules defined using the default mechanisms have no effect. Instead, the access control should be performed by a custom dashboard storage class that implements the [IEditableDashboardStorage](https://docs.devexpress.com/Dashboard/DevExpress.DashboardWeb.IEditableDashboardStorage?tabs=tabid-csharp%2Ctabid-T392813_7_52373613) interface.
 
@@ -643,7 +643,7 @@ DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<D
 
 **Security Risks**: [CWE-352](https://cwe.mitre.org/data/definitions/352.html)
 
-This section provides information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects applications performing POST requests including those using DevExpress AJAX-enabled controls such as the Grid View. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References (for example: _example.com/app/SecureReport.aspx?id=1_), they do not protect you from CSRF attacks.
+This section provides information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects applications that perform POST requests including those using DevExpress AJAX-enabled controls such as the Grid View. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References (for example: `_example.com/app/SecureReport.aspx?id=1_`), they do not protect you from CSRF attacks.
 
 The possible security breach could occur as follows:
 
@@ -724,7 +724,7 @@ This section describes security vulnerabilities that can make some sensitive inf
 
 The possible security breach can occur when the server generates an exception. If an application is configured incorrectly, a detailed information on the error is displayed to an end-user. This information can include sensitive parts giving a malefactor an insight on the application's infrastructure, file names and so on.
 
-This behavior is controlled by the [customErrors](<https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/h0hfz6fc(v=vs.100)>) web.config option. This option accepts the following values:
+This behavior is controlled by the [customErrors](<https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-4.0/h0hfz6fc(v=vs.100)>) *web.config* option. This option accepts the following values:
 
 - `RemoteOnly` (default) - In this mode, detailed errors are displayed only for connections from the local machine.
 - `On` - Ensures that private messages are never displayed.
@@ -790,7 +790,7 @@ The image below demonstrates how a hidden column's value can be accessed using a
 
 ![Unprotected Column Values](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/access-hidden-columns-no-protection.png)
 
-Set the **AllowReadUnexposedColumnsFromClientApi** property to false to disable this behavior:
+Set the `AllowReadUnexposedColumnsFromClientApi` property to `false` to disable this behavior:
 
 ```cs
 AllowReadUnexposedColumnsFromClientApi = "False";
@@ -806,7 +806,7 @@ gridView.GetRowValues(0, "GuidField", function (Value) {
 });
 ```
 
-The capability to do so is controlled by the **AllowReadUnlistedFieldsFromClientApi** property and is disabled by default (safe configuration):
+The capability to do so is controlled by the `AllowReadUnlistedFieldsFromClientApi` property and is disabled by default (safe configuration):
 
 ![Protected Column Values](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/access-hidden-columns-use-protection.png)
 
@@ -850,12 +850,12 @@ For example, you can remove HTML tags throughout the content but it can corrupt 
 
 Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/dotnet/api/system.web.httputility.htmlencode?view=netframework-4.7.2) class that you can use to encode data in various use-case scenarios. It provides the following methods:
 
-| Method              | Usage                                                     |
-| ------------------- | --------------------------------------------------------- |
-| HtmlEncode          | Sanitizes an untrusted input inserted into an HTML output |
-| HtmlAttributeEncode | Sanitizes an untrusted input assigned to a tag attribute  |
-| JavaScriptEncode    | Sanitizes an untrusted input used within a script         |
-| UrlEncode           | Sanitizes an untrusted input used to generate a URL       |
+| Method                | Usage                                                     |
+| --------------------- | --------------------------------------------------------- |
+| `HtmlEncode`          | Sanitizes an untrusted input inserted into an HTML output |
+| `HtmlAttributeEncode` | Sanitizes an untrusted input assigned to a tag attribute  |
+| `JavaScriptEncode`    | Sanitizes an untrusted input used within a script         |
+| `UrlEncode`           | Sanitizes an untrusted input used to generate a URL       |
 
 To safely insert user input value into markup, wrap it with the `HttpUtility.HtmlEncode` method call:
 
@@ -875,7 +875,7 @@ To insert user input into a JavaScript block, you need to prepare the string usi
 </script>
 ```
 
-Input text containing unsafe symbols will be converted to a safe form. In this example, if a user specifies the following unsafe string...
+Input text that contains unsafe symbols will be converted to a safe form. In this example, if a user specifies the following unsafe string...
 
 ```
 "<b>'test'</b>
@@ -893,9 +893,9 @@ See the example project's [HtmlEncoding/General.aspx](https://github.com/DevExpr
 
 By default, DevExpress controls encode displayed values that can be obtained from a data source. Refer to the [HTML-Encoding](https://documentation.devexpress.com/AspNet/117902/Common-Concepts/HTML-Encoding) document for more information.
 
-This behavior is specified by a control's EncodeHtml property. If a control displays a value that can be modified by an untrusted party, we recommend that you never disable this setting or sanitize the displayed content manually.
+This behavior is specified by a control's `EncodeHtml` property. If a control displays a value that can be modified by an untrusted party, we recommend that you never disable this setting or sanitize the displayed content manually.
 
-To get familiar with the vulnerability, open the example project's EncodeHtml.aspx page and uncomment the following line in the [code behind](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/EncodeHtml.aspx.cs):
+To get familiar with the vulnerability, open the example project's [EncodeHtml.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/EncodeHtml.aspx.cs) page and uncomment the following line in the [code behind](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/HtmlEncoding/EncodeHtml.aspx.cs):
 
 ```cs
 ((GridViewDataTextColumn)GridView.Columns["ProductName"]).PropertiesEdit.EncodeHtml = false;
@@ -913,7 +913,7 @@ In the safe configuration, the field's content would be interpreted as text and 
 
 **Related Controls**: [ASPxGridView](https://docs.devexpress.com/AspNet/5823/aspnet-webforms-controls/grid-view), [ASPxCardView](https://docs.devexpress.com/AspNet/114048/aspnet-webforms-controls/card-view), [ASPxVerticalGrid](https://docs.devexpress.com/AspNet/116045/aspnet-webforms-controls/vertical-grid), [ASPxTreeList](https://docs.devexpress.com/AspNet/7928/aspnet-webforms-controls/tree-list)
 
-You should always encode (wrap with the HttpUtility.HtmlEncode method call) filter items that are obtained from an unsafe data source or specified by an end user.
+You should always encode (wrap with the `HttpUtility.HtmlEncode` method call) filter items that are obtained from an unsafe data source or specified by an end user.
 
 ```cs
 ASPxGridViewHeaderFilterEventArgs e) {
@@ -1021,11 +1021,11 @@ With encoding, the markup is rendered as follows:
 
 It is potentially dangerous to use render a hyperlink's HREF attribute using a value from a database or user input.
 
-DevExpress grid based controls remove all potentially dangerous contents (for example, "javascript:") from HREF values when rendering hyperlink columns:
+DevExpress grid based controls remove all potentially dangerous contents (for example, `javascript:`) from HREF values when they render hyperlink columns:
 
 ![Unsafe Link](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/url-no-encoding.png?raw=true)
 
-This behavior is controlled by a column's `RemovePotentiallyDangerousNavigateUrl` option (true by default):
+This behavior is controlled by a column's `RemovePotentiallyDangerousNavigateUrl` option (`true` by default):
 
 ```xml
 <dx:GridViewDataHyperLinkColumn FieldName="Description" VisibleIndex="1">
@@ -1059,9 +1059,9 @@ It is strongly recommended that you validate values obtained from an end user be
 
 ![Validation Diagram](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/validation-diagram.png)
 
-You can specify value restrictions using a control's properties such as MaxLength, Min/Max Values, Required, etc. Server side validation does not allow to submit an invalid value even if you manage to send an invalid value bypassing the client validation. If the value is invalid, the editor's value is set to the previous value set on the editor's `init`.
+You can specify value restrictions using a control's properties such as `MaxLength`, `Min`/`Max` Values, `Required`, etc. Server side validation does not allow a user to submit an invalid value even if they manage to send an invalid value bypassing the client validation. If the value is invalid, the editor's value is set to the previous value set on the editor's `init`.
 
-> Note that starting with the version 19.2, the value set on `init` is also validated and cannot be saved if validation fails. In earlier versions, this value would be saved without validation if it was not modified on the client.
+> Note that starting with v19.2, the value set on `init` is also validated and cannot be saved if validation fails. In earlier versions, this value would be saved without validation if it was not modified on the client.
 
 The image below demonstrates how validation errors are indicated by DevExpress controls:
 
@@ -1087,7 +1087,7 @@ Some DevExpress web controls provide in-built validation mechanisms that apply r
 
 List controls in the DevExpress ASP.NET suite provide the `DataSecurity` property that specifies how a control handles input values that do not exist in the list. By default, this property is set to `Default`. With this setting, an editor accepts values that aren't in the list. Set the `DataSecurity` property to `Strict` to prohibit such values.
 
-If you use the Strict DataSecurity mode, ViewState is disabled and you use perform data binding in runtime, you should perform data binding on Page_Init. Binding on Page_load is too late because an editor's validation triggers earlier then its items are populated.
+If you use the Strict DataSecurity mode, ViewState is disabled and you use perform data binding in runtime, you should perform data binding on `Page_Init`. Binding on `Page_load` is too late because an editor's validation triggers earlier then its items are populated.
 
 See the example project's [ValidateInput/ListEditors.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ValidateInput/ListEditors.aspx#L8) page.
 
@@ -1101,7 +1101,7 @@ System.Web.HttpRequestValidationException: A potentially dangerous Request value
 
 In many cases such checks can have undesired side effects:
 
-- An end user cannot enter text containing elements that are common in technical texts, for example "Use the &lt;b&gt; tag to make text bold".
+- An end user cannot enter text containing elements that are common in technical texts, for example, "Use the &lt;b&gt; tag to make text bold".
 
 - On a validation error, ASP.NET raises an exception and responds with the default error page. Because of this, you cannot handle the error and display a user-friendly error message.
 
@@ -1153,7 +1153,7 @@ Control data exported to CSV can include content that spreadsheet software such 
 
 This may cause a security issue if an end-user opens the exported file in a spreadsheet program and allows the program to run executable content. Microsoft Excel displays a message explicitly asking a user whether or not to run executable content.
 
-To prevent possible security issues, set the `EncodeCsvExecutableContent` property to true. In this mode, the exported content is encoded so it cannot be interpreted as executable.
+To prevent possible security issues, set the `EncodeCsvExecutableContent` property to `true`. In this mode, the exported content is encoded so it cannot be interpreted as executable.
 
 This behavior is controlled by the following properties:
 
@@ -1225,7 +1225,7 @@ The best practices to mitigate this vulnerability are:
 
 - If you intend to use a grid-based control in view-only mode, make sure that its data source does not allow data editing (for example a SqlDataSource does not have DeleteCommand, InsertCommand and UpdateCommand).
 
-- Disable CRUD operations on the control level using the control's [SettingsDataSecurity](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridView.SettingsDataSecurity) property:
+- Disable CRUD operations on the control level using the control's [`SettingsDataSecurity`](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridView.SettingsDataSecurity) property:
 
   ```aspx
   <SettingsDataSecurity AllowEdit="False" AllowInsert="False" AllowDelete="False" />
@@ -1241,7 +1241,7 @@ If you intend the Spreadsheet control to work in read-only mode (the `SettingsVi
 </Settings>
 ```
 
-It is also recommended that you set the `ReadOnly` property to true:
+It is also recommended that you set the `ReadOnly` property to `true`:
 
 ```cs
 spreadsheet.ReadOnly="true"
@@ -1253,11 +1253,11 @@ See the example projects [ClientSideApi/SpreadsheetReadingModeOnly.aspx](https:/
 
 Related Controls: [ASPxReachEdit](https://docs.devexpress.com/AspNet/17721/aspnet-webforms-controls/rich-text-editor), [ASPxSpreadsheet](https://docs.devexpress.com/AspNet/16157/aspnet-webforms-controls/spreadsheet)
 
-In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (New, Open, Save, etc.) In this case, a document is opened and saved programmatically.
+In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (`New`, `Open`, `Save`, etc.) In this case, a document is opened and saved programmatically.
 
 Note that it is not enough to just hide the File tab because the commands from this tab can still be executed using JavaScript or keyboard shortcuts (for example, the Ctrl+O shortcut can invoke the Open dialog).
 
-When you want to disable file-related commands, the best practice is to also disable file operations by disabling the corresponding Behavior options (CreateNew, Open, Save, SaveAs, SwitchViewModes).
+When you want to disable file-related commands, the best practice is to also disable file operations by disabling the corresponding Behavior options (`CreateNew`, `Open`, `Save`, `SaveAs`, `SwitchViewModes`).
 
 ##### ASPxSpreadsheet:
 
@@ -1294,18 +1294,18 @@ Run the application and open the page. Now, if you press Ctrl+O, the Open dialog
 
 ## 10. Downloading Files From External URLs
 
-Consider a use-case scenario when an web application receives a URL from an end-user, downloads an image file from this URL and saves the file in a database. This file is then displayed on the application's page using the ASPxBinaryImage control.
+Consider a use-case scenario when an web application receives a URL from an end-user, downloads an image file from this URL and saves the file in a database. This file is then displayed on the application's page using the [ASPxBinaryImage](https://docs.devexpress.com/AspNet/11646/components/data-editors/binaryimage) control.
 
-It is often suggested to use the WebClient class to download a file in this scenario:
+It is often suggested to use the [WebClient](https://learn.microsoft.com/en-us/dotnet/api/system.net.webclient?view=net-6.0) class to download a file in this scenario:
 
 ```cs
 using(var webClient = new WebClient())
     BinaryImage.ContentBytes = webClient.DownloadData(url);
 ```
 
-However, this is unsafe because the WebClient can accept a path to a local resource on the server (for example, “c:\...\App_Data\ConfidentialImages\...”), which allows a malefactor to gain access to confidential files (such as web.config, the App_Data folder or other files and folders with nonpublic content).
+However, this is unsafe because the WebClient can accept a path to a local resource on the server (for example, `c:\...\App_Data\ConfidentialImages\...`), which allows a malefactor to gain access to confidential files (such as *web.config*, the *App_Data* folder or other files and folders with nonpublic content).
 
-To mitigate this vulnerability, use HttpWebRequest:
+To mitigate this vulnerability, use [HttpWebRequest](https://learn.microsoft.com/en-us/dotnet/api/system.net.httpwebrequest?view=net-7.0):
 
 ```cs
 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
