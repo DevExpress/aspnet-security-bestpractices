@@ -901,7 +901,7 @@ To get familiar with the vulnerability, open the example project's [EncodeHtml.a
 ((GridViewDataTextColumn)GridView.Columns["ProductName"]).PropertiesEdit.EncodeHtml = false;
 ```
 
-Launch the project and open the page in the browser. A data field's content will be interpreted as a script and you well see an alert popup.
+Launch the project and open the page in the browser. A data field's content will be interpreted as a script and you will see an alert popup.
 
 ![Devexpress Controls - No Encoding](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/grid-columns-no-encoding.png?raw=true)
 
