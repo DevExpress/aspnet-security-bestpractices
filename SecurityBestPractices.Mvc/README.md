@@ -1,8 +1,8 @@
 # ASP.NET MVC Security Best Practices
 
-This document provides information on some of the best practices developers should follow to avoid certain security breaches. Each section of this document describes a possible use-case scenario that exposes the security issue and the vulnerabilities associated with it, together with information on how to mitigate the security problems.
+This document contains information on some of the best practices developers should follow to avoid certain security breaches. Each section of this document describes a possible use-case scenario that exposes the security issue and the vulnerabilities associated with it, together with information on how to mitigate the security problems.
 
-The security issues are all shown using a simple Visual Studio solution. Fully commented code samples are provided as part of that solution to show how to avoid each security breach. You will need to have DevExpress ASP.NET MVC extensions installed in order to load and compile the solution. You can download the installer from the [DevExpress website](https://devexpress.com).
+The security issues are all shown in a simple Visual Studio solution. This solution includes fully commented code samples that show how to avoid each security breach. You will need to have DevExpress ASP.NET MVC extensions installed in order to load and compile the solution. You can download the installer from the [DevExpress website](https://devexpress.com).
 
 ---
 
@@ -14,7 +14,7 @@ The security issues are all shown using a simple Visual Studio solution. Fully c
 - [6. Preventing Cross-Site Scripting (XSS) Attacks with Encoding](#6-preventing-cross-site-scripting-xss-attacks-with-encoding)
 - [7. User Input Validation](#7-user-input-validation)
 - [8. Export to CSV](#8-export-to-csv)
-- [9. Unauthorized Server Operation via Client-Sided API](#9-unauthorized-server-operation-via-client-sided-api)
+- [9. Unauthorized Operations on Server Through Client API](#9-unauthorized-operations-on-server-through-client-api)
 - [10. Downloading Files From External URLs](#10-downloading-files-from-external-urls)
 
 ## 1. Uploading Files
@@ -33,13 +33,13 @@ This section describes how to handle file uploads securely. There are several se
 
 See the [controller code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/72492709fd0c53fef25414fc77df9a37fc4dc5a7/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UploadingFiles/UploadingFiles.cs#L12-L57) in the *Controllers\UploadingFiles\UploadingFiles.cs* file of the example project for a full code sample.
 
-Consider the situation where your web application allows for files to be uploaded. These files are then accessed using a specific URL (for example: `_example.com/uploaded/uploaded-filename_`).
+Consider the situation where your web application allows for files to be uploaded. A user can then use a URL to access the uploaded files (for example: `example.com/uploaded/uploaded-filename`).
 
 The possible security breach here occurs when a malicious file is uploaded that can then be executed on the server side. For example, a malefactor could upload a file containing malicious code and guess at its URL. If the malefactor is correct and requests this URL, the file would be executed on the server as if it were part of the application.
 
 To mitigate this vulnerability, do the following:
 
-1. Implement a custom model binder. In the model binder implementation, initialize the [AllowedFileExtensions](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_AllowedFileExtensionstopic) setting with a list of allowed file extensions. The server will then validate the type of the uploaded file. Provide the [FilesUploadCompleteHandler](http://help.devexpress.com/#AspNet/DevExpressWebMvcBinderSettingsUploadControlBinderSettings_FileUploadCompleteHandlertopic) to perform any additional checks:
+1. Implement a custom model binder. In the model binder implementation, initialize the [AllowedFileExtensions](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_AllowedFileExtensionstopic) setting with a list of allowed file extensions. The server will then validate the type of the uploaded file. Specify the [FilesUploadCompleteHandler](https://docs.devexpress.com/AspNetMvc/DevExpress.Web.Mvc.BinderSettings.UploadControlBinderSettings.FilesUploadCompleteHandler?p=netframework) to perform any additional checks:
 
 ```cs
 public class UploadValidationBinder : DevExpressEditorsBinder {
@@ -123,11 +123,11 @@ The table below lists the default file extensions allowed by various controls th
 
 Consider the situation where the web application allows files of any size to be uploaded.
 
-The possible security breach here occurs when a malefactor performs a denial of service ([DoS](https://cwe.mitre.org/data/definitions/400.html)) attack by uploading very large files, thereby using up server memory and disk space.
+The possible security breach here occurs when a malefactor uploads very large files to use up server memory and disk space, which is a particular case of a denial of service ([DoS](https://cwe.mitre.org/data/definitions/400.html)) attack.
 
 To mitigate this vulnerability:
 
-1. Access file contents using the [`FileContent`](http://help.devexpress.com/#AspNet/DevExpressWebUploadedFile_FileContenttopic) property (a Stream) rather than the [`FileBytes`](http://help.devexpress.com/#AspNet/DevExpressWebUploadedFile_FileBytestopic) property (a byte array). This will avoid memory overflow and other issues when processing large uploaded files.
+1. Use the [`FileContent`](http://help.devexpress.com/#AspNet/DevExpressWebUploadedFile_FileContenttopic) property (a Stream) rather than the [`FileBytes`](http://help.devexpress.com/#AspNet/DevExpressWebUploadedFile_FileBytestopic) property (a byte array) to access file contents. This will prevent memory overflows and other issues when the server processes large uploaded files.
 
 ```cs
 public class UploadInMemoryProcessingBinder : DevExpressEditorsBinder {
@@ -153,7 +153,7 @@ public class UploadInMemoryProcessingBinder : DevExpressEditorsBinder {
 
 ```
 
-2. Specify the maximum size for uploaded files using the [`UploadControlValidationSettings.MaxFileSize`](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_MaxFileSizetopic) property.
+2. Use the [`UploadControlValidationSettings.MaxFileSize`](http://help.devexpress.com/#AspNet/DevExpressWebUploadControlValidationSettings_MaxFileSizetopic) property to specify the maximum size for uploaded files.
 
 ```cs
 public class UploadValidationBinder : DevExpressEditorsBinder {
@@ -170,8 +170,8 @@ See the [Uploading Large Files](https://documentation.devexpress.com/AspNet/9822
 
 The following extensions limit the maximum size for uploaded files by default:
 
-- The **Html Editor** defines a 31,457,280 byte limit for uploaded file size.
-- The **Spreadsheet** and **Rich Edit** do not set a maximum size for an uploaded file, however there is a 31,457,280 byte limit for images to be inserted into a document. Note that both controls must be specifically enabled to allow for the uploading of files.
+- The Html Editor defines a 31,457,280 byte limit for uploaded file size.
+- The Spreadsheet and Rich Edit do not set a maximum size for an uploaded file, however there is a 31,457,280 byte limit for images to be inserted into a document. Note that both controls must be explicitly configured to accept file uploads.
 
 The File Manager automatically allows files to be uploaded, and does not impose any limitations on the file size and extension. You can disable file uploading with this View code:
 
@@ -184,7 +184,7 @@ The File Manager automatically allows files to be uploaded, and does not impose 
 }).BindToFolder(Model).GetHtml()
 ```
 
-Other operations on files organized by the File Manager (copy, delete, download, etc.) are configured using the [`SettingsEditing`](http://help.devexpress.com/#AspNet/DevExpressWebMvcFileManagerSettings_SettingsEditingtopic) property. All such operations are disabled by default.
+Other operations on files organized by the File Manager (copy, delete, download, etc.) are configured through the [`SettingsEditing`](http://help.devexpress.com/#AspNet/DevExpressWebMvcFileManagerSettings_SettingsEditingtopic) property. All such operations are disabled by default.
 
 #### 1.2.2 Prevent Uncontrolled Disk Space Consumption
 
@@ -220,7 +220,7 @@ See the example project's [Controllers/UploadingFiles/UploadingFiles.cs](https:/
 
 > See the [controller code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/72492709fd0c53fef25414fc77df9a37fc4dc5a7/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UploadingFiles/UploadingFiles.cs#L101-L130) in the **Controllers\UploadingFiles\UploadingFiles.cs** file for a full code sample.
 
-Consider the situation where you store temporary files on the server, prior to processing them on the server (for example, to extract the data within to write to a database).
+Consider the situation where you save data to temporary files on the server before you process it and, for example, write the result to a database.
 
 To avoid a security breach, you will need to ensure that these files are inaccessible to third parties.
 
@@ -228,7 +228,7 @@ To mitigate this vulnerability:
 
 1. Store temporary files in a folder unreachable by URL (for example, _App_Data_).
 2. Use a dedicated file extension for temporary files on the server (for example `"\*.mytmp"`).
-3. Consider assigning random file names using the [`GetRandomFileName`](<https://msdn.microsoft.com/en-us/library/system.io.path.getrandomfilename(v=vs.110).aspx>) method.
+3. Consider using the [`GetRandomFileName`](<https://msdn.microsoft.com/en-us/library/system.io.path.getrandomfilename(v=vs.110).aspx>) method to assign random file names.
 
 ```cs
 public class UploadSavingTemporaryFilesBinder : DevExpressEditorsBinder {
@@ -386,7 +386,7 @@ Response.Headers.Add("X-Content-Type-Options", "nosniff");
 
 **Security Risks**: [CWE-285](https://cwe.mitre.org/data/definitions/285.html)
 
-This section provides information on using DevExpress controls in web applications that implement authorization and access control. The following features are considered:
+This section contains information on how to use DevExpress controls in web applications that implement authorization and access control. The following features are considered:
 
 - [3.1. Using Authorization Attributes](#31-using-authorization-attributes)
 - [3.2. Reporting](#32-reporting)
@@ -395,9 +395,9 @@ This section provides information on using DevExpress controls in web applicatio
 
 ### 3.1 Using Authorization Attributes
 
-In ASP.NET MVC, authorization rules for a web application's pages are defined on the controller side using the **[`Authorize`]** attribute. This attribute can be applied either to a controller action or to the whole controller class.
+In ASP.NET MVC, you can use the `[Authorize]` attribute to define authorization rules for a web application's pages on the controller side. This attribute can be applied either to a controller action or to the whole controller class.
 
-For maximum security, it is recommended that you apply the **[`Authorize`]** attribute to the controller and allow anonymous access to actions that should be public using the **[`AllowAnonymous`]** attribute.
+For maximum security, it is recommended that you apply the `[Authorize]` attribute to the controller and use the `[AllowAnonymous]` attribute to allow anonymous access to actions that should be public.
 
 ```cs
 namespace SecurityBestPractices.Mvc.Controllers {
@@ -420,7 +420,7 @@ namespace SecurityBestPractices.Mvc.Controllers {
 
 ### 3.2. Reporting
 
-To implement authorization logic for the Document Viewer, provide a custom report storage derived from the [ReportStorageWebExtension](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebExtensionsReportStorageWebExtensiontopic) class. This storage will be used by the HTTP handler to access your reports and here you can define your authorization rules. As a starting point, you can copy the reference implementation of such a storage class from the example project's [ReportStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs) file to your application and fine-tune it for your needs. The following customizations would have to be considered:
+To implement authorization logic for the Document Viewer, add a custom report storage derived from the [ReportStorageWebExtension](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebExtensionsReportStorageWebExtensiontopic) class. This storage will be used by the HTTP handler to access your reports and here you can define your authorization rules. As a starting point, you can copy the reference implementation of such a storage class from the example project's [ReportStorageWithAccessRules.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/Authorization/Reports/ReportStorageWithAccessRules.cs) file to your application and fine-tune it for your needs. The following customizations would have to be considered:
 
 #### A. Viewing Reports
 
@@ -512,7 +512,7 @@ DevExpress.XtraReports.Web.Extensions.ReportStorageWebExtension.RegisterExtensio
 In the example project, you can check whether the customization has had any effect by using the following steps:
 
 - Open the [PublicReportPage](https://github.com/DevExpress/aspnet-security-bestpractices/blob/77534a317c3d685810e57cf034994d99a2d1c58f/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/Authorization/AuthorizationController.Reports.cs#L11-L13) page without logging in. This page contains a Report Viewer.
-- Try to open a report using the client API in the browser console. The example report has restricted access:
+- Try to use the client API in the browser console to open a report. The example report has restricted access:
 
 ```
 >documentViewer.OpenReport("Admin Report");
@@ -522,9 +522,9 @@ The browser console will respond with the following error.
 
 ![console-output](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/authoriazation-reports-accessdenied.png?raw=true)
 
-#### Provide an Operation Logger
+#### Implement an Operation Logger
 
-By default, the Web Document Viewer control access a report by a GUID, which serves as an authorization token. If required, you can provide additional protection by implementing a custom Operation Logger in order to enforce fine-grained control over which operations are available to a user. Extend the [WebDocumentViewerOperationLogger](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebWebDocumentViewerWebDocumentViewerOperationLoggertopic) class and override this class's methods to implement the required access control rules (see the [OperationLogger.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Services/Reports/OperationLogger.cs) file of the example project).
+By default, the Web Document Viewer control requests a report by a GUID, which serves as an authorization token. If required, you can increase protection by implementing a custom Operation Logger in order to enforce fine-grained control over which operations are available to a user. Extend the [WebDocumentViewerOperationLogger](http://help.devexpress.com/#XtraReports/clsDevExpressXtraReportsWebWebDocumentViewerWebDocumentViewerOperationLoggertopic) class and override this class's methods to implement the required access control rules (see the [OperationLogger.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Services/Reports/OperationLogger.cs) file of the example project).
 
 Register the operation logger in [Global.asax.cs](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Services/Reports/OperationLogger.cs):
 
@@ -536,7 +536,7 @@ DefaultWebDocumentViewerContainer.Register<WebDocumentViewerOperationLogger, Ope
 
 To familiarize yourself with the solution:
 
-1. Run the example application, log in using the [Login](https://github.com/DevExpress/aspnet-security-bestpractices/blob/77534a317c3d685810e57cf034994d99a2d1c58f/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/AccountController.cs#L21-L24) page.
+1. Run the example application and log in from the [Login](https://github.com/DevExpress/aspnet-security-bestpractices/blob/77534a317c3d685810e57cf034994d99a2d1c58f/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/AccountController.cs#L21-L24) page.
 2. Open the report preview ([Authorization/Reports/ReportViewer](https://github.com/DevExpress/aspnet-security-bestpractices/blob/77534a317c3d685810e57cf034994d99a2d1c58f/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/Authorization/AuthorizationController.Reports.cs#L16-L20)) in a separate browser tab.
 3. Log out.
 4. Try switching report pages.
@@ -547,11 +547,11 @@ The following error will be signaled:
 
 #### Restrict Access to Data Connections and Data Tables
 
-The [Report Designer](https://documentation.devexpress.com/XtraReports/17103/Creating-End-User-Reporting-Applications/Web-Reporting/Report-Designer) allows a user to browse available data connection and data tables using the integrated [Query Builder](http://help.devexpress.com/#AspNet/CustomDocument120076). Refer to the [Query Builder](#33-query-builder) subsection in this document to learn how to restrict access to this information, based on authorization rules.
+The [Report Designer](https://documentation.devexpress.com/XtraReports/17103/Creating-End-User-Reporting-Applications/Web-Reporting/Report-Designer) allows a user to browse available data connection and data tables in the integrated [Query Builder](http://help.devexpress.com/#AspNet/CustomDocument120076) UI. Refer to the [Query Builder](#33-query-builder) subsection in this document to learn how to restrict access to this information, based on authorization rules.
 
 ### 3.3. Dashboard
 
-The [DevExpress Web Dashboard](https://documentation.devexpress.com/Dashboard/16977/Building-the-Designer-and-Viewer-Applications/Web-Dashboard/ASP-NET-MVC-Dashboard-Extension) requires a controller, that inherits the **DashboardController** class. This class provides predefined actions that handle all AJAX requests from the dashboard.
+The [DevExpress Web Dashboard](https://documentation.devexpress.com/Dashboard/16977/Building-the-Designer-and-Viewer-Applications/Web-Dashboard/ASP-NET-MVC-Dashboard-Extension) requires a controller, that inherits the **DashboardController** class. This class exposes predefined actions that handle all AJAX requests from the dashboard.
 
 The access control should be performed by a custom dashboard storage class that implements the [`IEditableDashboardStorage`](https://docs.devexpress.com/Dashboard/DevExpress.DashboardWeb.IEditableDashboardStorage?tabs=tabid-csharp%2Ctabid-T392813_7_52373613) interface.
 
@@ -605,7 +605,7 @@ GET http://localhost:2088/dashboardDesigner/dashboards/1?_=1536758969547 404 (No
 
 #### Restrict Access to Data Connections and Data Tables
 
-The Web Dashboard control allows a user to browse available data connection and data tables using the integrated [Query Builder](http://help.devexpress.com/#AspNet/CustomDocument120076). Refer to the [Query Builder](#33-query-builder) subsection in this document to learn how to restrict access to this information based on authorization rules.
+The Web Dashboard control allows a user to browse available data connection and data tables in the integrated [Query Builder](http://help.devexpress.com/#AspNet/CustomDocument120076) UI. Refer to the [Query Builder](#33-query-builder) subsection in this document to learn how to restrict access to this information based on authorization rules.
 
 ### 3.4. Query Builder
 
@@ -703,13 +703,13 @@ DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<D
 
 **Security Risks**: [CWE-352](https://cwe.mitre.org/data/definitions/352.html)
 
-This section provides information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects applications performing POST requests including those using DevExpress AJAX-enabled controls such as the Grid View. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References (for example: `_example.com/app/SecureReport.aspx?id=1_`), they do not protect you from CSRF attacks.
+This section contains information on how to prevent cross-site request forgery (CSRF) attacks on your web application. The vulnerability affects applications performing POST requests, which includes requests made by DevExpress AJAX-enabled controls such as the Grid View. Although there are authorization mechanisms that allow you to deny access by Insecure Direct Object References (for example: `example.com/app/SecureReport.aspx?id=1`), they do not protect you from CSRF attacks.
 
 The possible security breach could occur as follows:
 
 1. A malefactor implements a phishing page.
-2. A user inadvertently visits this phishing page, which then sends a malicious request to your web application using the user's cookies.
-3. As a result, the malicious action is performed on the user's behalf, allowing the malefactor to access or modify the user's data or account info.
+2. A user inadvertently visits this phishing page, which then sends a malicious request to your web application with the user's cookies.
+3. As a result, the malicious action is performed on the user's behalf, so the malefactor can access or modify the user's private data or account information.
 
 ### Get Familiar With the Issue
 
@@ -752,7 +752,7 @@ To mitigate the vulnerability, use the **AntiForgeryToken** pattern as described
      value="[Token Value]"
    />
    ```
-2. Be aware that complex AJAX-enabled controls do not automatically include the token field's value in their AJAX requests. You need to manually add the token value to such requests. You can achieve this using the code below:
+2. Be aware that complex AJAX-enabled controls do not automatically include the token field's value in their AJAX requests. You need to manually add the token value to such requests as shown in the code sample below:
 
    ```cs
    <script>
@@ -784,7 +784,7 @@ If the validation fails, the server will generate an error:
 
 ![AntiForgeryError](https://github.com/DevExpress/aspnet-security-bestpractices/blob/wiki-static-resources/anti-forgery-error.png?raw=true)
 
-> Note that you should never perform data modifying requests using the **GET** method.
+> Note that you should never use the **GET** method to perform data modifying requests.
 
 ### Use Anti-Forgery Tokens With the Dashboard Designer
 
@@ -921,7 +921,7 @@ public ActionResult FormWithErrorMessage(EditFormItem item) {
 
 #### Prevent Access to Hidden Column Data
 
-This vulnerability is associated with grid-based controls. Consider a situation, in which a control has a hidden column bound to some sensitive data that is not displayed to an end-user and is only used on the server. A malefactor can still request a value of such column using the control's client API:
+This vulnerability is associated with grid-based controls. Consider a situation, in which a control has a hidden column bound to some sensitive data that is not displayed to an end-user and is only used on the server. A malefactor can still use the control's client API to request a value of this column:
 
 ```js
 gridView.GetRowValues(0, "UnitPrice", function (Value) {
@@ -929,7 +929,7 @@ gridView.GetRowValues(0, "UnitPrice", function (Value) {
 });
 ```
 
-The image below demonstrates how a hidden column's value can be accessed using a browser's console:
+The image below demonstrates how a browser's console can be used to access a hidden column's value:
 
 ![Unprotected Column Values](https://raw.githubusercontent.com/DevExpress/aspnet-security-bestpractices/wiki-static-resources/access-hidden-columns-no-protection.png)
 
@@ -988,11 +988,11 @@ function s1(){...}
 
 **Security Risks**: [CWE-80](https://cwe.mitre.org/data/definitions/80.html), [CWE-20](https://cwe.mitre.org/data/definitions/20.html)
 
-The vulnerability occurs when a web page is rendered using a content specified by an end user. If user input is not properly sanitized, a resulting page can be injected with a malicious script.
+The vulnerability occurs when a web page is rendered based on content specified by an end user. If user input is not properly sanitized, a resulting page can be injected with a malicious script.
 
-It is strongly suggested that you always sanitize page contents that can be specified by a user. You should be aware of what kind of sanitization you use so it is both compatible with the displayed content and provides the intended level of safety. For example, you can remove HTML tags throughout the content but it can corrupt text that is intended to contain code samples. A more generic approach would be to substitute all '<', '>' and '&' symbols with `&lt;`, `&gt;` and `&amp;` character codes.
+It is strongly suggested that you always sanitize page contents that can be specified by a user. You should be aware of what kind of sanitization you use so it is both compatible with the displayed content and guarantees the intended level of safety. For example, you can remove HTML tags throughout the content but it can corrupt text that is intended to contain code samples. A more generic approach would be to substitute all '<', '>' and '&' symbols with `&lt;`, `&gt;` and `&amp;` character codes.
 
-Microsoft provides the standard [HttpUtility](https://docs.microsoft.com/ru-ru/dotnet/api/system.web.httputility.htmlencode?view=netframework-4.7.2) class that you can use to encode data in various use-case scenarios. It provides the following methods:
+Microsoft supplies the standard [HttpUtility](https://docs.microsoft.com/ru-ru/dotnet/api/system.web.httputility.htmlencode?view=netframework-4.7.2) class that you can use to encode data in various use-case scenarios. It exposes the following methods:
 
 | Method              | Usage                                                     |
 | ------------------- | --------------------------------------------------------- |
@@ -1009,7 +1009,8 @@ In ASP.NET MVC, any content inserted into a Razor view via the `@` operator is e
 
 If you want to insert an unencoded value from a trusted source, use the `@Html.Raw` method.
 
-To insert user input into a JavaScript block, you need to first prepare the string using the `HttpUtility.JavaScriptStringEncode` and then insert this string into the script using `@Html.Raw`:
+Before you insert user input into a JavaScript block, you need to use the `HttpUtility.JavaScriptStringEncode` method to prepare the string and then call `@Html.Raw` to insert this string into the script:
+
 
 ```html
 <script>
@@ -1174,7 +1175,7 @@ public class UserProfile {
 }).GetHtml()
 ```
 
-On form submit, the corresponding [controller action](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L20) will receive the model-bound input's value. Here you can check for the user input's validity using the `ModelState.IsValid` property:
+On form submit, the corresponding [controller action](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Controllers/UserInputValidation/UserInputValidation.cs#L20) will receive the model-bound input's value. Here you can use the `ModelState.IsValid` property to check for the user input's validity:
 
 ```cs
 public ActionResult AdditionalDataAnnotationAttributes(EmployeeItem employeeItem) {
@@ -1197,7 +1198,7 @@ The image below demonstrates how validation errors are indicated by DevExpress c
 
 ### 7.2 Model Binding Restrictions
 
-In many cases, your input forms do not provide access to all properties of the model because some properties are not intended to be edited by a user. For example, the model contains a `salary` field that should never be modifiable by an end-user.
+In many cases, your input forms do not display editors for all properties of the model because some properties are not intended to be edited by a user. For example, the model contains a `salary` field that should never be modifiable by an end-user.
 
 A malefactor can forge a request that attempts to modify this field (`name="Salary"` `value="100000"`):
 
@@ -1213,7 +1214,7 @@ A malefactor can forge a request that attempts to modify this field (`name="Sala
 <a href="#" onclick="test.submit();">Send Postback</a>
 ```
 
-You can prohibit model binding for a specific model property using the Bind attribute's Exclude property as [shown below](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Models/UserInputValidationModel.cs#L10):
+You can use the `Bind` attribute's `Exclude` property as [shown below](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Models/UserInputValidationModel.cs#L10) to prohibit model binding for a specific model property:
 
 ```cs
 [Bind(Exclude = "Salary")]
@@ -1227,7 +1228,7 @@ public class EmployeeItem {
 
 ### 7.3 Additional Data Annotation Attributes
 
-In addition to data annotation attributes supported by ASP.NET MVC, DevExpress ASP.NET MVC extensions provide supplementary attributes that can be used for validation both on the server and client:
+In addition to data annotation attributes supported by ASP.NET MVC, DevExpress ASP.NET MVC extensions support supplementary attributes that can be used for validation both on the server and client:
 
 #### [Mask Check](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Models/UserInputValidationModel.cs#L20)
 
@@ -1269,7 +1270,7 @@ In some cases, you may need to validate values of inputs that are not bound to a
 
 See the [view code](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Views/UserInputValidation/General.cshtml#L15-L19).
 
-On server you can access this editor's value through a controller action's parameter with the same name as the input. You can validate this value using any custom logic. If validation did not pass, you can register a validation error using the `ModelState.AddModelError` method. Calling this method automatically sets the `IsValid` property to `false`.
+On server you can access this editor's value through a controller action's parameter with the same name as the input. You can use arbitrary logic to validate this value. If validation did not pass, you can use the `ModelState.AddModelError` method to register a validation error. This method automatically sets the `IsValid` property to `false`.
 
 ```cs
 public ActionResult General(UserProfile userProfile, string UserPassword) {
@@ -1319,7 +1320,7 @@ To familiarize yourself with the possible vulnerability:
 
 2. Run the project and open the [Static/ComboBoxForgeryTest.html](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.Mvc/SecurityBestPractices.Mvc/Static/ComboBoxForgeryTest.html) page.
 
-3. Using this page, submit a forged request with the `Id=3`, which should not be available to an end user.
+3. Use this page to submit a forged request with the `Id=3`, which should not be available to an end user.
 
 To prevent request forgery, you should manually check if the selected list item falls within the allowed range:
 
@@ -1353,7 +1354,7 @@ In many cases such checks can have undesired side effects:
 
 - Requests are intersected before they reach a controller action so you cannot handle them and render user-friendly error messages.
 
-Because of these reasons, the inbuilt request value checks are commonly disabled. You can do this using the `ValidateInputAttribute`:
+Because of these reasons, the inbuilt request value checks are commonly disabled. Use the `ValidateInputAttribute` to do this:
 
 ```cs
 [ValidateInput(false)]
@@ -1473,7 +1474,7 @@ See the following article to learn more about CSV injections: [https://www.owasp
 
 ---
 
-## 9. Unauthorized Server Operation via Client-Sided API
+## 9. Unauthorized Operations on Server Through Client API
 
 **Security Risks**: [CWE-284](https://cwe.mitre.org/data/definitions/284.html), [CWE-285](https://cwe.mitre.org/data/definitions/285.html)
 
@@ -1526,7 +1527,7 @@ See the example projects [Views/ClientSideApi/SpreadsheetReadingModeOnlyPartial.
 
 In one of the popular use case scenarios, the ReachEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing the FileSelector's commands (`New`, `Open`, `Save`, etc.) In this case, a document is opened and saved programmatically.
 
-Note that it is not enough to just hide the File tab because the commands from this tab can still be executed using JavaScript or keyboard shortcuts (for example, the Ctrl+O shortcut can invoke the Open dialog).
+Note that it is not enough to just hide the File tab because the commands from this tab can still be executed with JavaScript or keyboard shortcuts (for example, the Ctrl+O shortcut can invoke the Open dialog).
 
 When you want to disable file-related commands, the best practice is to also disable file operations by disabling the corresponding Behavior options (`CreateNew`, `Open`, `Save`, `SaveAs`, `SwitchViewModes`).
 
@@ -1554,7 +1555,7 @@ settings.Settings.Behavior.SaveAs = DevExpress.XtraRichEdit.DocumentCapability.H
 
 ## 10. Downloading Files From External URLs
 
-Consider a use-case scenario when an web application receives a URL from an end-user, downloads an image file from this URL and saves the file in a database. This file is then displayed on the application's page using the Binary Image extension.
+Consider a use-case scenario when a web application receives a URL from an end-user, downloads an image file from this URL and saves the file in a database. The Binary Image extension is then used to display this file on the application's page.
 
 It is often suggested to use the WebClient class to download a file in this scenario:
 
