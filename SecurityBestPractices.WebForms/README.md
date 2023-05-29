@@ -1252,9 +1252,9 @@ spreadsheet.ReadOnly="true"
 
 Review our sample [ClientSideApi/SpreadsheetReadingModeOnly.aspx](https://github.com/DevExpress/aspnet-security-bestpractices/blob/master/SecurityBestPractices.WebForms/SecurityBestPractices/ClientSideApi/SpreadsheetReadingModeOnly.aspx) page for more inforamtion.
 
-### 9.3 File Selector Commands in the ReachEdit and Spreadsheet
+### 9.3 File Selector Commands in the RichEdit and Spreadsheet
 
-Related Controls: [ASPxReachEdit](https://docs.devexpress.com/AspNet/17721/aspnet-webforms-controls/rich-text-editor), [ASPxSpreadsheet](https://docs.devexpress.com/AspNet/16157/aspnet-webforms-controls/spreadsheet)
+Related Controls: [ASPxRichEdit](https://docs.devexpress.com/AspNet/17721/aspnet-webforms-controls/rich-text-editor), [ASPxSpreadsheet](https://docs.devexpress.com/AspNet/16157/aspnet-webforms-controls/spreadsheet)
 
 In a popular use case scenario, the RichEdit or Spreadsheet control's **File** tab is hidden to prevent an end-user from accessing FileSelector commands (`New`, `Open`, `Save`, etc.) In such instances, documents are opened and saved programmatically.
 
