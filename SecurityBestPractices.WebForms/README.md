@@ -644,7 +644,7 @@ DefaultQueryBuilderContainer.RegisterDataSourceWizardDBSchemaProviderExFactory<D
 
 ## 4. Preventing Cross-Site Request Forgery (CSRF)
 
-**Related Controls**: Controls with data editing available by default (e.g., [ASPxGridView](http://help.devexpress.com/#AspNet/clsDevExpressWebASPxGridViewtopic), [ASPxCardView](http://help.devexpress.com/#AspNet/clsDevExpressWebASPxCardViewtopic), [ASPxVerticalGrid](http://help.devexpress.com/#AspNet/clsDevExpressWebASPxVerticalGridtopic), [ASPxTreeList](http://help.devexpress.com/#AspNet/clsDevExpressWebASPxTreeListASPxTreeListtopic), etc.)
+**Related Controls**: Controls with data editing available by default (e.g., [ASPxGridView](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxGridView), [ASPxCardView](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxCardView), [ASPxVerticalGrid](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxVerticalGrid), [ASPxTreeList](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxTreeList.ASPxTreeList), [ASPxDiagram](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxDiagram.ASPxDiagram), etc.)
 
 **Security Risks**: [CWE-352](https://cwe.mitre.org/data/definitions/352.html)
 
