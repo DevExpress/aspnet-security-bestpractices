@@ -1,8 +1,6 @@
-# DevExpress ASP.NET Security Best Practices
+# DevExpress ASP.NET Security-Related Best Practices
 
-##### Updated March 26, 2020
+Repository content is currently being revised and updated. Refer to the following DevExpress help topics for up-to-date information/guidance:
 
-This project provides information on best practices that you should follow when you develop your web applications and web sites to avoid introducing any security vulnerabilities when developing your web applications. This information is available for the following platforms:
-
-* [ASP.NET MVC](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.Mvc) <sup>(5 new, 1 updated)</sup>
-* [ASP.NET WebForms](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.WebForms) <sup>(5 new, 1 updated)</sup>
+* [ASP.NET Web Forms Controls – Security Considerations](https://docs.devexpress.com/AspNet/404512/security-considerations)
+* [ASP.NET MVC Extensions – Security Considerations](https://docs.devexpress.com/AspNetMvc/404565/security-considerations)
