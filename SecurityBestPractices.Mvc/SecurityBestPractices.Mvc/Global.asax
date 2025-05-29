@@ -1,1 +1,0 @@
-<%@ Application Codebehind="Global.asax.cs" Inherits="SecurityBestPractices.Mvc.MvcApplication" Language="C#" %>
